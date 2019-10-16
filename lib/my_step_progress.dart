@@ -1,62 +1,34 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:heutagogy/test_page_3.dart';
 
-class MyProgress extends StatelessWidget {
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Progress Meter',
-      home: ProgressPage(),
-    );
-  }
-}
-
-class ProgressPage extends StatefulWidget {
+class MyProgressPage extends StatefulWidget {
   @override
   ProgressPageState createState() => ProgressPageState();
 }
 
-class ProgressPageState extends State<ProgressPage> {
+class ProgressPageState extends State<MyProgressPage> {
   int currentStep = 1;
   List<Step> _mySteps = [
     Step(
       title: Text(''),
-      content: SizedBox(
-        child: Text("Hello"),
-        width: 100,
-        height: 100,
+      content: TestPage3(),
       ),
+    Step(
+      title: Text(''),
+      content: Text("How"),
     ),
     Step(
       title: Text(''),
-      content: SizedBox(
-        child: Text("How"),
-        width: 100,
-        height: 100,
-      ),
+      content: Text("Are"),
     ),
     Step(
       title: Text(''),
-      content: SizedBox(
-        child: Text("Are"),
-        width: 100,
-        height: 100,
-      ),
+      content: Text("You"),
     ),
     Step(
       title: Text(''),
-      content: SizedBox(
-        child: Text("You"),
-        width: 100,
-        height: 100,
-      ),
-    ),
-    Step(
-      title: Text(''),
-      content: SizedBox(
-        child: Text("?"),
-        width: 100,
-        height: 100,
-      ),
+      content: Text("?"),
     ),
   ];
 
@@ -91,7 +63,6 @@ class ProgressPageState extends State<ProgressPage> {
 
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
@@ -109,28 +80,11 @@ class ProgressPageState extends State<ProgressPage> {
         type: StepperType.horizontal,
         currentStep: this.currentStep,
         onStepTapped: onStepTapped,
-        controlsBuilder: (BuildContext context,
-            {VoidCallback onStepContinue, VoidCallback onStepCancel}) {
-          return Column(
-            children: <Widget>[
-              FlatButton(
-                onPressed: onStepContinue,
-                child: Text("Continue"),
-              ),
-              FlatButton(
-                onPressed: onStepCancel,
-                child: Text("Cancel"),
-              ),
-            ],
-          );
-        },
         steps: _mySteps,
       ),
       floatingActionButton: FloatingActionButton(
-        child: IconButton(
-          icon: Icon(Icons.navigate_next),
-          onPressed: onStepContinue,
-        ),
+        child: Icon(Icons.navigate_next),
+        onPressed: onStepContinue,
       ),
     );
   }
