@@ -72,18 +72,29 @@ flutter:
   # see https://flutter.dev/custom-fonts/#from-packages
 
 
+
+  #  Assets (Images)
+  assets:
+    - assets/images/books.jpg
+
   # Fonts
   fonts:
+    - family: Montserrat
+      fonts:
+        - asset: assets/fonts/Montserrat/Montserrat-Regular.ttf
+    - family: GloriaHallelujah
+      fonts:
+        - asset: assets/fonts/Gloria_Hallelujah/GloriaHallelujah-Regular.ttf
     - family: Quicksand
       fonts:
-        - asset: fonts/Quicksand-Regular.ttf
-        - asset: fonts/Quicksand-Bold.ttf
+        - asset: assets/fonts/Quicksand-Regular.ttf
+        - asset: assets/fonts/Quicksand-Bold.ttf
           weight: 800
-        - asset: fonts/Quicksand-Medium.ttf
+        - asset: assets/fonts/Quicksand-Medium.ttf
           weight: 400
-        - asset: fonts/Quicksand-Light.ttf
+        - asset: assets/fonts/Quicksand-Light.ttf
           weight: 100
-        - asset: fonts/QUicksand-SemiBold.ttf
+        - asset: assets/fonts/QUicksand-SemiBold.ttf
           weight: 700
 
 
