@@ -34,7 +34,7 @@ class _LessonsPageState extends State<LessonsPage> {
         "Lesson 3: Voculabry",
         "Let\' learn some new words and learn about the synonymns and antonyms. ",
         Colors.redAccent),
-    _Lessons("Lesson 4", "et\'s readL a story, learn something wonderful and answer the questions.",
+    _Lessons("Lesson 4", "Let\'s readL a story, learn something wonderful and answer the questions.",
         Colors.lightBlueAccent),
     _Lessons("Lesson 5", "Let\'s read a story, learn something wonderful and answer the questions.",
         Colors.amber),
@@ -77,7 +77,7 @@ class _LessonsPageState extends State<LessonsPage> {
   Widget build(BuildContext context) {
     return MaterialApp(
       theme: ThemeData(
-        fontFamily: 'Montserrat',
+        fontFamily: 'Nunito',
       ),
       home: Scaffold(
         body: NestedScrollView(

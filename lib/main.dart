@@ -1,6 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:heutagogy/test_card.dart';
+// import 'package:heutagogy/test_card.dart';
 import 'splash.dart';
 import 'lessons.dart';
 
@@ -11,7 +13,8 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Heutagogy',
-      home: LaunchScreen(),
+      theme: ThemeData(fontFamily: 'Quicksand'),
+      home: LessonsPage(),
     );
   }
 }

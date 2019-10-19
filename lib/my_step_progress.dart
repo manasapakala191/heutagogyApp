@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:heutagogy/lessons.dart';
+import 'package:heutagogy/new_page_test.dart';
 import 'package:heutagogy/test_page_3.dart';
 
 class MyProgressPage extends StatefulWidget {
@@ -22,7 +22,7 @@ class ProgressPageState extends State<MyProgressPage> {
       ),
       Step(
         title: Text(''),
-        content: Text("Puzzle 2 will come here"),
+        content: NewPageTest(),
         isActive: (currentStep >= 1),
         state: (currentStep == 1) ? StepState.editing : ((currentStep > 1) ? StepState.complete : StepState.indexed),
       ),
@@ -86,18 +86,19 @@ class ProgressPageState extends State<MyProgressPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: Colors.white,
         leading: IconButton(
           icon: Icon(
             Icons.arrow_back_ios,
-            color: Colors.white,
+            color: Colors.black,
           ),
           onPressed: () {
             Navigator.pop(context);
           },
         ),
-        title: Text("Lesson 1: Exam"),
+        title: Text("Lesson 1: Exam", style: TextStyle(color: Colors.black),),
       ),
-      body: new Stepper(
+      body: Theme(data: ThemeData(canvasColor: Colors.white,), child: Stepper(
         type: StepperType.horizontal,
         currentStep: this.currentStep,
         onStepTapped: onStepTapped,
@@ -115,7 +116,7 @@ class ProgressPageState extends State<MyProgressPage> {
             ],
           );
         },
-      ),
+      ),),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       floatingActionButton: Stack(
         children: <Widget>[
@@ -133,7 +134,7 @@ class ProgressPageState extends State<MyProgressPage> {
                   }
                   else{
                     Navigator.popUntil(context, ModalRoute.withName(Navigator.defaultRouteName));
-                  }
+                    }
                 },
                 child: Icon(Icons.navigate_next),
               ),
