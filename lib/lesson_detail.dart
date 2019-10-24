@@ -172,13 +172,15 @@ class LessonDetailState extends State<LessonDetail> {
             }
           }),
       floatingActionButton: FloatingActionButton(
-        child: Icon(Icons.assignment_turned_in),
+        child: Icon(Icons.assignment_turned_in, color: Colors.blue,),
+        backgroundColor: Colors.white,
+        splashColor: Colors.lightBlueAccent,
         onPressed: () {
           _stop();
           Navigator.push(context, MaterialPageRoute(builder: (context) => MyProgressPage()));
         },
         highlightElevation: 0,
-        splashColor: Colors.white,
+        shape: CircleBorder(side: BorderSide(color: Colors.blue, width: 2)),
       ),
     );
   }
@@ -341,12 +343,12 @@ List<Lesson> lessons = [
 //        },
 //        highlightElevation: 0,
 //        splashColor: Colors.white,
-////        foregroundColor: Color.fromRGBO(16, 75, 200, 1),
-////        backgroundColor: Colors.white,
-////        shape: RoundedRectangleBorder(
-////          borderRadius: BorderRadius.circular(50),
-////          side: BorderSide(color: Color.fromRGBO(16, 75, 200, 1)),
-////        ),
+//        foregroundColor: Color.fromRGBO(16, 75, 200, 1),
+//        backgroundColor: Colors.white,
+//        shape: RoundedRectangleBorder(
+//          borderRadius: BorderRadius.circular(50),
+//          side: BorderSide(color: Color.fromRGBO(16, 75, 200, 1)),
+//        ),
 //        label: Text(
 //          'Start Exam',
 //          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),

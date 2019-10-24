@@ -1,8 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:heutagogy/new_page_test.dart';
-import 'package:heutagogy/test_page_3.dart';
+import 'package:heutagogy/test3.dart';
 
 class MyProgressPage extends StatefulWidget {
   @override
@@ -16,39 +15,51 @@ class ProgressPageState extends State<MyProgressPage> {
     return [
       Step(
         title: Text(''),
-        content: TestPage3(),
+        content: Column(mainAxisSize: MainAxisSize.max ,crossAxisAlignment:CrossAxisAlignment.center, children: <Widget>[Padding(padding:EdgeInsets.only(top:25)), NewPageTest()]),
         isActive: (currentStep >= 0),
-        state: (currentStep == 0) ? StepState.editing : ((currentStep > 0) ? StepState.complete : StepState.indexed),
+        state: (currentStep == 0)
+            ? StepState.editing
+            : ((currentStep > 0) ? StepState.complete : StepState.indexed),
       ),
       Step(
         title: Text(''),
-        content: NewPageTest(),
+        content: Align(alignment: Alignment.bottomLeft, child: Text("Hello"),),
         isActive: (currentStep >= 1),
-        state: (currentStep == 1) ? StepState.editing : ((currentStep > 1) ? StepState.complete : StepState.indexed),
+        state: (currentStep == 1)
+            ? StepState.editing
+            : ((currentStep > 1) ? StepState.complete : StepState.indexed),
       ),
       Step(
         title: Text(''),
         content: Text("Puzzle 3 will come here"),
         isActive: (currentStep >= 2),
-        state: (currentStep == 2) ? StepState.editing : ((currentStep > 2) ? StepState.complete : StepState.indexed),
+        state: (currentStep == 2)
+            ? StepState.editing
+            : ((currentStep > 2) ? StepState.complete : StepState.indexed),
       ),
       Step(
         title: Text(''),
-        content: Text("Puzzle 4 will come here"),
+        content: Center(child:Text("Puzzle 4 will come here")),
         isActive: (currentStep >= 3),
-        state: (currentStep == 3) ? StepState.editing : ((currentStep > 3) ? StepState.complete : StepState.indexed),
+        state: (currentStep == 3)
+            ? StepState.editing
+            : ((currentStep > 3) ? StepState.complete : StepState.indexed),
       ),
       Step(
         title: Text(''),
         content: Text("Puzzle 5 will come here"),
         isActive: (currentStep >= 4),
-        state: (currentStep == 4) ? StepState.editing : ((currentStep > 4) ? StepState.complete : StepState.indexed),
+        state: (currentStep == 4)
+            ? StepState.editing
+            : ((currentStep > 4) ? StepState.complete : StepState.indexed),
       ),
       Step(
         title: Text(''),
         content: Text("Puzzle 6 will come here"),
         isActive: (currentStep >= 5),
-        state: (currentStep == 5) ? StepState.editing : ((currentStep > 5) ? StepState.complete : StepState.indexed),
+        state: (currentStep == 5)
+            ? StepState.editing
+            : ((currentStep > 5) ? StepState.complete : StepState.indexed),
       ),
     ];
   }
@@ -96,27 +107,35 @@ class ProgressPageState extends State<MyProgressPage> {
             Navigator.pop(context);
           },
         ),
-        title: Text("Lesson 1: Exam", style: TextStyle(color: Colors.black),),
+        title: Text(
+          "Lesson 1: Exam",
+          style: TextStyle(color: Colors.black),
+        ),
       ),
-      body: Theme(data: ThemeData(canvasColor: Colors.white,), child: Stepper(
-        type: StepperType.horizontal,
-        currentStep: this.currentStep,
-        onStepTapped: onStepTapped,
-        steps: _mySteps(),
-        controlsBuilder: (BuildContext context,
-            {VoidCallback onStepContinue, VoidCallback onStepCancel}) {
-          return Row(
-            children: <Widget>[
-              Container(
-                child: null,
-              ),
-              Container(
-                child: null,
-              ),
-            ],
-          );
-        },
-      ),),
+      body: Theme(
+        data: ThemeData(
+          canvasColor: Colors.white,
+        ),
+        child: Stepper(
+          type: StepperType.horizontal,
+          currentStep: this.currentStep,
+          onStepTapped: onStepTapped,
+          steps: _mySteps(),
+          controlsBuilder: (BuildContext context,
+              {VoidCallback onStepContinue, VoidCallback onStepCancel}) {
+            return Row(
+              children: <Widget>[
+                Container(
+                  child: null,
+                ),
+                Container(
+                  child: null,
+                ),
+              ],
+            );
+          },
+        ),
+      ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       floatingActionButton: Stack(
         children: <Widget>[
@@ -124,19 +143,23 @@ class ProgressPageState extends State<MyProgressPage> {
             alignment: Alignment.bottomRight,
             child: Padding(
               padding: EdgeInsets.fromLTRB(0, 0, 20, 0),
-              child: FloatingActionButton(
+              child: FloatingActionButton.extended(
+                backgroundColor: Colors.white,
+                splashColor: Colors.lightBlueAccent,
                 heroTag: 'NextStep',
                 onPressed: () {
-                  if (currentStep < _mySteps().length - 1){
+                  if (currentStep < _mySteps().length - 1) {
                     setState(() {
                       currentStep = currentStep + 1;
                     });
+                  } else {
+                    Navigator.popUntil(context,
+                        ModalRoute.withName(Navigator.defaultRouteName));
                   }
-                  else{
-                    Navigator.popUntil(context, ModalRoute.withName(Navigator.defaultRouteName));
-                    }
                 },
-                child: Icon(Icons.navigate_next),
+                label: Text("Next", style: TextStyle(color: Colors.blue, fontSize: 16, fontWeight: FontWeight.bold),),
+                shape: RoundedRectangleBorder(side: BorderSide(color: Colors.blue, width: 2), borderRadius: BorderRadius.circular(40)),
+                icon: Icon(Icons.navigate_next, color: Colors.blue,),
               ),
             ),
           ),
@@ -145,9 +168,18 @@ class ProgressPageState extends State<MyProgressPage> {
             child: Padding(
               padding: EdgeInsets.fromLTRB(20, 0, 0, 0),
               child: FloatingActionButton(
+                backgroundColor: Colors.white,
+                splashColor: Colors.lightBlueAccent,
                 heroTag: 'PreviousStep',
-                onPressed: onStepCancel,
-                child: Icon(Icons.navigate_before),
+                onPressed: () {
+                  if (currentStep > 0) {
+                    onStepCancel();
+                  } else {
+                    Navigator.pop(context);
+                  }
+                },
+                shape: CircleBorder(side: BorderSide(color: Colors.blue, width: 2)),
+                child: Icon(Icons.arrow_back, color: Colors.blue,),
               ),
             ),
           ),

@@ -57,6 +57,7 @@ class MyCard extends StatefulWidget {
 class _MyCardState extends State<MyCard> {
   bool isStarred;
   double progress;
+  String title;
   Color colorTheme;
 
   _MyCardState(this.colorTheme);

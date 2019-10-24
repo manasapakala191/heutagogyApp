@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'dart:math';
@@ -22,25 +23,61 @@ class _NewPageTestState extends State<NewPageTest> {
 
   @override
   Widget build(BuildContext context) {
-    List<int> nums = [11, 3, 5, 17, 9];
+    final pageController = PageController(initialPage: 0);
+    List<int> nums1 = [6, 18, 12, 4, 20];
+    List<int> nums2 = [10, 11, 7, 1, 19];
+    List<int> nums3 = [11, 17, 9, 5, 18];
+    List<int> nums4 = [3, 16, 2, 19, 8];
 
-    return SafeArea(
-      child: Column(
-        children: <Widget>[
-          NumberPuzzle(
-            numbers: nums,
-          ),
-          Padding(padding: EdgeInsets.only(top: 30),),
-          NumberPuzzle(
-            numbers: nums,
-          ),
-          Padding(padding: EdgeInsets.only(top: 30),),
-          NumberPuzzle(
-            numbers: nums,
-          ),
-        ],
+    return Center(
+      child: Container(
+        height: 400,
+        child: PageView(
+          controller: pageController,
+          scrollDirection: Axis.vertical,
+          children: <Widget>[
+            NumberPuzzle(
+              key: PageStorageKey<String>(String.fromCharCodes(nums1)),
+              numbers: nums1,
+            ),
+            NumberPuzzle(
+              key: PageStorageKey<String>(String.fromCharCodes(nums2)),
+              numbers: nums2,
+            ),
+            NumberPuzzle(
+              key: PageStorageKey<String>(String.fromCharCodes(nums3)),
+              numbers: nums3,
+            ),
+            NumberPuzzle(
+              key: PageStorageKey<String>(String.fromCharCodes(nums4)),
+              numbers: nums4,
+            )
+          ],
+        ),
       ),
     );
+
+    // return SafeArea(
+    //   child: Column(
+    //     children: <Widget>[
+    //       NumberPuzzle(
+    //         numbers: nums,
+    //       ),
+    //       Padding(
+    //         padding: EdgeInsets.only(top: 30),
+    //       ),
+    //       NumberPuzzle(
+    //         numbers: [2, 54, 6, 32, 61, 8],
+    //       ),
+    //       Padding(
+    //         padding: EdgeInsets.only(top: 30),
+    //       ),
+    //       NumberPuzzle(
+    //         numbers: [3, 65, 2, 12],
+    //       ),
+    //     ],
+    //   ),
+    // );
   }
 }
 
@@ -50,25 +87,38 @@ class NumberPuzzle extends StatefulWidget {
   _NumberPuzzleState createState() => _NumberPuzzleState(numbers);
 }
 
-class _NumberPuzzleState extends State<NumberPuzzle> {
+class _NumberPuzzleState extends State<NumberPuzzle>
+    with AutomaticKeepAliveClientMixin<NumberPuzzle> {
+  @override
+  bool get wantKeepAlive => true;
+  // bool mustCallSuper() => true;
   List<int> numbers;
   _NumberPuzzleState(this.numbers);
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return Center(
         child: Card(
       child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
           Padding(
-              padding: EdgeInsets.only(top: 10, bottom: 20),
-              child: Text("Sort in Ascending Order")),
+            padding: EdgeInsets.only(top: 10, bottom: 20),
+            child: Text(
+              "Sort in Ascending Order",
+              style: TextStyle(fontSize: 20),
+            ),
+          ),
           NumberPuzzleSub(recievedNumbers: numbers, order: "ASC"),
           Padding(
-              padding: EdgeInsets.only(top: 30, bottom: 20),
-              child: Text("Sort in Descending Order")),
+            padding: EdgeInsets.only(top: 20, bottom: 20),
+            child: Text(
+              "Sort in Descending Order",
+              style: TextStyle(fontSize: 20),
+            ),
+          ),
           NumberPuzzleSub(recievedNumbers: numbers, order: "DESC"),
           Padding(
-            padding: EdgeInsets.only(top: 20),
+            padding: EdgeInsets.only(top: 10),
           ),
         ],
       ),
@@ -81,10 +131,8 @@ class _NumberPuzzleState extends State<NumberPuzzle> {
 class NumberPuzzleSub extends StatefulWidget {
   final List<int> recievedNumbers;
   final String order;
-  NumberPuzzleSub({Key key, @required this.recievedNumbers, this.order})
-      : super(key: key);
-  _NumberPuzzleSubState createState() =>
-      _NumberPuzzleSubState(recievedNumbers, order);
+  NumberPuzzleSub({Key key, @required this.recievedNumbers, this.order}) : super(key: key);
+  _NumberPuzzleSubState createState() => _NumberPuzzleSubState(recievedNumbers, order);
 }
 
 class _NumberPuzzleSubState extends State<NumberPuzzleSub> {
@@ -113,7 +161,7 @@ class _NumberPuzzleSubState extends State<NumberPuzzleSub> {
             children: _dragTargetBuilder(numbers, order, 1),
           ),
           Padding(
-            padding: EdgeInsets.only(top: 30),
+            padding: EdgeInsets.only(top: 15),
           ),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -124,10 +172,8 @@ class _NumberPuzzleSubState extends State<NumberPuzzleSub> {
     );
   }
 
-  List<Widget> _dragTargetBuilder(
-      List<MyNumber<int, bool>> numbers, String order, int id) {
-    List<MyNumber<int, bool>> correctOrder =
-        List<MyNumber<int, bool>>.from(numbers);
+  List<Widget> _dragTargetBuilder(List<MyNumber<int, bool>> numbers, String order, int id) {
+    List<MyNumber<int, bool>> correctOrder = List<MyNumber<int, bool>>.from(numbers);
     List<Widget> myList = [];
     // Ascending Order
     correctOrder = List<MyNumber<int, bool>>.from(numbers);
@@ -151,7 +197,7 @@ class _NumberPuzzleSubState extends State<NumberPuzzleSub> {
               child: Center(
                 child: Text(
                   "?",
-                  style: TextStyle(fontSize: 20),
+                  style: TextStyle(fontSize: 24),
                 ),
               ),
             );
@@ -190,8 +236,7 @@ class _NumberPuzzleSubState extends State<NumberPuzzleSub> {
     return myList;
   }
 
-  List<Widget> _draggableItemBuilder(
-      List<MyNumber<int, bool>> numbers, String order, int id) {
+  List<Widget> _draggableItemBuilder(List<MyNumber<int, bool>> numbers, String order, int id) {
     List<Widget> myList = [];
     for (var number in numbers) {
       Widget aColumn = AnimatedContainer(
@@ -211,7 +256,7 @@ class _NumberPuzzleSubState extends State<NumberPuzzleSub> {
       if (number.second == false) {
         myList.add(Transform.translate(
             offset: Offset(0, 0),
-            child: LongPressDraggable<String>(
+            child: Draggable<String>(
               child: aColumn,
               childWhenDragging: AnimatedContainer(
                 duration: Duration(milliseconds: 200),
@@ -221,27 +266,32 @@ class _NumberPuzzleSubState extends State<NumberPuzzleSub> {
                   borderRadius: BorderRadius.circular(16),
                   border: Border.all(color: Colors.blueAccent),
                 ),
-                child: AnimatedOpacity(opacity: 0.5, duration: Duration(milliseconds: 200), child: null),
+                child: AnimatedOpacity(
+                    opacity: 0.5, duration: Duration(milliseconds: 200), child: null),
               ),
               feedback: Material(
                 borderRadius: BorderRadius.circular(16),
-                child: AnimatedOpacity(opacity: 0.5, duration: Duration(milliseconds: 200), child:Material(
-                  type: MaterialType.transparency,
-                  child: AnimatedContainer(
-                    duration: Duration(milliseconds: 200),
-                    width: 50,
-                    height: 50,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(16),
-                      color: Colors.blueAccent,
+                child: AnimatedOpacity(
+                  opacity: 0.8,
+                  duration: Duration(milliseconds: 200),
+                  child: Material(
+                    type: MaterialType.transparency,
+                    child: AnimatedContainer(
+                      duration: Duration(milliseconds: 200),
+                      width: 50,
+                      height: 50,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(16),
+                        color: Colors.blueAccent,
+                      ),
+                      child: Center(
+                          child: Text(
+                        "${number.first}",
+                        style: TextStyle(fontSize: 20, color: Colors.white),
+                      )),
                     ),
-                    child: Center(
-                        child: Text(
-                      "${number.first}",
-                      style: TextStyle(fontSize: 20),
-                    )),
                   ),
-                ),),
+                ),
               ),
               data: "$id:$order:${number.first}",
             )));
