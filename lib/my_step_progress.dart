@@ -1,7 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:heutagogy/test3.dart';
+import 'package:heutagogy/tests/test3.dart';
+import 'package:heutagogy/tests/test6.dart';
 
 class MyProgressPage extends StatefulWidget {
   @override
@@ -9,13 +10,13 @@ class MyProgressPage extends StatefulWidget {
 }
 
 class ProgressPageState extends State<MyProgressPage> {
-  int currentStep = 0;
+  int currentStep = 5;
 
   List<Step> _mySteps() {
     return [
       Step(
         title: Text(''),
-        content: Column(mainAxisSize: MainAxisSize.max ,crossAxisAlignment:CrossAxisAlignment.center, children: <Widget>[Padding(padding:EdgeInsets.only(top:25)), NewPageTest()]),
+        content: Text("Puzzle 1 will come here"),
         isActive: (currentStep >= 0),
         state: (currentStep == 0)
             ? StepState.editing
@@ -23,7 +24,7 @@ class ProgressPageState extends State<MyProgressPage> {
       ),
       Step(
         title: Text(''),
-        content: Align(alignment: Alignment.bottomLeft, child: Text("Hello"),),
+        content: Text("Puzzle 2 will come here"),
         isActive: (currentStep >= 1),
         state: (currentStep == 1)
             ? StepState.editing
@@ -31,7 +32,7 @@ class ProgressPageState extends State<MyProgressPage> {
       ),
       Step(
         title: Text(''),
-        content: Text("Puzzle 3 will come here"),
+        content: Test3Page(),
         isActive: (currentStep >= 2),
         state: (currentStep == 2)
             ? StepState.editing
@@ -55,7 +56,7 @@ class ProgressPageState extends State<MyProgressPage> {
       ),
       Step(
         title: Text(''),
-        content: Text("Puzzle 6 will come here"),
+        content: Test6Page(),
         isActive: (currentStep >= 5),
         state: (currentStep == 5)
             ? StepState.editing

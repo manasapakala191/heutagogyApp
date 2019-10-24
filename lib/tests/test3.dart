@@ -9,13 +9,13 @@ class MyNumber<T, S> {
   MyNumber(this.first, this.second);
 }
 
-class NewPageTest extends StatefulWidget {
-  NewPageTest({Key key}) : super(key: key);
+class Test3Page extends StatefulWidget {
+  Test3Page({Key key}) : super(key: key);
 
-  _NewPageTestState createState() => _NewPageTestState();
+  _Test3PageState createState() => _Test3PageState();
 }
 
-class _NewPageTestState extends State<NewPageTest> {
+class _Test3PageState extends State<Test3Page> {
   @override
   void initState() {
     super.initState();
@@ -96,6 +96,7 @@ class _NumberPuzzleState extends State<NumberPuzzle>
   _NumberPuzzleState(this.numbers);
   @override
   Widget build(BuildContext context) {
+    super.build(context);
     return Center(
         child: Card(
       child: Column(

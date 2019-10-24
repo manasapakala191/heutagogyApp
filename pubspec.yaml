@@ -79,6 +79,11 @@ flutter:
   #  Assets (Images)
   assets:
     - assets/images/books.jpg
+    - assets/images/pb6/gaurd.png
+    - assets/images/pb6/spinach.png
+    - assets/images/pb6/eggplant.png
+    - assets/images/pb6/jackfruit.png
+
 
   # Fonts
   fonts:
