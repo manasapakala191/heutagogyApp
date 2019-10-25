@@ -5,9 +5,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_tts/flutter_tts.dart';
 import 'my_step_progress.dart';
 
-String lessonDetail =
-    "Sujay was a class II student. He was fond of cats. He asked his parents to give permission to have a kitten as his pet. His parents asked him to earn the permission by winning a running race in the competition held by their colony people. Sujay agreed. He participated in the running race. The participants were standing in a row. Sujay counted them. they were 20. They had numbers on their shirts. Sujay noticed that they were not standing in proper sequence. He told his father. His father arranged them in proper sequence from number 1 to 20. When the race was about to begin, Sujay realized that he was standing in a wrong place. His number was 11. He was standing between 9 and 11. He changed his position and stood between 10 and 12. The race started. Sujay put all his efforts and won the race.\tThe next morning was Sujay’s birthday. His father arranged a party. His relatives and friends attended the party. Sujay gave plants as return gift to his friends and relatives. His grand father and grand mother were teachers. They gifted him an education kit. His aunt was a nurse and his uncle was a bank manager. They gifted him a business game. His friends gifted him different kinds of pens and sketches. Sujay was so happy. His father and mother gifted him a little kitten. He named it Gifty. Sujay’s dad was a forest officer. He had his duty in the forest during day time. Gifty was so cute. Sujay played with it after his school. One day when he returned home, he found that Gifty was missing. He was afraid and sad. He could not sleep that night. He kept weeping. His father’s friend was a police. He helped Sujay and his family in searching the kitten in the forest the next day. Sujay was entering the forest for the first time. He saw different types of vegetation in the forest. There were vegetable and fruit gardens in the entrance of the forest.When Sujay asked about them, his father said that he encouraged the villagers to grow kitchen gardens in the entrance of the forest that could help them have organic vegetables and fruits for their survival. They were growing brinjal, potato, banana, guava, leafy vegetables, jack fruit etc., He remembered his Telugu lesson in the school, “sandade sandadi” He started humming the song and was imagining how it could be if all these vegetables and fruits danced and performed brinjal’s wedding as said in his lesson. He was surprised to see many animals and birds in the forest. He saw a peacock that was dancing, a cuckoo that was singing, a parrot that was chattering, a pig that was grunting, a horse that was neighing, a dog that was barking etc.,\tThey kept searching for Gifty. Sujay heard the cries of Gifty when they were in the middle of that forest. He told his police uncle to search the place from where the cries were heard. At last they found her stuck in thick creepers. Gifty was so relieved after seeing Sujay. She stopping meowing. Sujay identified scratches on her back and legs. It was weak. They took her to one of Sujay’s father’s friend who was a veterinary doctor. The doctor gave an injection to Gifty and asked Sujay to relax. After the treatment, they took her home.  Gifty never went into the forest again. ";
-
 class LessonDetail extends StatefulWidget {
   @override
   State<StatefulWidget> createState() => LessonDetailState();
@@ -16,6 +13,10 @@ class LessonDetail extends StatefulWidget {
 enum TtsState { playing, stopped }
 
 class LessonDetailState extends State<LessonDetail> {
+  String lessonDetail =
+    "Sujay was a class II student. He was fond of cats. He asked his parents to give permission to have a kitten as his pet. His parents asked him to earn the permission by winning a running race in the competition held by their colony people. Sujay agreed. He participated in the running race. The participants were standing in a row. Sujay counted them. they were 20. They had numbers on their shirts.\n\n Sujay noticed that they were not standing in proper sequence. He told his father. His father arranged them in proper sequence from number 1 to 20. When the race was about to begin, Sujay realized that he was standing in a wrong place. His number was 11. He was standing between 9 and 11. He changed his position and stood between 10 and 12. The race started. Sujay put all his efforts and won the race.\n\nThe next morning was Sujay’s birthday. His father arranged a party. His relatives and friends attended the party. Sujay gave plants as return gift to his friends and relatives. His grand father and grand mother were teachers. They gifted him an education kit. His aunt was a nurse and his uncle was a bank manager. They gifted him a business game.\n\n His friends gifted him different kinds of pens and sketches. Sujay was so happy. His father and mother gifted him a little kitten. He named it Gifty. Sujay’s dad was a forest officer. He had his duty in the forest during day time. Gifty was so cute. Sujay played with it after his school. \n\nOne day when he returned home, he found that Gifty was missing. He was afraid and sad. He could not sleep that night. He kept weeping. His father’s friend was a police. He helped Sujay and his family in searching the kitten in the forest the next day. Sujay was entering the forest for the first time. He saw different types of vegetation in the forest. There were vegetable and fruit gardens in the entrance of the forest.\n\nWhen Sujay asked about them, his father said that he encouraged the villagers to grow kitchen gardens in the entrance of the forest that could help them have organic vegetables and fruits for their survival. They were growing brinjal, potato, banana, guava, leafy vegetables, jack fruit etc., He remembered his Telugu lesson in the school, “sandade sandadi” He started humming the song and was imagining how it could be if all these vegetables and fruits danced and performed brinjal’s wedding as said in his lesson. \n\nHe was surprised to see many animals and birds in the forest. He saw a peacock that was dancing, a cuckoo that was singing, a parrot that was chattering, a pig that was grunting, a horse that was neighing, a dog that was barking etc.,They kept searching for Gifty. Sujay heard the cries of Gifty when they were in the middle of that forest. He told his police uncle to search the place from where the cries were heard. \n\nAt last they found her stuck in thick creepers. Gifty was so relieved after seeing Sujay. She stopping meowing. Sujay identified scratches on her back and legs. It was weak. They took her to one of Sujay’s father’s friend who was a veterinary doctor. The doctor gave an injection to Gifty and asked Sujay to relax. After the treatment, they took her home.  Gifty never went into the forest again. ";
+
+
   // Related to TTS
   FlutterTts flutterTts;
   TtsState ttsState = TtsState.stopped;
@@ -152,7 +153,7 @@ class LessonDetailState extends State<LessonDetail> {
                 padding: EdgeInsets.fromLTRB(20, 30, 20, 40),
                 child: Text(
                   lessonDetail,
-                  style: TextStyle(fontSize: 16, fontFamily: "Quicksand", wordSpacing: 2, fontWeight: FontWeight.bold),
+                  style: TextStyle(fontSize: 16, wordSpacing: 2),
                 ),
               );
             } else {
@@ -171,13 +172,15 @@ class LessonDetailState extends State<LessonDetail> {
             }
           }),
       floatingActionButton: FloatingActionButton(
-        child: Icon(Icons.assignment_turned_in),
+        child: Icon(Icons.assignment_turned_in, color: Colors.blue,),
+        backgroundColor: Colors.white,
+        splashColor: Colors.lightBlueAccent,
         onPressed: () {
           _stop();
           Navigator.push(context, MaterialPageRoute(builder: (context) => MyProgressPage()));
         },
         highlightElevation: 0,
-        splashColor: Colors.white,
+        shape: CircleBorder(side: BorderSide(color: Colors.blue, width: 2)),
       ),
     );
   }
@@ -340,12 +343,12 @@ List<Lesson> lessons = [
 //        },
 //        highlightElevation: 0,
 //        splashColor: Colors.white,
-////        foregroundColor: Color.fromRGBO(16, 75, 200, 1),
-////        backgroundColor: Colors.white,
-////        shape: RoundedRectangleBorder(
-////          borderRadius: BorderRadius.circular(50),
-////          side: BorderSide(color: Color.fromRGBO(16, 75, 200, 1)),
-////        ),
+//        foregroundColor: Color.fromRGBO(16, 75, 200, 1),
+//        backgroundColor: Colors.white,
+//        shape: RoundedRectangleBorder(
+//          borderRadius: BorderRadius.circular(50),
+//          side: BorderSide(color: Color.fromRGBO(16, 75, 200, 1)),
+//        ),
 //        label: Text(
 //          'Start Exam',
 //          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),

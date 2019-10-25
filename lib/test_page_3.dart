@@ -934,7 +934,6 @@ class _TestPage3State extends State<TestPage3> {
                             height: 30.0,
                             child: TextField(
                               keyboardType: TextInputType.number,
-                              autofocus: true,
                               controller: in31,
                               decoration: InputDecoration(
                                   filled: true,
