@@ -16,7 +16,8 @@ class _Lessons {
 
   _Lessons(this.title, this.description, this.color);
 
-  _Lessons.withNextPage(this.title, this.description, this.color, this.nextPage);
+  _Lessons.withNextPage(
+      this.title, this.description, this.color, this.nextPage);
 }
 
 class _LessonsPageState extends State<LessonsPage> {
@@ -36,7 +37,9 @@ class _LessonsPageState extends State<LessonsPage> {
         Colors.redAccent),
     _Lessons("Lesson 4", "Let\'s readL a story, learn something wonderful and answer the questions.",
         Colors.lightBlueAccent),
-    _Lessons("Lesson 5", "Let\'s read a story, learn something wonderful and answer the questions.",
+    _Lessons(
+        "Lesson 5",
+        "Let\'s read a story, learn something wonderful and answer the questions.",
         Colors.amber),
   ];
 
@@ -46,16 +49,58 @@ class _LessonsPageState extends State<LessonsPage> {
   Widget lessonsBuilder(BuildContext context, int index) {
     if (index == 0) {
       return Padding(
-        padding: EdgeInsets.fromLTRB(0, 0, 0, 10),
-        child: Center(
-          child: Text(
-            "Choose any lesson to begin",
-            style: TextStyle(
-              fontSize: 25,
-              // fontWeight: FontWeight.bold
+        padding: EdgeInsets.fromLTRB(0, 10, 0, 10),
+        // child: Center(
+        child: Column(
+          children: <Widget>[
+            Padding(
+              padding: EdgeInsets.fromLTRB(0, 10, 0, 20),
+              child: Row(
+                children: <Widget>[
+                  Expanded(
+                    flex: 1,
+                    child: Icon(
+                      Icons.menu,
+                    ),
+                  ),
+                  Expanded(
+                    flex: 7,
+                    child: Container(
+                      margin: EdgeInsets.fromLTRB(10, 0, 10, 0),
+                      child: TextField(
+                        style: TextStyle(
+                          fontSize: 20,
+                        ),
+                        decoration: InputDecoration(
+                          hintText: 'Search',
+                          suffixIcon: Icon(Icons.search),
+                          contentPadding:
+                              EdgeInsets.fromLTRB(20.0, 10.0, 0.0, 10.0),
+                          border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(20.0)),
+                        ),
+                      ),
+                    ),
+                  ),
+                  Expanded(
+                    flex: 1,
+                    child: Icon(
+                      Icons.filter_list,
+                    ),
+                  ),
+                ],
+              ),
             ),
-          ),
+            Text(
+              "Choose any lesson to begin",
+              style: TextStyle(
+                fontSize: 25,
+                // fontWeight: FontWeight.bold
+              ),
+            ),
+          ],
         ),
+        // ),
       );
     } else {
       return Lesson(
@@ -65,7 +110,8 @@ class _LessonsPageState extends State<LessonsPage> {
         () {
           if (index >= 0 && index < this._itemCount) {
             if (index == 1) {
-              Navigator.push(context, MaterialPageRoute(builder: (context) => LessonDetail()));
+              Navigator.push(context,
+                  MaterialPageRoute(builder: (context) => LessonDetail()));
             }
           }
         },
@@ -80,49 +126,62 @@ class _LessonsPageState extends State<LessonsPage> {
         fontFamily: 'Nunito',
       ),
       home: Scaffold(
-        body: NestedScrollView(
-          headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
-            return <Widget>[
-              SliverAppBar(
-                  expandedHeight: 200.0,
-                  floating: false,
-                  pinned: true,
-                  // backgroundColor: Colors.lightGreenAccent,
-                  flexibleSpace: LayoutBuilder(
-                    builder: (BuildContext context, BoxConstraints constraints) {
-                      top = constraints.biggest.height;
-                      return FlexibleSpaceBar(
-                        centerTitle: true,
-                        title: AnimatedOpacity(
-                          duration: Duration(milliseconds: 300),
-                          opacity: top <= 140.0 ? 1.0 : 0.0,
-                          child: Text(
-                            "Welcome",
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 18.0,
-                            ),
-                          ),
-                        ),
-                        background: Image.asset(
-                          "assets/images/books.jpg",
-                          // "https://d3ui957tjb5bqd.cloudfront.net/uploads/images/3/36/36367.pic.jpg?1463997427",
-                          // "https://images.unsplash.com/photo-1455884981818-54cb785db6fc?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1890&q=80",
-                          // "https://images.unsplash.com/photo-1455884981818-54cb785db6fc?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1890&q=80",
-                          // "https://images.unsplash.com/photo-1539795845756-4fadad2905ec?ixlib=rb-1.2.1&auto=format&fit=crop&w=1050&q=80",
-                          fit: BoxFit.fill,
-                          // alignment: Alignment.topLeft,
-                        ),
-                      );
-                    },
-                  )),
-            ];
-          },
-          body: ListView.builder(
-            itemCount: this._itemCount,
-            itemBuilder: lessonsBuilder,
-          ),
+        // appBar: AppBar(
+        //   title: Text(
+        //     "Welcome",
+        //     style: TextStyle(
+        //       color: Colors.white,
+        //       fontSize: 18.0,
+        //     ),
+        //   ),
+        // ),
+        body: ListView.builder(
+          itemCount: this._itemCount,
+          itemBuilder: lessonsBuilder,
         ),
+        // body: NestedScrollView(
+        //   headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
+        //     return <Widget>[
+        //       SliverAppBar(
+        //           expandedHeight: 200.0,
+        //           floating: false,
+        //           pinned: true,
+        //           // backgroundColor: Colors.lightGreenAccent,
+        //           flexibleSpace: LayoutBuilder(
+        //             builder: (BuildContext context, BoxConstraints constraints) {
+        //               top = constraints.biggest.height;
+        //               return FlexibleSpaceBar(
+        //                 centerTitle: true,
+        //                 title: AnimatedOpacity(
+        //                   duration: Duration(milliseconds: 300),
+        //                   opacity: top <= 140.0 ? 1.0 : 0.0,
+        //                   child: Text(
+        //                     "Welcome",
+        //                     style: TextStyle(
+        //                       color: Colors.white,
+        //                       fontSize: 18.0,
+        //                     ),
+        //                   ),
+        //                 ),
+        //                 background: Image.asset(
+        //                   "assets/images/books.jpg",
+        //                   // "https://d3ui957tjb5bqd.cloudfront.net/uploads/images/3/36/36367.pic.jpg?1463997427",
+        //                   // "https://images.unsplash.com/photo-1455884981818-54cb785db6fc?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1890&q=80",
+        //                   // "https://images.unsplash.com/photo-1455884981818-54cb785db6fc?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1890&q=80",
+        //                   // "https://images.unsplash.com/photo-1539795845756-4fadad2905ec?ixlib=rb-1.2.1&auto=format&fit=crop&w=1050&q=80",
+        //                   fit: BoxFit.fill,
+        //                   // alignment: Alignment.topLeft,
+        //                 ),
+        //               );
+        //             },
+        //           )),
+        //     ];
+        //   },
+        //   body: ListView.builder(
+        //     itemCount: this._itemCount,
+        //     itemBuilder: lessonsBuilder,
+        //   ),
+        // ),
       ),
     );
   }
@@ -182,6 +241,7 @@ class Lesson extends StatelessWidget {
                     fontWeight: FontWeight.w500,
                   ),
                 ),
+                // Progress(),
               ],
             ),
           ),
@@ -191,3 +251,33 @@ class Lesson extends StatelessWidget {
   }
 }
 
+// class Progress extends StatefulWidget {
+//   @override
+//   _ProgressState createState() => _ProgressState();
+// }
+
+// class _ProgressState extends State<Progress> {
+//   int currentStep = 0;
+
+//   List<Step> _mySteps() {
+//     return [
+//       Step(
+//         title: Text(''),
+//         content: Text("Puzzle 2 will come here"),
+//         isActive: true,
+//         state: (currentStep == 0)
+//             ? StepState.editing
+//             : ((currentStep > 0) ? StepState.complete : StepState.indexed),
+//       ),
+//     ];
+//   }
+
+//   @override
+//   Widget build(BuildContext context) {
+//     return new Stepper(
+//       type: StepperType.horizontal,
+//       currentStep: this.currentStep,
+//       steps: _mySteps(),
+//     );
+//   }
+// }
