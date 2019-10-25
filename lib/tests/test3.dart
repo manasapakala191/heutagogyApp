@@ -56,7 +56,7 @@ class _Test3PageState extends State<Test3Page> {
         ),
       ),
     );
-
+  //
     // return SafeArea(
     //   child: Column(
     //     children: <Widget>[
@@ -91,7 +91,6 @@ class _NumberPuzzleState extends State<NumberPuzzle>
     with AutomaticKeepAliveClientMixin<NumberPuzzle> {
   @override
   bool get wantKeepAlive => true;
-  // bool mustCallSuper() => true;
   List<int> numbers;
   _NumberPuzzleState(this.numbers);
   @override

@@ -180,7 +180,7 @@ class LessonDetailState extends State<LessonDetail> {
           Navigator.push(context, MaterialPageRoute(builder: (context) => MyProgressPage()));
         },
         highlightElevation: 0,
-        shape: CircleBorder(side: BorderSide(color: Colors.blue, width: 2)),
+        shape: CircleBorder(side: BorderSide(color: Colors.blue, width: 1)),
       ),
     );
   }

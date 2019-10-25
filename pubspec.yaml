@@ -25,6 +25,7 @@ dependencies:
   cupertino_icons: ^0.1.2
   flutter_tts: ^0.6.0
   percent_indicator: "^2.1.1"
+  audioplayers: ^0.13.2
 
 
 dev_dependencies:
@@ -84,7 +85,15 @@ flutter:
     - assets/images/pb6/eggplant.png
     - assets/images/pb6/jackfruit.png
 
-
+  # Assets (Sounds)
+    - assets/audio/parrot.wav
+    - assets/audio/monkey.wav
+    - assets/audio/horse.wav
+    - assets/audio/dog.wav
+    - assets/audio/cat.wav
+    - assets/audio/pig.wav
+    - assets/audio/cuckoo.wav
+    
   # Fonts
   fonts:
     - family: Montserrat

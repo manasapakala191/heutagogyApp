@@ -2,6 +2,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:heutagogy/tests/test3.dart';
+import 'package:heutagogy/tests/test4.dart';
+import 'package:heutagogy/tests/test5.dart';
 import 'package:heutagogy/tests/test6.dart';
 
 class MyProgressPage extends StatefulWidget {
@@ -10,8 +12,7 @@ class MyProgressPage extends StatefulWidget {
 }
 
 class ProgressPageState extends State<MyProgressPage> {
-  int currentStep = 5;
-
+  int currentStep = 3;
   List<Step> _mySteps() {
     return [
       Step(
@@ -40,7 +41,7 @@ class ProgressPageState extends State<MyProgressPage> {
       ),
       Step(
         title: Text(''),
-        content: Center(child:Text("Puzzle 4 will come here")),
+        content: Test4Page(),
         isActive: (currentStep >= 3),
         state: (currentStep == 3)
             ? StepState.editing
@@ -48,7 +49,7 @@ class ProgressPageState extends State<MyProgressPage> {
       ),
       Step(
         title: Text(''),
-        content: Text("Puzzle 5 will come here"),
+        content: Test5Page(),
         isActive: (currentStep >= 4),
         state: (currentStep == 4)
             ? StepState.editing
@@ -96,6 +97,7 @@ class ProgressPageState extends State<MyProgressPage> {
 
   @override
   Widget build(BuildContext context) {
+    final bool showFab = MediaQuery.of(context).viewInsets.bottom == 0.0;
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.white,
@@ -138,54 +140,71 @@ class ProgressPageState extends State<MyProgressPage> {
         ),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
-      floatingActionButton: Stack(
-        children: <Widget>[
-          Align(
-            alignment: Alignment.bottomRight,
-            child: Padding(
-              padding: EdgeInsets.fromLTRB(0, 0, 20, 0),
-              child: FloatingActionButton.extended(
-                backgroundColor: Colors.white,
-                splashColor: Colors.lightBlueAccent,
-                heroTag: 'NextStep',
-                onPressed: () {
-                  if (currentStep < _mySteps().length - 1) {
-                    setState(() {
-                      currentStep = currentStep + 1;
-                    });
-                  } else {
-                    Navigator.popUntil(context,
-                        ModalRoute.withName(Navigator.defaultRouteName));
-                  }
-                },
-                label: Text("Next", style: TextStyle(color: Colors.blue, fontSize: 16, fontWeight: FontWeight.bold),),
-                shape: RoundedRectangleBorder(side: BorderSide(color: Colors.blue, width: 2), borderRadius: BorderRadius.circular(40)),
-                icon: Icon(Icons.navigate_next, color: Colors.blue,),
-              ),
-            ),
-          ),
-          Align(
-            alignment: Alignment.bottomLeft,
-            child: Padding(
-              padding: EdgeInsets.fromLTRB(20, 0, 0, 0),
-              child: FloatingActionButton(
-                backgroundColor: Colors.white,
-                splashColor: Colors.lightBlueAccent,
-                heroTag: 'PreviousStep',
-                onPressed: () {
-                  if (currentStep > 0) {
-                    onStepCancel();
-                  } else {
-                    Navigator.pop(context);
-                  }
-                },
-                shape: CircleBorder(side: BorderSide(color: Colors.blue, width: 2)),
-                child: Icon(Icons.arrow_back, color: Colors.blue,),
-              ),
-            ),
-          ),
-        ],
-      ),
+      floatingActionButton: (showFab
+          ? Stack(
+              children: <Widget>[
+                Align(
+                  alignment: Alignment.bottomRight,
+                  child: Padding(
+                    padding: EdgeInsets.fromLTRB(0, 0, 20, 0),
+                    child: FloatingActionButton.extended(
+                      backgroundColor: Colors.white,
+                      splashColor: Colors.lightBlueAccent,
+                      heroTag: 'NextStep',
+                      onPressed: () {
+                        if (currentStep < _mySteps().length - 1) {
+                          setState(() {
+                            currentStep = currentStep + 1;
+                          });
+                        } else {
+                          Navigator.popUntil(context,
+                              ModalRoute.withName(Navigator.defaultRouteName));
+                        }
+                      },
+                      label: Text(
+                        "Next",
+                        style: TextStyle(
+                            color: Colors.blue,
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold),
+                      ),
+                      shape: RoundedRectangleBorder(
+                          side: BorderSide(color: Colors.blue, width: 1),
+                          borderRadius: BorderRadius.circular(40)),
+                      icon: Icon(
+                        Icons.navigate_next,
+                        color: Colors.blue,
+                      ),
+                    ),
+                  ),
+                ),
+                Align(
+                  alignment: Alignment.bottomLeft,
+                  child: Padding(
+                    padding: EdgeInsets.fromLTRB(20, 0, 0, 0),
+                    child: FloatingActionButton(
+                      backgroundColor: Colors.white,
+                      splashColor: Colors.lightBlueAccent,
+                      heroTag: 'PreviousStep',
+                      onPressed: () {
+                        if (currentStep > 0) {
+                          onStepCancel();
+                        } else {
+                          Navigator.pop(context);
+                        }
+                      },
+                      shape: CircleBorder(
+                          side: BorderSide(color: Colors.blue, width: 1)),
+                      child: Icon(
+                        Icons.arrow_back,
+                        color: Colors.blue,
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            )
+          : null),
     );
   }
 }
