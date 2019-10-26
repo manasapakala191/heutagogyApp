@@ -33,7 +33,7 @@ class _Test4PageState extends State<Test4Page> {
   }
 
   List<Widget> _builder(Map correct) {
-    for(var x in audioList){
+    for (var x in audioList) {
       print("$x - ${correct[x]}");
     }
     List<Widget> body = [];
@@ -41,32 +41,63 @@ class _Test4PageState extends State<Test4Page> {
     List<Widget> targets = [];
 
     for (String sound in audioList) {
-      drops.add(DraggableAudioButton(audioPath: sound, active: correct[sound]));
+      if (correct[sound]) {
+        drops.add(Container(
+            width: 64,
+            height: 64,
+            decoration: BoxDecoration(
+                color: Color.fromARGB(20, 10, 240, 34),
+                border: Border.all(width: 2),
+                borderRadius: BorderRadius.circular(100)),
+            child: Icon(
+              Icons.check,
+              color: Colors.green,
+              size: 32,
+            )));
+      } else {
+        drops.add(
+            DraggableAudioButton(audioPath: sound, active: correct[sound]));
+      }
       targets.add(
         DragTarget(
           builder:
               (BuildContext context, List<String> incoming, List rejected) {
             if (!correct[sound]) {
               return Container(
-                padding: EdgeInsets.all(10),
-                color: Colors.lightBlue,
-                width: 100,
+                padding: EdgeInsets.only(bottom: 4),
+                width: 140,
                 height: 64,
-                child: Center(child:Text(sound)),
+                alignment: Alignment.center,
+                child: Container(
+                  decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(20),
+                      border: Border.all(color: Colors.blueAccent, width: 2),
+                      color: Colors.lightBlue),
+                  padding: EdgeInsets.all(10),
+                  height: 64,
+                  child: Center(child: Text(sound, style: TextStyle(color: Colors.white, fontSize: 20, fontWeight: FontWeight.bold),)),
+                ),
               );
             } else {
-               return Container(
-                padding: EdgeInsets.all(10),
-                color: Colors.green,
-                width: 100,
+              return Container(
+                padding: EdgeInsets.only(bottom: 4),
+                width: 140,
                 height: 64,
-                child: Center(child: Text("Correct")),
+                child: Container(
+                  decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(20),
+                      border: Border.all(color: Colors.greenAccent, width: 2),
+                      color: Colors.green),
+                  padding: EdgeInsets.all(10),
+                  height: 64,
+                  child: Center(child: Text("Correct", style: TextStyle(fontSize: 20, color: Colors.white, fontWeight: FontWeight.bold),),)
+                ),
               );
             }
           },
           onAccept: (data) {
             setState(() {
-             correct[data] = true; 
+              correct[data] = true;
             });
           },
           onLeave: (data) {},
@@ -90,7 +121,8 @@ class _Test4PageState extends State<Test4Page> {
 class DraggableAudioButton extends StatefulWidget {
   final String audioPath;
   final bool active;
-  DraggableAudioButton({Key key, this.audioPath, this.active}) : super(key: key);
+  DraggableAudioButton({Key key, this.audioPath, this.active})
+      : super(key: key);
   @override
   _DraggableAudioButtonState createState() =>
       _DraggableAudioButtonState(audioPath, active);
@@ -122,18 +154,6 @@ class _DraggableAudioButtonState extends State<DraggableAudioButton>
 
   @override
   Widget build(BuildContext context) {
-    // print("builing $audioPath $enabled");
-    if (enabled){
-      return Container(
-      width: 64,
-      height: 64,
-      decoration: BoxDecoration(
-        color: Color.fromARGB(20, 10, 240, 34),
-        border: Border.all(width: 2),
-        borderRadius: BorderRadius.circular(100)),
-      child: Icon(Icons.check, color: Colors.green, size: 32,)
-    );
-    }
     var aud = Container(
       width: 64,
       height: 64,
@@ -173,8 +193,8 @@ class _DraggableAudioButtonState extends State<DraggableAudioButton>
             width: 72,
             height: 72,
             decoration: BoxDecoration(
-                color: Colors.lightBlueAccent,
-                border: Border.all(width: 2),
+                color: Color.fromARGB(20, 90, 200, 30),
+                border: Border.all(width: 2, color: Colors.black45),
                 borderRadius: BorderRadius.circular(100)),
             child: Icon(Icons.music_note)),
         childWhenDragging: Container(
@@ -188,9 +208,10 @@ class _DraggableAudioButtonState extends State<DraggableAudioButton>
   }
 }
 
-class _InheritedContainer extends InheritedWidget{
+class _InheritedContainer extends InheritedWidget {
   final _DraggableAudioButtonState data;
-  _InheritedContainer({Key key, @required this.data, @required Widget child}) : super(key: key, child: child);
+  _InheritedContainer({Key key, @required this.data, @required Widget child})
+      : super(key: key, child: child);
   @override
   bool updateShouldNotify(InheritedWidget oldWidget) => true;
 }
@@ -204,4 +225,3 @@ List<String> audioList = [
   "pig",
   "parrot"
 ];
-

@@ -1,3 +1,4 @@
+import 'dart:math';
 import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
@@ -35,7 +36,9 @@ class _LessonsPageState extends State<LessonsPage> {
         "Lesson 3: Voculabry",
         "Let\' learn some new words and learn about the synonymns and antonyms. ",
         Colors.redAccent),
-    _Lessons("Lesson 4", "Let\'s readL a story, learn something wonderful and answer the questions.",
+    _Lessons(
+        "Lesson 4",
+        "Let\'s readL a story, learn something wonderful and answer the questions.",
         Colors.lightBlueAccent),
     _Lessons(
         "Lesson 5",
@@ -104,10 +107,9 @@ class _LessonsPageState extends State<LessonsPage> {
       );
     } else {
       return Lesson(
-        this.lessons[index - 1].title,
-        this.lessons[index - 1].description,
-        this.lessons[index - 1].color,
-        () {
+        title: this.lessons[index - 1].title,
+        summary: this.lessons[index - 1].description,
+        func: () {
           if (index >= 0 && index < this._itemCount) {
             if (index == 1) {
               Navigator.push(context,
@@ -126,158 +128,91 @@ class _LessonsPageState extends State<LessonsPage> {
         fontFamily: 'Nunito',
       ),
       home: Scaffold(
-        // appBar: AppBar(
-        //   title: Text(
-        //     "Welcome",
-        //     style: TextStyle(
-        //       color: Colors.white,
-        //       fontSize: 18.0,
-        //     ),
-        //   ),
-        // ),
         body: ListView.builder(
           itemCount: this._itemCount,
           itemBuilder: lessonsBuilder,
         ),
-        // body: NestedScrollView(
-        //   headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
-        //     return <Widget>[
-        //       SliverAppBar(
-        //           expandedHeight: 200.0,
-        //           floating: false,
-        //           pinned: true,
-        //           // backgroundColor: Colors.lightGreenAccent,
-        //           flexibleSpace: LayoutBuilder(
-        //             builder: (BuildContext context, BoxConstraints constraints) {
-        //               top = constraints.biggest.height;
-        //               return FlexibleSpaceBar(
-        //                 centerTitle: true,
-        //                 title: AnimatedOpacity(
-        //                   duration: Duration(milliseconds: 300),
-        //                   opacity: top <= 140.0 ? 1.0 : 0.0,
-        //                   child: Text(
-        //                     "Welcome",
-        //                     style: TextStyle(
-        //                       color: Colors.white,
-        //                       fontSize: 18.0,
-        //                     ),
-        //                   ),
-        //                 ),
-        //                 background: Image.asset(
-        //                   "assets/images/books.jpg",
-        //                   // "https://d3ui957tjb5bqd.cloudfront.net/uploads/images/3/36/36367.pic.jpg?1463997427",
-        //                   // "https://images.unsplash.com/photo-1455884981818-54cb785db6fc?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1890&q=80",
-        //                   // "https://images.unsplash.com/photo-1455884981818-54cb785db6fc?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1890&q=80",
-        //                   // "https://images.unsplash.com/photo-1539795845756-4fadad2905ec?ixlib=rb-1.2.1&auto=format&fit=crop&w=1050&q=80",
-        //                   fit: BoxFit.fill,
-        //                   // alignment: Alignment.topLeft,
-        //                 ),
-        //               );
-        //             },
-        //           )),
-        //     ];
-        //   },
-        //   body: ListView.builder(
-        //     itemCount: this._itemCount,
-        //     itemBuilder: lessonsBuilder,
-        //   ),
-        // ),
       ),
     );
   }
 }
 
-class Lesson extends StatelessWidget {
+class Lesson extends StatefulWidget {
   final String title;
   final String summary;
-  final Color borderColor;
   final Function func;
+  Lesson({Key key, this.title, this.summary, this.func}) : super(key: key);
 
-  Lesson(this.title, this.summary, this.borderColor, this.func);
+  @override
+  State<StatefulWidget> createState() => LessonState(title, summary, func);
+}
+
+class LessonState extends State<Lesson> {
+  String title;
+  String summary;
+  double progress;
+  Function func;
+  @override
+  void initState() {
+    super.initState();
+    progress = Random().nextDouble();
+  }
+
+  LessonState(this.title, this.summary, this.func);
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      elevation: 0,
-      margin: EdgeInsets.symmetric(
-        vertical: 20.0,
-        horizontal: 30.0,
-      ),
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(20.0),
-      ),
-      child: InkWell(
-        onTap: func,
-        borderRadius: BorderRadius.circular(20.0),
-        child: Container(
-          decoration: BoxDecoration(
-            border: Border.all(
-              color: borderColor,
-              width: 2,
-            ),
-            borderRadius: BorderRadius.circular(20.0),
-          ),
-          padding: EdgeInsets.all(20),
-          child: Container(
-            child: Column(
-              children: <Widget>[
-                Text(
+    return Container(
+      padding: EdgeInsets.fromLTRB(20, 20, 20, 0),
+      child: Card(
+        clipBehavior: Clip.antiAlias,
+        elevation: 3,
+        shape: RoundedRectangleBorder(
+          side: BorderSide(
+              color: Colors.blueAccent, style: BorderStyle.solid, width: 1.0),
+          borderRadius: BorderRadius.circular(16.0),
+        ),
+        child: InkWell(
+          splashColor: Color.fromARGB(40, 0, 0, 200),
+          onTap: func,
+          child: Column(
+            mainAxisSize: MainAxisSize.max,
+            children: <Widget>[
+              Padding(
+                padding: EdgeInsets.only(top: 16),
+                child: Text(
                   title,
                   style: TextStyle(
-                    color: Colors.grey[800],
-                    fontWeight: FontWeight.bold,
                     fontSize: 20,
+                    fontFamily: 'Nunito',
                   ),
                 ),
-                Divider(
-                  thickness: 1,
-                  // color: borderColor,
-                ),
-                Text(
+              ),
+              Divider(
+                color: Colors.black87,
+              ),
+              Padding(
+                padding: EdgeInsets.only(top: 10, left: 20, right: 20),
+                child: Text(
                   summary,
                   style: TextStyle(
-                    color: Colors.grey[800],
-                    fontSize: 15,
-                    fontWeight: FontWeight.w500,
+                    fontSize: 16,
+                    fontFamily: 'Nunito',
                   ),
                 ),
-                // Progress(),
-              ],
-            ),
+              ),
+              Padding(
+                padding: EdgeInsets.only(top: 20),
+              ),
+              LinearProgressIndicator(
+                value: progress,
+                backgroundColor: Colors.transparent,
+                valueColor: AlwaysStoppedAnimation<Color>(Colors.blueAccent),
+              ),
+            ],
           ),
         ),
       ),
     );
-  }
+  } 
 }
-
-// class Progress extends StatefulWidget {
-//   @override
-//   _ProgressState createState() => _ProgressState();
-// }
-
-// class _ProgressState extends State<Progress> {
-//   int currentStep = 0;
-
-//   List<Step> _mySteps() {
-//     return [
-//       Step(
-//         title: Text(''),
-//         content: Text("Puzzle 2 will come here"),
-//         isActive: true,
-//         state: (currentStep == 0)
-//             ? StepState.editing
-//             : ((currentStep > 0) ? StepState.complete : StepState.indexed),
-//       ),
-//     ];
-//   }
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return new Stepper(
-//       type: StepperType.horizontal,
-//       currentStep: this.currentStep,
-//       steps: _mySteps(),
-//     );
-//   }
-// }
