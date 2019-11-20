@@ -208,14 +208,6 @@ class _DraggableAudioButtonState extends State<DraggableAudioButton>
   }
 }
 
-class _InheritedContainer extends InheritedWidget {
-  final _DraggableAudioButtonState data;
-  _InheritedContainer({Key key, @required this.data, @required Widget child})
-      : super(key: key, child: child);
-  @override
-  bool updateShouldNotify(InheritedWidget oldWidget) => true;
-}
-
 List<String> audioList = [
   "horse",
   "monkey",

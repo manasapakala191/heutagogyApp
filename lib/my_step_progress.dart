@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:heutagogy/data_models.dart';
 import 'package:heutagogy/tests/test1.dart';
 import 'package:heutagogy/tests/test3.dart';
 import 'package:heutagogy/tests/test4.dart';
@@ -8,17 +9,22 @@ import 'package:heutagogy/tests/test5.dart';
 import 'package:heutagogy/tests/test6.dart';
 
 class MyProgressPage extends StatefulWidget {
+  final LessonData lessonData;
+  MyProgressPage(this.lessonData);
+
   @override
-  ProgressPageState createState() => ProgressPageState();
+  ProgressPageState createState() => ProgressPageState(lessonData);
 }
 
 class ProgressPageState extends State<MyProgressPage> {
+  ProgressPageState(this.lessonData);
+  LessonData lessonData;
   int currentStep = 0;
   List<Step> _mySteps() {
     return [
       Step(
         title: Text(''),
-        content: Test1Page(),
+        content: Test1Page(this.lessonData.test1[0]),
         isActive: (currentStep >= 0),
         state: (currentStep == 0)
             ? StepState.editing

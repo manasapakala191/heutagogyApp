@@ -1,53 +1,30 @@
+import 'dart:convert';
 import 'dart:math';
 import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:heutagogy/data_models.dart';
 import 'lesson_detail.dart';
 
 class LessonsPage extends StatefulWidget {
+  final String data;
+
+  LessonsPage(this.data);
+
   @override
-  _LessonsPageState createState() => _LessonsPageState();
-}
-
-class _Lessons {
-  String title;
-  String description;
-  Color color;
-  Widget nextPage;
-
-  _Lessons(this.title, this.description, this.color);
-
-  _Lessons.withNextPage(
-      this.title, this.description, this.color, this.nextPage);
+  _LessonsPageState createState() => _LessonsPageState(data);
 }
 
 class _LessonsPageState extends State<LessonsPage> {
-  List<_Lessons> lessons = [
-    _Lessons(
-      "Lesson 1: Story",
-      "Let\'s read a story, learn something wonderful and answer the questions.",
-      Colors.orangeAccent,
-    ),
-    _Lessons(
-        "Lesson 2: Grammar",
-        "Let\'s learn about Grammer, Sentences, Tenses, Verbs, Words and many more.",
-        Colors.greenAccent),
-    _Lessons(
-        "Lesson 3: Voculabry",
-        "Let\' learn some new words and learn about the synonymns and antonyms. ",
-        Colors.redAccent),
-    _Lessons(
-        "Lesson 4",
-        "Let\'s readL a story, learn something wonderful and answer the questions.",
-        Colors.lightBlueAccent),
-    _Lessons(
-        "Lesson 5",
-        "Let\'s read a story, learn something wonderful and answer the questions.",
-        Colors.amber),
-  ];
+  _LessonsPageState(String data) {
+    var lessons = json.decode(data);
+    for (var x in lessons) {
+      lessonsData.add(LessonData.fromJSON(x));
+    }
+    print("No of Lessons = ${lessonsData.length}");
+  }
 
-  var top = 0.0;
-  int _itemCount = 6;
+  List<LessonData> lessonsData = [];
 
   Widget lessonsBuilder(BuildContext context, int index) {
     if (index == 0) {
@@ -77,10 +54,8 @@ class _LessonsPageState extends State<LessonsPage> {
                         decoration: InputDecoration(
                           hintText: 'Search',
                           suffixIcon: Icon(Icons.search),
-                          contentPadding:
-                              EdgeInsets.fromLTRB(20.0, 10.0, 0.0, 10.0),
-                          border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(20.0)),
+                          contentPadding: EdgeInsets.fromLTRB(20.0, 10.0, 0.0, 10.0),
+                          border: OutlineInputBorder(borderRadius: BorderRadius.circular(20.0)),
                         ),
                       ),
                     ),
@@ -107,14 +82,14 @@ class _LessonsPageState extends State<LessonsPage> {
       );
     } else {
       return Lesson(
-        title: this.lessons[index - 1].title,
-        summary: this.lessons[index - 1].description,
+        title: this.lessonsData[index - 1].title,
+        summary: this.lessonsData[index - 1].introText,
         func: () {
-          if (index >= 0 && index < this._itemCount) {
-            if (index == 1) {
-              Navigator.push(context,
-                  MaterialPageRoute(builder: (context) => LessonDetail()));
-            }
+          if (index >= 0 && index <= this.lessonsData.length) {
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => LessonDetail(this.lessonsData[index - 1])));
           }
         },
       );
@@ -129,7 +104,7 @@ class _LessonsPageState extends State<LessonsPage> {
       ),
       home: Scaffold(
         body: ListView.builder(
-          itemCount: this._itemCount,
+          itemCount: this.lessonsData.length + 1,
           itemBuilder: lessonsBuilder,
         ),
       ),
@@ -141,6 +116,7 @@ class Lesson extends StatefulWidget {
   final String title;
   final String summary;
   final Function func;
+
   Lesson({Key key, this.title, this.summary, this.func}) : super(key: key);
 
   @override
@@ -152,6 +128,7 @@ class LessonState extends State<Lesson> {
   String summary;
   double progress;
   Function func;
+
   @override
   void initState() {
     super.initState();
@@ -168,8 +145,7 @@ class LessonState extends State<Lesson> {
         clipBehavior: Clip.antiAlias,
         elevation: 3,
         shape: RoundedRectangleBorder(
-          side: BorderSide(
-              color: Colors.blueAccent, style: BorderStyle.solid, width: 1.0),
+          side: BorderSide(color: Colors.blueAccent, style: BorderStyle.solid, width: 1.0),
           borderRadius: BorderRadius.circular(16.0),
         ),
         child: InkWell(
@@ -214,5 +190,5 @@ class LessonState extends State<Lesson> {
         ),
       ),
     );
-  } 
+  }
 }
