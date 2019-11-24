@@ -33,8 +33,7 @@ class ProgressPageState extends State<MyProgressPage> {
       if (z < lessonData.test1.length) {
         mySteps.add(Step(
           title: Text(''),
-          content: Test1Page(lessonData.test1[z],
-              key: ObjectKey(lessonData.test1[z])),
+          content: Test1Page(lessonData.test1[z]),
           isActive: true,
           state: StepState.indexed,
         ));
@@ -44,8 +43,15 @@ class ProgressPageState extends State<MyProgressPage> {
           title: Text(''),
           content: new Test3Page(
             lessonData.test3[z],
-            key: ObjectKey(lessonData.test3[z]),
           ),
+          isActive: true,
+          state: StepState.indexed,
+        ));
+      }
+      if (z < lessonData.test4.length) {
+        mySteps.add(Step(
+          title: Text(''),
+          content: Test4Page(lessonData.test4[z]),
           isActive: true,
           state: StepState.indexed,
         ));
@@ -54,17 +60,10 @@ class ProgressPageState extends State<MyProgressPage> {
 
     mySteps.add(Step(
       title: Text(''),
-      content: Test4Page(lessonData.test4[0]),
+      content: Test5Page(),
       isActive: true,
       state: StepState.indexed,
     ));
-
-    // mySteps.add(Step(
-    //   title: Text(''),
-    //   content: Test5Page(),
-    //   isActive: true,
-    //   state: StepState.indexed,
-    // ));
   }
 
   LessonData lessonData;
