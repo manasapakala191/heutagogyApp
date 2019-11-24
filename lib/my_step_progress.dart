@@ -29,28 +29,28 @@ class ProgressPageState extends State<MyProgressPage> {
       lessonData.test2.length,
       lessonData.test3.length,
     ].reduce(max);
-    // for (int z = 0; z < maxLength; z++) {
-    //   if (z < lessonData.test1.length) {
-    //     mySteps.add(Step(
-    //       title: Text(''),
-    //       content: Test1Page(lessonData.test1[z],
-    //           key: ObjectKey(lessonData.test1[z])),
-    //       isActive: true,
-    //       state: StepState.indexed,
-    //     ));
-    //   }
-    //   if (z < lessonData.test3.length) {
-    //     mySteps.add(Step(
-    //       title: Text(''),
-    //       content: new Test3Page(
-    //         lessonData.test3[z],
-    //         key: ObjectKey(lessonData.test3[z]),
-    //       ),
-    //       isActive: true,
-    //       state: StepState.indexed,
-    //     ));
-    //   }
-    // }
+    for (int z = 0; z < maxLength; z++) {
+      if (z < lessonData.test1.length) {
+        mySteps.add(Step(
+          title: Text(''),
+          content: Test1Page(lessonData.test1[z],
+              key: ObjectKey(lessonData.test1[z])),
+          isActive: true,
+          state: StepState.indexed,
+        ));
+      }
+      if (z < lessonData.test3.length) {
+        mySteps.add(Step(
+          title: Text(''),
+          content: new Test3Page(
+            lessonData.test3[z],
+            key: ObjectKey(lessonData.test3[z]),
+          ),
+          isActive: true,
+          state: StepState.indexed,
+        ));
+      }
+    }
 
     mySteps.add(Step(
       title: Text(''),
