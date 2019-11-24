@@ -129,7 +129,7 @@ class LessonDetailState extends State<LessonDetail> {
         backgroundColor: Colors.white,
         title: Center(
           child: Text(
-            'Lesson 1: Story',
+            lessonData.title,
             style: TextStyle(color: Colors.black),
           ),
         ),

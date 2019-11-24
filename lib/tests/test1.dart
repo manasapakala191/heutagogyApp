@@ -6,7 +6,7 @@ import 'animated_button.dart';
 
 class Test1Page extends StatefulWidget {
   final Test1Data test1data;
-  Test1Page(this.test1data);
+  Test1Page(this.test1data, {Key key}) : super(key: key);
 
   @override
   State<StatefulWidget> createState() => Test1PageState(test1data);

@@ -4,7 +4,6 @@ import 'package:http/http.dart' as http;
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'data_models.dart';
 import 'json_read_write.dart';
 
 void main() {
@@ -19,12 +18,10 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   String data;
-  LessonData abcd;
   final JsonEncoder jsonEncoder = new JsonEncoder.withIndent('    ');
   @override
   void initState() {
     data = "";
-    abcd = LessonData();
     super.initState();
   }
 
@@ -35,8 +32,7 @@ class _MyHomePageState extends State<MyHomePage> {
         title: Text("Hello"),
       ),
       body: SingleChildScrollView(
-        child: Container(
-          padding: EdgeInsets.fromLTRB(20, 20, 20, 50),
+        child: Center(
           child: Column(
             children: <Widget>[
               (data == "") ? Text("Welcome") : Text(""),
@@ -62,11 +58,11 @@ class _MyHomePageState extends State<MyHomePage> {
     if (loaded != "Nothing saved yet!") {
       setState(() {
         data = loaded;
-      });
+      }); 
     }
     if (data == "") {
       final response =
-          await http.get("https://1ashutosh.pythonanywhere.com/api/lesson/1");
+          await http.get("https://1ashutosh.pythonanywhere.com/api/lessons");
       if (response.statusCode == 200) {
         String body = response.body;
         setState(() {
@@ -79,7 +75,7 @@ class _MyHomePageState extends State<MyHomePage> {
         throw Exception("Unable to load!");
       }
     } else {
-      Navigator.push(
+      Navigator.pushReplacement(
           context, MaterialPageRoute(builder: (context) => LessonsPage(data)));
     }
   }

@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'dart:math';
 
+import 'package:heutagogy/data_models.dart';
+
 class MyNumber<T, S> {
   T first;
   S second;
@@ -10,12 +12,16 @@ class MyNumber<T, S> {
 }
 
 class Test3Page extends StatefulWidget {
-  Test3Page({Key key}) : super(key: key);
+  final Test3Data test3data;
+  Test3Page(this.test3data, {Key key}) : super(key: key);
 
-  _Test3PageState createState() => _Test3PageState();
+  _Test3PageState createState() => _Test3PageState(test3data);
 }
 
 class _Test3PageState extends State<Test3Page> {
+  Test3Data test3data;
+  _Test3PageState(this.test3data);
+
   @override
   void initState() {
     super.initState();
@@ -24,10 +30,7 @@ class _Test3PageState extends State<Test3Page> {
   @override
   Widget build(BuildContext context) {
     final pageController = PageController(initialPage: 0);
-    List<int> nums1 = [6, 18, 12, 4, 20];
-    List<int> nums2 = [10, 11, 7, 1, 19];
-    List<int> nums3 = [11, 17, 9, 5, 18];
-    List<int> nums4 = [3, 16, 2, 19, 8];
+
 
     return Center(
       child: Container(
@@ -35,49 +38,22 @@ class _Test3PageState extends State<Test3Page> {
         child: PageView(
           controller: pageController,
           scrollDirection: Axis.vertical,
-          children: <Widget>[
-            NumberPuzzle(
-              key: PageStorageKey<String>(String.fromCharCodes(nums1)),
-              numbers: nums1,
-            ),
-            NumberPuzzle(
-              key: PageStorageKey<String>(String.fromCharCodes(nums2)),
-              numbers: nums2,
-            ),
-            NumberPuzzle(
-              key: PageStorageKey<String>(String.fromCharCodes(nums3)),
-              numbers: nums3,
-            ),
-            NumberPuzzle(
-              key: PageStorageKey<String>(String.fromCharCodes(nums4)),
-              numbers: nums4,
-            )
-          ],
+          children: _buildChildren()
         ),
       ),
     );
-  //
-    // return SafeArea(
-    //   child: Column(
-    //     children: <Widget>[
-    //       NumberPuzzle(
-    //         numbers: nums,
-    //       ),
-    //       Padding(
-    //         padding: EdgeInsets.only(top: 30),
-    //       ),
-    //       NumberPuzzle(
-    //         numbers: [2, 54, 6, 32, 61, 8],
-    //       ),
-    //       Padding(
-    //         padding: EdgeInsets.only(top: 30),
-    //       ),
-    //       NumberPuzzle(
-    //         numbers: [3, 65, 2, 12],
-    //       ),
-    //     ],
-    //   ),
-    // );
+  }
+  _buildChildren(){
+    List<Widget> numberPuzzles = [];
+    for (var x in test3data.numberLists){
+      numberPuzzles.add(
+          NumberPuzzle(
+//            key: PageStorageKey<String>(String.fromCharCodes(nu)),
+            numbers: x.numbers,
+          )
+      );
+    }
+    return numberPuzzles;
   }
 }
 

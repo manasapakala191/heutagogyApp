@@ -6,18 +6,32 @@ import 'package:flutter/rendering.dart';
 import 'package:heutagogy/data_models.dart';
 import 'lesson_detail.dart';
 
-class LessonsPage extends StatefulWidget {
+class LessonsPage extends StatelessWidget{
+  final String data;
+  LessonsPage(this.data);
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      theme: ThemeData(fontFamily: 'Nunito'),
+      home: _LessonsPage(data),
+    );
+  }
+}
+
+
+
+class _LessonsPage extends StatefulWidget {
   final String data;
 
-  LessonsPage(this.data);
+  _LessonsPage(this.data);
 
   @override
   _LessonsPageState createState() => _LessonsPageState(data);
 }
 
-class _LessonsPageState extends State<LessonsPage> {
+class _LessonsPageState extends State<_LessonsPage> {
   _LessonsPageState(String data) {
-    var lessons = json.decode(data);
+    var lessons = json.decode(utf8.decode(data.codeUnits));
     for (var x in lessons) {
       lessonsData.add(LessonData.fromJSON(x));
     }

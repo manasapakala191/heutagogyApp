@@ -7,9 +7,11 @@ import 'package:heutagogy/tests/test3.dart';
 import 'package:heutagogy/tests/test4.dart';
 import 'package:heutagogy/tests/test5.dart';
 import 'package:heutagogy/tests/test6.dart';
+import 'dart:math';
 
 class MyProgressPage extends StatefulWidget {
   final LessonData lessonData;
+
   MyProgressPage(this.lessonData);
 
   @override
@@ -17,83 +19,56 @@ class MyProgressPage extends StatefulWidget {
 }
 
 class ProgressPageState extends State<MyProgressPage> {
-  ProgressPageState(this.lessonData);
+  List<Step> mySteps;
+
+  ProgressPageState(LessonData lessonData) {
+    this.mySteps = [];
+    int i = 0;
+    int maxLength = [
+      lessonData.test1.length,
+      lessonData.test2.length,
+      lessonData.test3.length,
+    ].reduce(max);
+    // for (int z = 0; z < maxLength; z++) {
+    //   if (z < lessonData.test1.length) {
+    //     mySteps.add(Step(
+    //       title: Text(''),
+    //       content: Test1Page(lessonData.test1[z],
+    //           key: ObjectKey(lessonData.test1[z])),
+    //       isActive: true,
+    //       state: StepState.indexed,
+    //     ));
+    //   }
+    //   if (z < lessonData.test3.length) {
+    //     mySteps.add(Step(
+    //       title: Text(''),
+    //       content: new Test3Page(
+    //         lessonData.test3[z],
+    //         key: ObjectKey(lessonData.test3[z]),
+    //       ),
+    //       isActive: true,
+    //       state: StepState.indexed,
+    //     ));
+    //   }
+    // }
+
+    mySteps.add(Step(
+      title: Text(''),
+      content: Test4Page(lessonData.test4[0]),
+      isActive: true,
+      state: StepState.indexed,
+    ));
+
+    // mySteps.add(Step(
+    //   title: Text(''),
+    //   content: Test5Page(),
+    //   isActive: true,
+    //   state: StepState.indexed,
+    // ));
+  }
+
   LessonData lessonData;
   int currentStep = 0;
-  List<Step> _mySteps() {
-    return [
-      Step(
-        title: Text(''),
-        content: Test1Page(this.lessonData.test1[0]),
-        isActive: (currentStep >= 0),
-        state: (currentStep == 0)
-            ? StepState.editing
-            : ((currentStep > 0) ? StepState.complete : StepState.indexed),
-      ),
-      Step(
-        title: Text(''),
-        content: Text("Puzzle 2 will come here"),
-        isActive: (currentStep >= 1),
-        state: (currentStep == 1)
-            ? StepState.editing
-            : ((currentStep > 1) ? StepState.complete : StepState.indexed),
-      ),
-      Step(
-        title: Text(''),
-        content: Test3Page(),
-        isActive: (currentStep >= 2),
-        state: (currentStep == 2)
-            ? StepState.editing
-            : ((currentStep > 2) ? StepState.complete : StepState.indexed),
-      ),
-      Step(
-        title: Text(''),
-        content: Test4Page(),
-        isActive: (currentStep >= 3),
-        state: (currentStep == 3)
-            ? StepState.editing
-            : ((currentStep > 3) ? StepState.complete : StepState.indexed),
-      ),
-      Step(
-        title: Text(''),
-        content: Test5Page(),
-        isActive: (currentStep >= 4),
-        state: (currentStep == 4)
-            ? StepState.editing
-            : ((currentStep > 4) ? StepState.complete : StepState.indexed),
-      ),
-      Step(
-        title: Text(''),
-        content: Test6Page(),
-        isActive: (currentStep >= 5),
-        state: (currentStep == 5)
-            ? StepState.editing
-            : ((currentStep > 5) ? StepState.complete : StepState.indexed),
-      ),
-    ];
-  }
-
-  onStepContinue() {
-    setState(() {
-      if (currentStep < _mySteps().length - 1) {
-        currentStep = currentStep + 1;
-      } else {
-        currentStep = 0;
-      }
-    });
-    print("On Step Continue: " + currentStep.toString());
-  }
-
-  onStepCancel() {
-    setState(() {
-      if (currentStep > 0) {
-        currentStep = currentStep - 1;
-      } else {
-        currentStep = 0;
-      }
-    });
-    print("On Step Cancel: " + currentStep.toString());
-  }
 
   onStepTapped(step) {
     setState(() {
@@ -130,7 +105,7 @@ class ProgressPageState extends State<MyProgressPage> {
           type: StepperType.horizontal,
           currentStep: this.currentStep,
           onStepTapped: onStepTapped,
-          steps: _mySteps(),
+          steps: mySteps,
           controlsBuilder: (BuildContext context,
               {VoidCallback onStepContinue, VoidCallback onStepCancel}) {
             return Row(
@@ -159,7 +134,7 @@ class ProgressPageState extends State<MyProgressPage> {
                       splashColor: Colors.lightBlueAccent,
                       heroTag: 'NextStep',
                       onPressed: () {
-                        if (currentStep < _mySteps().length - 1) {
+                        if (currentStep < mySteps.length - 1) {
                           setState(() {
                             currentStep = currentStep + 1;
                           });
@@ -195,7 +170,9 @@ class ProgressPageState extends State<MyProgressPage> {
                       heroTag: 'PreviousStep',
                       onPressed: () {
                         if (currentStep > 0) {
-                          onStepCancel();
+                          setState(() {
+                            currentStep = currentStep - 1;
+                          });
                         } else {
                           Navigator.pop(context);
                         }

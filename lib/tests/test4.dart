@@ -3,22 +3,25 @@ import 'dart:math';
 import 'package:audioplayers/audio_cache.dart';
 import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
+import 'package:heutagogy/data_models.dart';
 
 class Test4Page extends StatefulWidget {
-  Test4Page({Key key}) : super(key: key);
+  Test4Data test4data;
+  Test4Page(this.test4data, {Key key}) : super(key: key);
 
   @override
-  _Test4PageState createState() => _Test4PageState();
+  _Test4PageState createState() => _Test4PageState(test4data);
 }
 
 class _Test4PageState extends State<Test4Page> {
-  var correct = Map();
-  @override
-  void initState() {
-    for (var sound in audioList) {
-      correct[sound] = false;
+  Test4Data test4data;
+  var correct;
+  _Test4PageState(Test4Data data) {
+    this.test4data = data;
+    this.correct = Map();
+    for (var audio in this.test4data.audios) {
+      correct[audio.description] = false;
     }
-    super.initState();
   }
 
   @override
@@ -75,7 +78,14 @@ class _Test4PageState extends State<Test4Page> {
                       color: Colors.lightBlue),
                   padding: EdgeInsets.all(10),
                   height: 64,
-                  child: Center(child: Text(sound, style: TextStyle(color: Colors.white, fontSize: 20, fontWeight: FontWeight.bold),)),
+                  child: Center(
+                      child: Text(
+                    sound,
+                    style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold),
+                  )),
                 ),
               );
             } else {
@@ -84,14 +94,21 @@ class _Test4PageState extends State<Test4Page> {
                 width: 140,
                 height: 64,
                 child: Container(
-                  decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(20),
-                      border: Border.all(color: Colors.greenAccent, width: 2),
-                      color: Colors.green),
-                  padding: EdgeInsets.all(10),
-                  height: 64,
-                  child: Center(child: Text("Correct", style: TextStyle(fontSize: 20, color: Colors.white, fontWeight: FontWeight.bold),),)
-                ),
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(20),
+                        border: Border.all(color: Colors.greenAccent, width: 2),
+                        color: Colors.green),
+                    padding: EdgeInsets.all(10),
+                    height: 64,
+                    child: Center(
+                      child: Text(
+                        "Correct",
+                        style: TextStyle(
+                            fontSize: 20,
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold),
+                      ),
+                    )),
               );
             }
           },
