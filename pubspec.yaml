@@ -28,6 +28,9 @@ dependencies:
   audioplayers: ^0.13.2
   http: ^0.12.0+2
   path_provider: ^1.4.4
+  cached_network_image: ^1.1.3
+  
+
 
 dev_dependencies:
   flutter_test:
@@ -87,13 +90,13 @@ flutter:
     - assets/images/pb6/jackfruit.png
 
   # Assets (Sounds)
-    - assets/audio/parrot.wav
-    - assets/audio/monkey.wav
-    - assets/audio/horse.wav
-    - assets/audio/dog.wav
-    - assets/audio/cat.wav
-    - assets/audio/pig.wav
-    - assets/audio/cuckoo.wav
+    - assets/audio/parrot.mp3
+    - assets/audio/monkey.mp3
+    - assets/audio/horse.mp3
+    - assets/audio/dog.mp3
+    - assets/audio/cat.mp3
+    - assets/audio/pig.mp3
+    - assets/audio/cuckoo.mp3
     
   # Fonts
   fonts:

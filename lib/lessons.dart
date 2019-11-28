@@ -6,7 +6,7 @@ import 'package:flutter/rendering.dart';
 import 'package:heutagogy/data_models.dart';
 import 'lesson_detail.dart';
 
-class LessonsPage extends StatelessWidget{
+class LessonsPage extends StatelessWidget {
   final String data;
   LessonsPage(this.data);
   @override
@@ -17,8 +17,6 @@ class LessonsPage extends StatelessWidget{
     );
   }
 }
-
-
 
 class _LessonsPage extends StatefulWidget {
   final String data;
@@ -68,8 +66,10 @@ class _LessonsPageState extends State<_LessonsPage> {
                         decoration: InputDecoration(
                           hintText: 'Search',
                           suffixIcon: Icon(Icons.search),
-                          contentPadding: EdgeInsets.fromLTRB(20.0, 10.0, 0.0, 10.0),
-                          border: OutlineInputBorder(borderRadius: BorderRadius.circular(20.0)),
+                          contentPadding:
+                              EdgeInsets.fromLTRB(20.0, 10.0, 0.0, 10.0),
+                          border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(20.0)),
                         ),
                       ),
                     ),
@@ -103,7 +103,10 @@ class _LessonsPageState extends State<_LessonsPage> {
             Navigator.push(
                 context,
                 MaterialPageRoute(
-                    builder: (context) => LessonDetail(this.lessonsData[index - 1])));
+                    builder: (context) => LessonDetail(
+                          this.lessonsData[index - 1],
+                          id: index,
+                        )));
           }
         },
       );
@@ -159,7 +162,8 @@ class LessonState extends State<Lesson> {
         clipBehavior: Clip.antiAlias,
         elevation: 3,
         shape: RoundedRectangleBorder(
-          side: BorderSide(color: Colors.blueAccent, style: BorderStyle.solid, width: 1.0),
+          side: BorderSide(
+              color: Colors.blueAccent, style: BorderStyle.solid, width: 1.0),
           borderRadius: BorderRadius.circular(16.0),
         ),
         child: InkWell(

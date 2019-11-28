@@ -5,6 +5,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'json_read_write.dart';
+import 'my_testing_page.dart';
 
 void main() {
   runApp(MyApp());
@@ -87,7 +88,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Heutagogy',
       theme: ThemeData(fontFamily: 'Quicksand'),
-      home: MyHomePage(),
+      home: Page1(),
     );
   }
 }

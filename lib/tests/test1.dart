@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:heutagogy/data_models.dart';
@@ -6,6 +7,7 @@ import 'animated_button.dart';
 
 class Test1Page extends StatefulWidget {
   final Test1Data test1data;
+
   Test1Page(this.test1data, {Key key}) : super(key: key);
 
   @override
@@ -14,7 +16,9 @@ class Test1Page extends StatefulWidget {
 
 class Test1PageState extends State<Test1Page> {
   Test1Data data;
+
   Test1PageState(this.data);
+
   @override
   void initState() {
     super.initState();
@@ -47,7 +51,9 @@ class Test1PageState extends State<Test1Page> {
 
 class QuestionWidget extends StatefulWidget {
   final QuestionData question;
+
   QuestionWidget({this.question});
+
   @override
   State<StatefulWidget> createState() => QuestionWidgetState(question);
 }
@@ -69,6 +75,13 @@ class QuestionWidgetState extends State<StatefulWidget> {
               "Q. ${question.text}",
               style: TextStyle(fontSize: 18),
             )),
+            (question.image != "")
+                ? CachedNetworkImage(
+                    imageUrl: question.image,
+                    width: 256,
+                    height: 256,
+                  )
+                : Container(),
             Padding(
               padding: EdgeInsets.only(top: 10),
             ),

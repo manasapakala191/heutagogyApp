@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:heutagogy/data_models.dart';
 
 class Test4Page extends StatefulWidget {
-  Test4Data test4data;
+  final Test4Data test4data;
   Test4Page(this.test4data, {Key key}) : super(key: key);
 
   @override
@@ -16,7 +16,9 @@ class Test4Page extends StatefulWidget {
 class _Test4PageState extends State<Test4Page> {
   Test4Data test4data;
   var correct;
+  var seed;
   _Test4PageState(Test4Data data) {
+    seed = Random().nextInt(100);
     this.test4data = data;
     this.correct = Map();
     for (var audio in this.test4data.audios) {
@@ -29,22 +31,19 @@ class _Test4PageState extends State<Test4Page> {
     return Container(
       child: Container(
         child: Column(
-          children: _builder(correct),
+          children: _builder(test4data, correct, seed),
         ),
       ),
     );
   }
 
-  List<Widget> _builder(Map correct) {
-    for (var x in audioList) {
-      print("$x - ${correct[x]}");
-    }
+  List<Widget> _builder(Test4Data test4data, Map correct, var seed) {
     List<Widget> body = [];
     List<Widget> drops = [];
     List<Widget> targets = [];
 
-    for (String sound in audioList) {
-      if (correct[sound]) {
+    for (var sound in test4data.audios) {
+      if (correct[sound.description]) {
         drops.add(Container(
             width: 64,
             height: 64,
@@ -59,13 +58,13 @@ class _Test4PageState extends State<Test4Page> {
             )));
       } else {
         drops.add(
-            DraggableAudioButton(audioPath: sound, active: correct[sound]));
+            DraggableAudioButton(audioPath: sound.description, active: correct[sound.description]));
       }
       targets.add(
         DragTarget(
           builder:
               (BuildContext context, List<String> incoming, List rejected) {
-            if (!correct[sound]) {
+            if (!correct[sound.description]) {
               return Container(
                 padding: EdgeInsets.only(bottom: 4),
                 width: 140,
@@ -74,13 +73,13 @@ class _Test4PageState extends State<Test4Page> {
                 child: Container(
                   decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(20),
-                      border: Border.all(color: Colors.blueAccent, width: 2),
-                      color: Colors.lightBlue),
+                      border: Border.all(color: Colors.lightBlue, width: 2),
+                      color: Colors.blueAccent),
                   padding: EdgeInsets.all(10),
                   height: 64,
                   child: Center(
                       child: Text(
-                    sound,
+                    sound.description,
                     style: TextStyle(
                         color: Colors.white,
                         fontSize: 20,
@@ -118,12 +117,12 @@ class _Test4PageState extends State<Test4Page> {
             });
           },
           onLeave: (data) {},
-          onWillAccept: (data) => data == sound,
+          onWillAccept: (data) => data == sound.description,
         ),
       );
     }
-    targets..shuffle(Random(2));
-    for (int i = 0; i < audioList.length; i++) {
+    targets..shuffle(Random(seed));
+    for (int i = 0; i < test4data.audios.length; i++) {
       body.add(Padding(
           padding: EdgeInsets.only(top: 3),
           child: Row(
@@ -157,7 +156,7 @@ class _DraggableAudioButtonState extends State<DraggableAudioButton>
   void initState() {
     super.initState();
     audioCache = AudioCache(prefix: 'audio/');
-    audioCache.load("$audioPath.wav");
+    audioCache.load("$audioPath.mp3");
     playing = false;
     _controller =
         AnimationController(duration: Duration(milliseconds: 200), vsync: this);
@@ -193,7 +192,7 @@ class _DraggableAudioButtonState extends State<DraggableAudioButton>
                   });
                   _controller.forward();
                   AudioPlayer audioPlayer =
-                      await audioCache.play("$audioPath.wav");
+                      await audioCache.play("$audioPath.mp3");
                   audioPlayer.onPlayerCompletion.listen((event) {
                     setState(() {
                       playing = false;
@@ -224,13 +223,3 @@ class _DraggableAudioButtonState extends State<DraggableAudioButton>
         child: aud);
   }
 }
-
-List<String> audioList = [
-  "horse",
-  "monkey",
-  "dog",
-  "cat",
-  "cuckoo",
-  "pig",
-  "parrot"
-];

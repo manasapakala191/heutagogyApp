@@ -31,10 +31,10 @@ class LessonData {
     for (var x in jsonData['test3']) {
       test3DataList.add(Test3Data.fromJSON(x));
     }
-    // List<Test4Data> test4DataList = [];
-    // for (var x in jsonData['test4']) {
-    //   test4DataList.add(Test4Data.fromJSON(x));
-    // }
+    List<Test4Data> test4DataList = [];
+    for (var x in jsonData['test4']) {
+      test4DataList.add(Test4Data.fromJSON(x));
+    }
     // List<Test6Data> test6DataList = [];
     // for (var x in jsonData['test6']) {
     //   test6DataList.add(Test6Data.fromJSON(x));
@@ -46,7 +46,7 @@ class LessonData {
       test1: test1DataList,
       test2: test2DataList,
       test3: test3DataList,
-      // test4: test4DataList,
+      test4: test4DataList,
       // test6: test6DataList,
     );
   }
@@ -65,16 +65,20 @@ class ChoiceData {
 
 class QuestionData {
   String text;
+  String image;
   List<ChoiceData> options;
 
-  QuestionData({this.text, this.options});
+  QuestionData({this.text, this.options, this.image});
 
   factory QuestionData.fromJSON(Map<String, dynamic> jsonData) {
     List<ChoiceData> opts = [];
     for (var x in jsonData['options']) {
       opts.add(ChoiceData.fromJson(x));
     }
-    return QuestionData(text: jsonData['text'], options: opts);
+    return QuestionData(
+        text: jsonData['text'],
+        options: opts,
+        image: (jsonData["image"] != null) ? jsonData["image"] : "");
   }
 }
 
@@ -100,8 +104,7 @@ class PicturePairData {
   PicturePairData({this.picture, this.description});
 
   factory PicturePairData.fromJSON(Map<String, dynamic> jsonData) {
-    return PicturePairData(
-        picture: jsonData['picture'], description: jsonData['description']);
+    return PicturePairData(picture: jsonData['picture'], description: jsonData['description']);
   }
 }
 
@@ -156,8 +159,7 @@ class AudioPairData {
   AudioPairData({this.audio, this.description});
 
   factory AudioPairData.fromJSON(Map<String, dynamic> jsonData) {
-    return AudioPairData(
-        audio: jsonData['audio'], description: jsonData['description']);
+    return AudioPairData(audio: jsonData['audio'], description: jsonData['description']);
   }
 }
 
@@ -185,9 +187,7 @@ class ImageChoiceData {
 
   factory ImageChoiceData.fromJson(Map<String, dynamic> jsonData) {
     return ImageChoiceData(
-        text: jsonData['text'],
-        picture: jsonData['image'],
-        correct: jsonData['correct']);
+        text: jsonData['text'], picture: jsonData['image'], correct: jsonData['correct']);
   }
 }
 
@@ -228,8 +228,7 @@ class PictureTextInput {
   PictureTextInput({this.picture, this.correctText});
 
   factory PictureTextInput.fromJSON(Map<String, dynamic> jsonData) {
-    return PictureTextInput(
-        picture: jsonData['picture'], correctText: jsonData['correct_text']);
+    return PictureTextInput(picture: jsonData['picture'], correctText: jsonData['correct_text']);
   }
 }
 

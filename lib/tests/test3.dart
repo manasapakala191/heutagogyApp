@@ -169,7 +169,7 @@ class _NumberPuzzleSubState extends State<NumberPuzzleSub> {
               height: 50,
               decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(16),
-                  border: Border.all(color: Colors.blue)),
+                  border: Border.all(color: Colors.blueAccent)),
               child: Center(
                 child: Text(
                   "?",
@@ -221,7 +221,7 @@ class _NumberPuzzleSubState extends State<NumberPuzzleSub> {
         height: 50,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(16),
-          color: Colors.blue,
+          color: Colors.blueAccent,
         ),
         child: Center(
             child: Text(
@@ -240,7 +240,7 @@ class _NumberPuzzleSubState extends State<NumberPuzzleSub> {
                 height: 50,
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(16),
-                  border: Border.all(color: Colors.blue),
+                  border: Border.all(color: Colors.lightBlueAccent),
                 ),
                 child: AnimatedOpacity(
                     opacity: 0.5, duration: Duration(milliseconds: 200), child: null),
@@ -258,7 +258,7 @@ class _NumberPuzzleSubState extends State<NumberPuzzleSub> {
                       height: 50,
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(16),
-                        color: Colors.blue,
+                        color: Colors.lightBlueAccent,
                       ),
                       child: Center(
                           child: Text(
