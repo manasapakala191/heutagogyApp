@@ -11,7 +11,9 @@ import 'package:heutagogy/lesson_3_tests.dart';
 class LessonDetail extends StatefulWidget {
   final LessonData lessonData;
   final int id;
+
   LessonDetail(this.lessonData, {this.id});
+
   @override
   State<StatefulWidget> createState() => LessonDetailState(lessonData, id: id);
 }
@@ -21,6 +23,7 @@ enum TtsState { playing, stopped }
 class LessonDetailState extends State<LessonDetail> {
   LessonData lessonData;
   int id;
+
   LessonDetailState(this.lessonData, {this.id});
 
   // Related to TTS
@@ -132,9 +135,15 @@ class LessonDetailState extends State<LessonDetail> {
         ),
         backgroundColor: Colors.white,
         title: Center(
-          child: Text(
-            lessonData.title,
-            style: TextStyle(color: Colors.black),
+          child: Hero(
+            tag: "lesson${lessonData.title}",
+            child: Material(
+              color: Colors.transparent,
+              child: Text(
+                lessonData.title,
+                style: TextStyle(color: Colors.black, fontSize: 20),
+              ),
+            ),
           ),
         ),
         actions: <Widget>[
@@ -173,21 +182,15 @@ class LessonDetailState extends State<LessonDetail> {
           _stop();
           if (id == 1) {
             Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (context) => MyLesson1Tests(lessonData)));
+                context, MaterialPageRoute(builder: (context) => MyLesson1Tests(lessonData)));
           }
           if (id == 2) {
             Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (context) => MyLesson2Tests(lessonData)));
+                context, MaterialPageRoute(builder: (context) => MyLesson2Tests(lessonData)));
           }
           if (id == 3) {
             Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (context) => MyLesson3Tests(lessonData)));
+                context, MaterialPageRoute(builder: (context) => MyLesson3Tests(lessonData)));
           }
         },
         highlightElevation: 0,

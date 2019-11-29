@@ -86,16 +86,17 @@ class QuestionData {
 
 class Test1Data {
   String name;
+  String heading;
   List<QuestionData> questions;
 
-  Test1Data({this.name, this.questions});
+  Test1Data({this.name, this.questions, this.heading});
 
   factory Test1Data.fromJSON(Map<String, dynamic> jsonData) {
     List<QuestionData> ques = [];
     for (var q in jsonData['questions']) {
       ques.add(QuestionData.fromJSON(q));
     }
-    return Test1Data(name: jsonData['name'], questions: ques);
+    return Test1Data(name: jsonData['name'], questions: ques, heading: jsonData['heading']);
   }
 }
 

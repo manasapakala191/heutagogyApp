@@ -19,9 +19,11 @@ class MyLesson1Tests extends StatefulWidget {
 }
 
 class Lesson1TestsState extends State<MyLesson1Tests> {
+  LessonData lessonData;
   List<Step> mySteps;
 
-  Lesson1TestsState(LessonData lessonData) {
+  Lesson1TestsState(LessonData data){
+    this.lessonData = data;
     this.mySteps = [];
     int maxLength = [
       lessonData.test1.length,
@@ -82,7 +84,6 @@ class Lesson1TestsState extends State<MyLesson1Tests> {
 //    ));
   }
 
-  LessonData lessonData;
   int currentStep = 0;
 
   onStepTapped(step) {

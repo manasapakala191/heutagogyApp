@@ -18,7 +18,7 @@ class Page1 extends StatelessWidget {
       theme: ThemeData(backgroundColor: Colors.white),
       home: Scaffold(
         appBar: AppBar(),
-        body: Test8Page(),
+        body: Test8Page([100,200,300,400,500,600,700,800,900,1000], [200,300,600,800,900]),
       ),
     );
   }

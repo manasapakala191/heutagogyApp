@@ -146,62 +146,66 @@ class LessonState extends State<Lesson> {
   void initState() {
     super.initState();
     progress = Random().nextDouble();
-  } 
+  }
 
   LessonState(this.title, this.summary, this.func);
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.fromLTRB(20, 20, 20, 0),
-      child: Card(
-        clipBehavior: Clip.antiAlias,
-        elevation: 3,
-        shape: RoundedRectangleBorder(
-          side: BorderSide(color: Colors.blueAccent, style: BorderStyle.solid, width: 1.0),
-          borderRadius: BorderRadius.circular(16.0),
-        ),
-        child: InkWell(
-          splashColor: Color.fromARGB(40, 0, 0, 200),
-          onTap: func,
-          child: Column(
-            mainAxisSize: MainAxisSize.max,
-            children: <Widget>[
-              Padding(
-                padding: EdgeInsets.only(top: 16),
-                child: Text(
-                  title,
-                  style: TextStyle(
-                    fontSize: 20,
-                    fontFamily: 'Nunito',
+        padding: EdgeInsets.fromLTRB(20, 20, 20, 0),
+        child: Card(
+            clipBehavior: Clip.antiAlias,
+            elevation: 3,
+            shape: RoundedRectangleBorder(
+              side: BorderSide(color: Colors.blueAccent, style: BorderStyle.solid, width: 1.0),
+              borderRadius: BorderRadius.circular(16.0),
+            ),
+            child: InkWell(
+              splashColor: Color.fromARGB(40, 0, 0, 200),
+              onTap: func,
+              child: Column(
+                mainAxisSize: MainAxisSize.max,
+                children: <Widget>[
+                  Padding(
+                    padding: EdgeInsets.only(top: 16),
+                    child: Hero(
+                      tag: "lesson$title",
+                      child: Material(
+                        color: Colors.transparent,
+                        child: Text(
+                          title,
+                          style: TextStyle(
+                            fontSize: 20,
+                            fontFamily: 'Nunito',
+                          ),
+                        ),
+                      ),
+                    ),
                   ),
-                ),
-              ),
-              Divider(
-                color: Colors.black87,
-              ),
-              Padding(
-                padding: EdgeInsets.only(top: 10, left: 20, right: 20),
-                child: Text(
-                  summary,
-                  style: TextStyle(
-                    fontSize: 16,
-                    fontFamily: 'Nunito',
+                  Divider(
+                    color: Colors.black87,
                   ),
-                ),
+                  Padding(
+                    padding: EdgeInsets.only(top: 10, left: 20, right: 20),
+                    child: Text(
+                      summary,
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontFamily: 'Nunito',
+                      ),
+                    ),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.only(top: 20),
+                  ),
+                  LinearProgressIndicator(
+                    value: progress,
+                    backgroundColor: Colors.transparent,
+                    valueColor: AlwaysStoppedAnimation<Color>(Colors.blueAccent),
+                  ),
+                ],
               ),
-              Padding(
-                padding: EdgeInsets.only(top: 20),
-              ),
-              LinearProgressIndicator(
-                value: progress,
-                backgroundColor: Colors.transparent,
-                valueColor: AlwaysStoppedAnimation<Color>(Colors.blueAccent),
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
+            )));
   }
 }

@@ -1,4 +1,5 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:heutagogy/data_models.dart';
@@ -31,13 +32,21 @@ class Test1PageState extends State<Test1Page> {
       padding: EdgeInsets.only(bottom: 50),
       child: Column(
         mainAxisSize: MainAxisSize.max,
-        children: _buildQuestions(),
+        children: _buildQuestions((this.data.heading != "" && this.data.heading != null)),
       ),
     );
   }
 
-  List<Widget> _buildQuestions() {
+  List<Widget> _buildQuestions(bool addHeading) {
     List<Widget> questionsList = [];
+    if (addHeading) {
+      questionsList.add(Center(
+        child: Text(
+          this.data.heading,
+          style: TextStyle(fontSize: 18),
+        ),
+      ));
+    }
     for (var x in data.questions) {
       questionsList.add(Padding(
         padding: EdgeInsets.only(bottom: 20),
@@ -71,17 +80,18 @@ class QuestionWidgetState extends State<StatefulWidget> {
         child: Column(
           mainAxisSize: MainAxisSize.max,
           children: <Widget>[
-            Center(
-                child: Text(
+            Text(
               "Q. ${question.text}",
               style: TextStyle(fontSize: 18),
-            )),
+              textAlign: TextAlign.center,
+            ),
+            Padding(padding: EdgeInsets.only(top: 10)),
             (question.youtubeVideo != "" && question.youtubeVideo != null)
                 ? YoutubePlayer(
                     width: 360,
                     context: context,
                     source: question.youtubeVideo,
-                    quality: YoutubeQuality.HD,
+                    quality: YoutubeQuality.HIGH,
                     autoPlay: false,
                     showVideoProgressbar: true,
                   )
@@ -89,7 +99,8 @@ class QuestionWidgetState extends State<StatefulWidget> {
                     ? CachedNetworkImage(
                         imageUrl: question.image,
                         width: 256,
-                        height: 256,
+                        placeholder: (context, data) => CircularProgressIndicator(),
+                        placeholderFadeInDuration: Duration(seconds: 1),
                       )
                     : Container(),
             Padding(
@@ -100,6 +111,9 @@ class QuestionWidgetState extends State<StatefulWidget> {
               alignment: WrapAlignment.center,
               crossAxisAlignment: WrapCrossAlignment.center,
               children: _buildChildren(),
+            ),
+            Padding(
+              padding: EdgeInsets.only(top: 15),
             ),
           ],
         ));
