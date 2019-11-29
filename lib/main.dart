@@ -22,13 +22,14 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  String data;
+  String data, assessment;
   var loader;
 
   final JsonEncoder jsonEncoder = new JsonEncoder.withIndent('    ');
   @override
   void initState() {
     data = "";
+    assessment = "";
     loader = CircularProgressIndicator();
     super.initState();
   }
@@ -53,7 +54,8 @@ class _MyHomePageState extends State<MyHomePage> {
 
   void fetchData() async {
     String offlineData = await readData();
-    if (data == "") {
+    String offlineData2 = await readData2();
+    if (data == "" || assessment == "") {
       try {
         final response =
             await http.get("https://1ashutosh.pythonanywhere.com/api/lessons");
@@ -65,7 +67,7 @@ class _MyHomePageState extends State<MyHomePage> {
             loader = Icon(
               Icons.check,
               color: Colors.green,
-              size: 40.0,
+              size: 128.0,
             );
           });
         } else {
@@ -75,7 +77,7 @@ class _MyHomePageState extends State<MyHomePage> {
               loader = Icon(
                 Icons.check,
                 color: Colors.blue,
-                size: 40.0,
+                size: 128.0,
               );
             });
           } else {
@@ -83,11 +85,43 @@ class _MyHomePageState extends State<MyHomePage> {
               loader = Icon(
                 Icons.signal_wifi_off,
                 color: Colors.orange,
-                size: 40.0,
+                size: 128.0,
               );
             });
           }
-          // throw Exception("Unable to load!");s
+        }
+        final response2 =
+            await http.get("https://1ashutosh.pythonanywhere.com/api/assessment");
+        if (response.statusCode == 200) {
+          String body = response2.body;
+          writeData2(body);
+          setState(() {
+            assessment = body;
+            loader = Icon(
+              Icons.check,
+              color: Colors.green,
+              size: 128.0,
+            );
+          });
+        } else {
+          if (offlineData2 != "{}") {
+            setState(() {
+              data = offlineData;
+              loader = Icon(
+                Icons.check,
+                color: Colors.blue,
+                size: 128.0,
+              );
+            });
+          } else {
+            setState(() {
+              loader = Icon(
+                Icons.signal_wifi_off,
+                color: Colors.orange,
+                size: 128.0,
+              );
+            });
+          }
         }
       } on SocketException catch (_) {
         //fetching data locally
@@ -97,7 +131,7 @@ class _MyHomePageState extends State<MyHomePage> {
             loader = Icon(
               Icons.check,
               color: Colors.grey,
-              size: 40.0,
+              size: 128.0,
             );
           });
         } else {
@@ -105,15 +139,16 @@ class _MyHomePageState extends State<MyHomePage> {
             loader = Icon(
               Icons.signal_wifi_off,
               color: Colors.red,
-              size: 40.0,
+              size: 128.0,
             );
           });
         }
       }
     } else {
       Timer(Duration(milliseconds: 1100), () {
+        print(assessment);
         Navigator.pushReplacement(
-            context, MaterialPageRoute(builder: (context) => HomePage(data)));
+            context, MaterialPageRoute(builder: (context) => HomePage(data, assessment)));
       });
     }
   }

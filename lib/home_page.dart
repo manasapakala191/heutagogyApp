@@ -6,33 +6,39 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:heutagogy/data_models.dart';
 import 'package:heutagogy/lessons.dart';
+import 'package:heutagogy/summative_assesment.dart';
 import 'lesson_detail.dart';
 
 class HomePage extends StatelessWidget {
   final String data;
+  final String assessment;
 
-  HomePage(this.data);
+  HomePage(this.data, this.assessment);
 
   @override
   Widget build(BuildContext context) {
-
-      return _HomePage(data);
+    return _HomePage(data, assessment);
   }
 }
 
 class _HomePage extends StatefulWidget {
   final String data;
+  final String assessment;
 
-  _HomePage(this.data);
+  _HomePage(this.data, this.assessment);
 
   @override
-  _HomePageState createState() => _HomePageState(data);
+  _HomePageState createState() => _HomePageState(data, assessment);
 }
 
 class _HomePageState extends State<_HomePage> {
   String data;
+  LessonData assessment;
 
-  _HomePageState(this.data);
+  _HomePageState(String lessonData, String assess) {
+    this.data = lessonData;
+    assessment = LessonData.fromJSON(json.decode(assess));
+  }
 
   Widget optionsBuilder(BuildContext context, int index) {
     if (index == 0) {
@@ -55,7 +61,7 @@ class _HomePageState extends State<_HomePage> {
                   splashColor: Color.fromARGB(40, 0, 0, 200),
                   onTap: () {
                     Navigator.push(
-                        context, MaterialPageRoute(builder: (context) => LessonsPage(data)));
+                        context, MaterialPageRoute(builder: (context) => LessonsPage(this.data)));
                   },
                   child: Column(mainAxisSize: MainAxisSize.max, children: <Widget>[
                     Padding(
@@ -94,17 +100,26 @@ class _HomePageState extends State<_HomePage> {
               child: InkWell(
                   splashColor: Color.fromARGB(40, 0, 0, 200),
                   onTap: () {
-//                    Navigator.push(
-//                        context, MaterialPageRoute(builder: (context) => LessonsPage(data)));
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) =>
+                                SummativeTests(assessment)));
                   },
                   child: Column(mainAxisSize: MainAxisSize.max, children: <Widget>[
                     Padding(
                       padding: EdgeInsets.only(top: 16),
-                      child: Text(
-                        "Summative Assesments",
-                        style: TextStyle(
-                          fontSize: 20,
-                          fontFamily: 'Nunito',
+                      child: Hero(
+                        tag: "assessment",
+                        child: Material(
+                          color: Colors.transparent,
+                          child: Text(
+                            "Summative Assesments",
+                            style: TextStyle(
+                              fontSize: 20,
+                              fontFamily: 'Nunito',
+                            ),
+                          ),
                         ),
                       ),
                     ),
@@ -127,11 +142,14 @@ class _HomePageState extends State<_HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(title: Text("Let\'s Study"), centerTitle: true,),
-        body: ListView.builder(
-          itemCount: 3,
-          itemBuilder: optionsBuilder,
-        ),
+      appBar: AppBar(
+        title: Text("Let\'s Study"),
+        centerTitle: true,
+      ),
+      body: ListView.builder(
+        itemCount: 3,
+        itemBuilder: optionsBuilder,
+      ),
     );
   }
 }

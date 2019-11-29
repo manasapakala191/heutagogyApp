@@ -6,8 +6,11 @@ import 'package:heutagogy/tests/test1.dart';
 import 'package:heutagogy/tests/test2.dart';
 import 'package:heutagogy/tests/test3.dart';
 import 'package:heutagogy/tests/test4.dart';
-import 'package:heutagogy/tests/test5.dart';
+import 'package:heutagogy/tests/test7.dart';
+
 import 'dart:math';
+
+import 'package:heutagogy/tests/test8.dart';
 
 class SummativeTests extends StatefulWidget {
   final LessonData lessonData;
@@ -75,6 +78,16 @@ class Lesson1TestsState extends State<SummativeTests> {
         ));
       }
     }
+    mySteps.add(Step(
+      title: Text(''),
+      content: Test7Page(
+          10,
+          10,
+          [2, 7, 12, 15, 19, 23, 27, 40, 41, 43, 45, 58, 62, 64, 66, 70, 73, 77, 81, 85, 93, 96, 99]
+            ..shuffle()),
+      isActive: true,
+      state: StepState.indexed,
+    ));
 
 //    mySteps.add(Step(
 //      title: Text(''),
@@ -109,9 +122,15 @@ class Lesson1TestsState extends State<SummativeTests> {
             Navigator.pop(context);
           },
         ),
-        title: Text(
-          "Lesson 3: Exam",
-          style: TextStyle(color: Colors.black),
+        title: Hero(
+          tag: "assessment",
+          child: Material(
+            color: Colors.transparent,
+            child: Text(
+              "Summative Assessments",
+              style: TextStyle(color: Colors.black, fontSize: 20),
+            ),
+          ),
         ),
       ),
       body: Theme(
@@ -141,67 +160,66 @@ class Lesson1TestsState extends State<SummativeTests> {
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       floatingActionButton: (showFab
           ? Stack(
-        children: <Widget>[
-          Align(
-            alignment: Alignment.bottomRight,
-            child: Padding(
-              padding: EdgeInsets.fromLTRB(0, 0, 20, 0),
-              child: FloatingActionButton.extended(
-                backgroundColor: Colors.white,
-                splashColor: Colors.lightBlueAccent,
-                heroTag: 'NextStep',
-                onPressed: () {
-                  if (currentStep < mySteps.length - 1) {
-                    setState(() {
-                      currentStep = currentStep + 1;
-                    });
-                  } else {
-                    Navigator.popUntil(
-                        context, ModalRoute.withName(Navigator.defaultRouteName));
-                  }
-                },
-                label: Text(
-                  "Next",
-                  style: TextStyle(
-                      color: Colors.blue, fontSize: 16, fontWeight: FontWeight.bold),
+              children: <Widget>[
+                Align(
+                  alignment: Alignment.bottomRight,
+                  child: Padding(
+                    padding: EdgeInsets.fromLTRB(0, 0, 20, 0),
+                    child: FloatingActionButton.extended(
+                      backgroundColor: Colors.white,
+                      splashColor: Colors.lightBlueAccent,
+                      heroTag: 'NextStep',
+                      onPressed: () {
+                        if (currentStep < mySteps.length - 1) {
+                          setState(() {
+                            currentStep = currentStep + 1;
+                          });
+                        } else {
+                          Navigator.pop(context);
+                        }
+                      },
+                      label: Text(
+                        "Next",
+                        style: TextStyle(
+                            color: Colors.blue, fontSize: 16, fontWeight: FontWeight.bold),
+                      ),
+                      shape: RoundedRectangleBorder(
+                          side: BorderSide(color: Colors.blue, width: 1),
+                          borderRadius: BorderRadius.circular(40)),
+                      icon: Icon(
+                        Icons.navigate_next,
+                        color: Colors.blue,
+                      ),
+                    ),
+                  ),
                 ),
-                shape: RoundedRectangleBorder(
-                    side: BorderSide(color: Colors.blue, width: 1),
-                    borderRadius: BorderRadius.circular(40)),
-                icon: Icon(
-                  Icons.navigate_next,
-                  color: Colors.blue,
+                Align(
+                  alignment: Alignment.bottomLeft,
+                  child: Padding(
+                    padding: EdgeInsets.fromLTRB(20, 0, 0, 0),
+                    child: FloatingActionButton(
+                      backgroundColor: Colors.white,
+                      splashColor: Colors.lightBlueAccent,
+                      heroTag: 'PreviousStep',
+                      onPressed: () {
+                        if (currentStep > 0) {
+                          setState(() {
+                            currentStep = currentStep - 1;
+                          });
+                        } else {
+                          Navigator.pop(context);
+                        }
+                      },
+                      shape: CircleBorder(side: BorderSide(color: Colors.blue, width: 1)),
+                      child: Icon(
+                        Icons.arrow_back,
+                        color: Colors.blue,
+                      ),
+                    ),
+                  ),
                 ),
-              ),
-            ),
-          ),
-          Align(
-            alignment: Alignment.bottomLeft,
-            child: Padding(
-              padding: EdgeInsets.fromLTRB(20, 0, 0, 0),
-              child: FloatingActionButton(
-                backgroundColor: Colors.white,
-                splashColor: Colors.lightBlueAccent,
-                heroTag: 'PreviousStep',
-                onPressed: () {
-                  if (currentStep > 0) {
-                    setState(() {
-                      currentStep = currentStep - 1;
-                    });
-                  } else {
-                    Navigator.pop(context);
-                  }
-                },
-                shape: CircleBorder(side: BorderSide(color: Colors.blue, width: 1)),
-                child: Icon(
-                  Icons.arrow_back,
-                  color: Colors.blue,
-                ),
-              ),
-            ),
-          ),
-        ],
-      )
+              ],
+            )
           : null),
     );
   }
