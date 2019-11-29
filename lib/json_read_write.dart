@@ -44,6 +44,6 @@ Future<String> readData() async {
 
     return data;
   } catch (e) {
-    return "Nothing saved yet!";
+    return "{}";
   }
 }
