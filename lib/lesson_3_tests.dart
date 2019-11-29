@@ -158,8 +158,7 @@ class Lesson1TestsState extends State<MyLesson3Tests> {
                             currentStep = currentStep + 1;
                           });
                         } else {
-                          Navigator.popUntil(
-                              context, ModalRoute.withName(Navigator.defaultRouteName));
+                          Navigator.pop(context);
                         }
                       },
                       label: Text(

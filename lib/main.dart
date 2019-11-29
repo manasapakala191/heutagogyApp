@@ -56,7 +56,7 @@ class _MyHomePageState extends State<MyHomePage> {
     if (data == "") {
       try {
         final response =
-            await http.get("https://1ashutosh.pythonanywhere.com/api/lessons5");
+            await http.get("https://1ashutosh.pythonanywhere.com/api/lessons");
         if (response.statusCode == 200) {
           String body = response.body;
           writeData(body);

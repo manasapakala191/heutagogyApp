@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:math';
 import 'dart:ui';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:heutagogy/data_models.dart';
@@ -14,10 +15,8 @@ class HomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      theme: ThemeData(fontFamily: 'Nunito'),
-      home: _HomePage(data),
-    );
+
+      return _HomePage(data);
   }
 }
 
@@ -40,18 +39,6 @@ class _HomePageState extends State<_HomePage> {
       return Padding(
         padding: EdgeInsets.fromLTRB(0, 10, 0, 10),
         // child: Center(
-        child: Column(
-          children: <Widget>[
-            Text(
-              "Lets Start Learning",
-              style: TextStyle(
-                fontSize: 25,
-                // fontWeight: FontWeight.bold
-              ),
-            ),
-          ],
-        ),
-        // ),
       );
     }
     if (index == 1) {
@@ -139,17 +126,12 @@ class _HomePageState extends State<_HomePage> {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      theme: ThemeData(
-        fontFamily: 'Nunito',
-      ),
-      home: Scaffold(
-        appBar: AppBar(),
+    return Scaffold(
+        appBar: AppBar(title: Text("Let\'s Study"), centerTitle: true,),
         body: ListView.builder(
           itemCount: 3,
           itemBuilder: optionsBuilder,
         ),
-      ),
     );
   }
 }

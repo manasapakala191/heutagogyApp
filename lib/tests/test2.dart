@@ -146,6 +146,8 @@ class DraggableImage extends StatelessWidget {
             imageUrl: image.picture,
             width: 128,
             height: 128,
+            placeholder: (context, data) => CircularProgressIndicator(),
+            placeholderFadeInDuration: Duration(milliseconds: 500),
           ),
           clipBehavior: Clip.hardEdge,
         ),
@@ -153,6 +155,7 @@ class DraggableImage extends StatelessWidget {
           borderRadius: BorderRadius.circular(15),
           child: CachedNetworkImage(
             placeholder: (context,url) => CircularProgressIndicator(),
+            placeholderFadeInDuration: Duration(milliseconds: 100),
             imageUrl: image.picture,
             width: 128,
             height: 128,
