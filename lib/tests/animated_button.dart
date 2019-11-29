@@ -107,7 +107,7 @@ class _AnimatedButtonState extends State<AnimatedButton>
                         )
                       : Container(),
                   SizedBox(
-                    width: (_currentstate == ButtonStates.BOTH) ? 10 : 0,
+                    width: (_currentstate == ButtonStates.BOTH) ? 15 : 5,
                   ),
                   (_currentstate == ButtonStates.BOTH)
                       ? Text(

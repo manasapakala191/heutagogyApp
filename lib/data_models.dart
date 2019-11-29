@@ -66,9 +66,10 @@ class ChoiceData {
 class QuestionData {
   String text;
   String image;
+  String youtubeVideo;
   List<ChoiceData> options;
 
-  QuestionData({this.text, this.options, this.image});
+  QuestionData({this.text, this.options, this.image, this.youtubeVideo});
 
   factory QuestionData.fromJSON(Map<String, dynamic> jsonData) {
     List<ChoiceData> opts = [];
@@ -78,7 +79,8 @@ class QuestionData {
     return QuestionData(
         text: jsonData['text'],
         options: opts,
-        image: (jsonData["image"] != null) ? jsonData["image"] : "");
+        image: (jsonData["image"] != null) ? jsonData["image"] : "",
+        youtubeVideo: jsonData["youtube_video"]);
   }
 }
 

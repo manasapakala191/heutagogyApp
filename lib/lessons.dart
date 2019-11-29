@@ -8,13 +8,12 @@ import 'lesson_detail.dart';
 
 class LessonsPage extends StatelessWidget {
   final String data;
+
   LessonsPage(this.data);
+
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      theme: ThemeData(fontFamily: 'Nunito'),
-      home: _LessonsPage(data),
-    );
+    return _LessonsPage(data);
   }
 }
 
@@ -51,8 +50,11 @@ class _LessonsPageState extends State<_LessonsPage> {
                 children: <Widget>[
                   Expanded(
                     flex: 1,
-                    child: Icon(
-                      Icons.menu,
+                    child: IconButton(
+                      icon: Icon(Icons.arrow_back),
+                      onPressed: () {
+                        Navigator.pop(context);
+                      },
                     ),
                   ),
                   Expanded(
@@ -66,10 +68,8 @@ class _LessonsPageState extends State<_LessonsPage> {
                         decoration: InputDecoration(
                           hintText: 'Search',
                           suffixIcon: Icon(Icons.search),
-                          contentPadding:
-                              EdgeInsets.fromLTRB(20.0, 10.0, 0.0, 10.0),
-                          border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(20.0)),
+                          contentPadding: EdgeInsets.fromLTRB(20.0, 10.0, 0.0, 10.0),
+                          border: OutlineInputBorder(borderRadius: BorderRadius.circular(20.0)),
                         ),
                       ),
                     ),
@@ -115,15 +115,11 @@ class _LessonsPageState extends State<_LessonsPage> {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      theme: ThemeData(
-        fontFamily: 'Nunito',
-      ),
-      home: Scaffold(
-        body: ListView.builder(
-          itemCount: this.lessonsData.length + 1,
-          itemBuilder: lessonsBuilder,
-        ),
+    return Scaffold(
+//        appBar: AppBar(),
+      body: ListView.builder(
+        itemCount: this.lessonsData.length + 1,
+        itemBuilder: lessonsBuilder,
       ),
     );
   }
@@ -150,7 +146,7 @@ class LessonState extends State<Lesson> {
   void initState() {
     super.initState();
     progress = Random().nextDouble();
-  }
+  } 
 
   LessonState(this.title, this.summary, this.func);
 
@@ -162,8 +158,7 @@ class LessonState extends State<Lesson> {
         clipBehavior: Clip.antiAlias,
         elevation: 3,
         shape: RoundedRectangleBorder(
-          side: BorderSide(
-              color: Colors.blueAccent, style: BorderStyle.solid, width: 1.0),
+          side: BorderSide(color: Colors.blueAccent, style: BorderStyle.solid, width: 1.0),
           borderRadius: BorderRadius.circular(16.0),
         ),
         child: InkWell(

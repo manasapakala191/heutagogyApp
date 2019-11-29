@@ -2,6 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:heutagogy/data_models.dart';
+import 'package:youtube_player/youtube_player.dart';
 
 import 'animated_button.dart';
 
@@ -66,7 +67,7 @@ class QuestionWidgetState extends State<StatefulWidget> {
   @override
   Widget build(BuildContext context) {
     return Container(
-        padding: EdgeInsets.fromLTRB(40, 0, 40, 0),
+        padding: EdgeInsets.fromLTRB(20, 0, 20, 0),
         child: Column(
           mainAxisSize: MainAxisSize.max,
           children: <Widget>[
@@ -75,13 +76,22 @@ class QuestionWidgetState extends State<StatefulWidget> {
               "Q. ${question.text}",
               style: TextStyle(fontSize: 18),
             )),
-            (question.image != "")
-                ? CachedNetworkImage(
-                    imageUrl: question.image,
-                    width: 256,
-                    height: 256,
+            (question.youtubeVideo != "" && question.youtubeVideo != null)
+                ? YoutubePlayer(
+                    width: 360,
+                    context: context,
+                    source: question.youtubeVideo,
+                    quality: YoutubeQuality.HD,
+                    autoPlay: false,
+                    showVideoProgressbar: true,
                   )
-                : Container(),
+                : (question.image != "")
+                    ? CachedNetworkImage(
+                        imageUrl: question.image,
+                        width: 256,
+                        height: 256,
+                      )
+                    : Container(),
             Padding(
               padding: EdgeInsets.only(top: 10),
             ),
@@ -100,14 +110,14 @@ class QuestionWidgetState extends State<StatefulWidget> {
     ButtonStyle correctButtonStyle = ButtonStyle(
         initialColour: Colors.blueAccent,
         finalColour: Colors.white10,
-        intialTextstyle: TextStyle(fontSize: 12, color: Colors.white),
-        finalTextStyle: TextStyle(fontSize: 12, color: Colors.green),
+        intialTextstyle: TextStyle(fontSize: 14, color: Colors.white),
+        finalTextStyle: TextStyle(fontSize: 16, color: Colors.green),
         elevation: 3);
     ButtonStyle incorrectButtonStyle = ButtonStyle(
         initialColour: Colors.blueAccent,
         finalColour: Colors.white10,
-        intialTextstyle: TextStyle(fontSize: 12, color: Colors.white),
-        finalTextStyle: TextStyle(fontSize: 12, color: Colors.red),
+        intialTextstyle: TextStyle(fontSize: 14, color: Colors.white),
+        finalTextStyle: TextStyle(fontSize: 16, color: Colors.red),
         elevation: 3);
     for (ChoiceData x in question.options) {
       children.add(Padding(
@@ -118,7 +128,7 @@ class QuestionWidgetState extends State<StatefulWidget> {
             buttonStyle: x.correct ? correctButtonStyle : incorrectButtonStyle,
             animationduration: Duration(seconds: 1),
             iconData: x.correct ? Icons.check : Icons.close,
-            iconsize: 12,
+            iconsize: 14,
             onTap: () {},
             radius: 14,
           )));

@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:heutagogy/home_page.dart';
 import 'package:heutagogy/lessons.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/cupertino.dart';
@@ -77,7 +78,7 @@ class _MyHomePageState extends State<MyHomePage> {
       }
     } else {
       Navigator.pushReplacement(
-          context, MaterialPageRoute(builder: (context) => LessonsPage(data)));
+          context, MaterialPageRoute(builder: (context) => HomePage(data)));
     }
   }
 }
@@ -88,7 +89,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Heutagogy',
       theme: ThemeData(fontFamily: 'Quicksand'),
-      home: Page1(),
+      home: MyHomePage(),
     );
   }
 }

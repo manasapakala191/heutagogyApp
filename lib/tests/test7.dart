@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -5,7 +7,7 @@ class Test7Page extends StatefulWidget {
   final int L, B;
   final List<int> numbers;
 
-  Test7Page(this.L, this.B, this.numbers);
+  Test7Page(this.L, this.B, this.numbers, {Key key}) : super(key:key);
 
   @override
   _Test7PageState createState() => _Test7PageState(L, B, numbers);
@@ -33,24 +35,33 @@ class _Test7PageState extends State<Test7Page> {
         data[i] = 0;
       }
     }
-    data[1] = 2;
   }
 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return SingleChildScrollView(
       child: Column(
         children: <Widget>[
           Padding(
-            padding: EdgeInsets.only(top: 20, bottom: 20),
+            padding: EdgeInsets.only(bottom: 10),
             child: Center(
               child: Text(
-                "Heading",
-                style: TextStyle(fontSize: 20),
+                "Fill in the Missing Numbers",
+                style: TextStyle(fontSize: 20, fontFamily: 'Nunito'),
               ),
             ),
           ),
           _buildGrid(),
+          Padding(
+            padding: EdgeInsets.only(bottom: 10),
+          ),
+          Padding(
+              padding: EdgeInsets.only(left: 40, right: 40, bottom: 40),
+              child: Wrap(
+                alignment: WrapAlignment.center,
+                runAlignment: WrapAlignment.spaceEvenly,
+                children: _buildDraggable(),
+              )),
         ],
       ),
     );
@@ -66,7 +77,7 @@ class _Test7PageState extends State<Test7Page> {
           row.add(ClipRect(
             clipBehavior: Clip.antiAlias,
             child: Container(
-              margin: EdgeInsets.all(5),
+              margin: EdgeInsets.all(2),
               width: 32,
               height: 32,
               child: Center(
@@ -82,45 +93,48 @@ class _Test7PageState extends State<Test7Page> {
           ));
         } else {
           if (data[tmp] == 0) {
-            row.add(ClipRect(
-              clipBehavior: Clip.antiAlias,
-              child: DragTarget<int>(
+            row.add(
+              DragTarget<int>(
                 builder: (BuildContext context, List<int> incoming, List rejected) {
-                  return Container(
-                    margin: EdgeInsets.all(5),
-                    width: 32,
-                    height: 32,
-                    child: Center(
-                      child: Text(
-                        (data[tmp] == 0) ? "" : tmp.toString(),
-                        style: TextStyle(
-                            color: (data[tmp] == 0) ? Colors.black54 : Colors.blue,
-                            fontWeight: FontWeight.bold),
-                      ),
-                    ),
-                    decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(100),
-                        border: Border.all(color: Colors.black54, width: 1)),
-                  );
+                  return ClipRect(
+                      clipBehavior: Clip.antiAlias,
+                      child: Container(
+                        margin: EdgeInsets.all(2),
+                        width: 32,
+                        height: 32,
+                        child: Center(
+                          child: Text(
+                            (data[tmp] == 0) ? "" : tmp.toString(),
+                            style: TextStyle(
+                                color: (data[tmp] == 0) ? Colors.black54 : Colors.blue,
+                                fontWeight: FontWeight.bold),
+                          ),
+                        ),
+                        decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(100),
+                            border: Border.all(color: Colors.black54, width: 1)),
+                      ));
                 },
-                onAccept: (received){
+                onAccept: (x) {
                   setState(() {
-                    data[received] = 2;
+                    data[x] = 2;
                   });
                 },
+                onWillAccept: (x) => x == tmp,
+                onLeave: (x) {},
               ),
-            ));
+            );
           } else {
             row.add(ClipRect(
               clipBehavior: Clip.antiAlias,
               child: Container(
-                margin: EdgeInsets.all(5),
+                margin: EdgeInsets.all(2),
                 width: 32,
                 height: 32,
                 child: Center(
                   child: Text(
                     tmp.toString(),
-                    style: TextStyle(color: Colors.blue, fontWeight: FontWeight.bold),
+                    style: TextStyle(color: Colors.green, fontWeight: FontWeight.bold),
                   ),
                 ),
                 decoration: BoxDecoration(
@@ -141,7 +155,72 @@ class _Test7PageState extends State<Test7Page> {
     );
   }
 
-  _buildDraggables(){
-
+  _buildDraggable() {
+    List<Widget> buttons = [];
+    for (int i in numbers) {
+      if (data[i] == 0) {
+        buttons.add(Draggable<int>(
+          data: i,
+          child: ClipRect(
+            clipBehavior: Clip.antiAlias,
+            child: Container(
+              margin: EdgeInsets.all(5),
+              width: 40,
+              height: 40,
+              child: Center(
+                child: Text(
+                  i.toString(),
+                  style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+                ),
+              ),
+              decoration: BoxDecoration(
+                  color: Colors.blueAccent,
+                  borderRadius: BorderRadius.circular(100),
+                  border: Border.all(color: Colors.black54, width: 1)),
+            ),
+          ),
+          childWhenDragging: ClipRect(
+            clipBehavior: Clip.antiAlias,
+            child: Container(
+              margin: EdgeInsets.all(5),
+              width: 32,
+              height: 32,
+              child: Center(
+                child: Text(
+                  i.toString(),
+                  style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+                ),
+              ),
+              decoration: BoxDecoration(
+                  color: Colors.blueGrey,
+                  borderRadius: BorderRadius.circular(100),
+                  border: Border.all(color: Colors.black54, width: 1)),
+            ),
+          ),
+          feedback: Material(
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(100),
+              clipBehavior: Clip.hardEdge,
+              child: Container(
+                decoration: BoxDecoration(
+                    color: Colors.blueAccent,
+                    border: Border.all(width: 1),
+                    borderRadius: BorderRadius.circular(100)),
+                width: 36,
+                height: 36,
+                child: Center(
+                  child: Text(
+                    i.toString(),
+                    style: TextStyle(color: Colors.white),
+                  ),
+                ),
+              ),
+            ),
+            color: Colors.transparent,
+          ),
+        ));
+      }
+    }
+    return buttons;
   }
 }
