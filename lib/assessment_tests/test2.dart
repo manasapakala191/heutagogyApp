@@ -6,6 +6,7 @@ import 'package:heutagogy/data_models.dart';
 
 class Test2Page extends StatefulWidget {
   final Test2Data test2data;
+
   Test2Page(this.test2data, {Key key}) : super(key: key);
 
   @override
@@ -15,6 +16,7 @@ class Test2Page extends StatefulWidget {
 class _Test2PageState extends State<Test2Page> {
   Test2Data test2data;
   Map<String, bool> correct;
+
   _Test2PageState(Test2Data data) {
     this.test2data = data;
     this.correct = Map();
@@ -45,22 +47,20 @@ class _Test2PageState extends State<Test2Page> {
             width: 64,
             height: 64,
             decoration: BoxDecoration(
-                color: Color.fromARGB(20, 10, 240, 34),
+                color: Color.fromARGB(20, 10, 40, 230),
                 border: Border.all(width: 2),
                 borderRadius: BorderRadius.circular(100)),
             child: Icon(
-              Icons.check,
-              color: Colors.green,
+              Icons.assignment_turned_in,
+              color: Colors.blue,
               size: 32,
             )));
       } else {
-        drops.add(
-            DraggableImage(image: image, active: correct[image.description]));
+        drops.add(DraggableImage(image: image, active: correct[image.description]));
       }
       targets.add(
         DragTarget(
-          builder:
-              (BuildContext context, List<String> incoming, List rejected) {
+          builder: (BuildContext context, List<String> incoming, List rejected) {
             if (!correct[image.description]) {
               return Container(
                 padding: EdgeInsets.only(bottom: 4),
@@ -77,10 +77,8 @@ class _Test2PageState extends State<Test2Page> {
                   child: Center(
                       child: Text(
                     image.description,
-                    style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold),
+                    style:
+                        TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold),
                   )),
                 ),
               );
@@ -92,17 +90,15 @@ class _Test2PageState extends State<Test2Page> {
                 child: Container(
                     decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(20),
-                        border: Border.all(color: Colors.greenAccent, width: 2),
-                        color: Colors.green),
+                        border: Border.all(color: Colors.black54, width: 2),
+                        color: Colors.blueAccent),
                     padding: EdgeInsets.all(10),
                     height: 128,
                     child: Center(
                       child: Text(
-                        "Correct",
+                        "Matched",
                         style: TextStyle(
-                            fontSize: 18,
-                            color: Colors.white,
-                            fontWeight: FontWeight.bold),
+                            fontSize: 18, color: Colors.white, fontWeight: FontWeight.bold),
                       ),
                     )),
               );
@@ -134,36 +130,39 @@ class _Test2PageState extends State<Test2Page> {
 class DraggableImage extends StatelessWidget {
   final PicturePairData image;
   final bool active;
+
   DraggableImage({this.image, this.active});
+
   @override
   Widget build(BuildContext context) {
     if (!this.active) {
       return Draggable<String>(
-        data: image.description,
-        child: ClipRRect(
-          borderRadius: BorderRadius.circular(15),
-          child: CachedNetworkImage(
-            imageUrl: image.picture,
-            width: 128,
-            height: 128,
-            placeholder: (context, data) => CircularProgressIndicator(),
-            placeholderFadeInDuration: Duration(milliseconds: 500),
+          data: image.description,
+          child: ClipRRect(
+            borderRadius: BorderRadius.circular(15),
+            child: CachedNetworkImage(
+              imageUrl: image.picture,
+              width: 128,
+              height: 128,
+              placeholder: (context, data) => CircularProgressIndicator(),
+              placeholderFadeInDuration: Duration(milliseconds: 500),
+            ),
+            clipBehavior: Clip.hardEdge,
           ),
-          clipBehavior: Clip.hardEdge,
-        ),
-        feedback: ClipRRect(
-          borderRadius: BorderRadius.circular(15),
-          child: CachedNetworkImage(
-            placeholder: (context,url) => CircularProgressIndicator(),
-            placeholderFadeInDuration: Duration(milliseconds: 100),
-            imageUrl: image.picture,
-            width: 128,
-            height: 128,
+          feedback: ClipRRect(
+            borderRadius: BorderRadius.circular(15),
+            child: CachedNetworkImage(
+              placeholder: (context, url) => CircularProgressIndicator(),
+              placeholderFadeInDuration: Duration(milliseconds: 100),
+              imageUrl: image.picture,
+              width: 128,
+              height: 128,
+            ),
+            clipBehavior: Clip.hardEdge,
           ),
-          clipBehavior: Clip.hardEdge,
-        ),
-        childWhenDragging: Container(width: 128,)
-      );
+          childWhenDragging: Container(
+            width: 128,
+          ));
     } else {
       return ClipRect(
         child: Container(
@@ -171,11 +170,11 @@ class DraggableImage extends StatelessWidget {
           height: 128,
           child: Center(
             child: Icon(
-              Icons.check,
-              color: Colors.greenAccent,
+              Icons.assignment_turned_in,
+              color: Colors.blueAccent,
             ),
           ),
-          color: Colors.lightGreenAccent,
+          color: Colors.lightBlueAccent,
         ),
         clipBehavior: Clip.antiAlias,
       );

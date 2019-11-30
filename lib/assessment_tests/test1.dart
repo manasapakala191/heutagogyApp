@@ -121,29 +121,22 @@ class QuestionWidgetState extends State<StatefulWidget> {
 
   List<Widget> _buildChildren() {
     List<Widget> children = [];
-    ButtonStyle correctButtonStyle = ButtonStyle(
+    ButtonStyle buttonStyle = ButtonStyle(
         initialColour: Colors.blueAccent,
         finalColour: Colors.white10,
         intialTextstyle: TextStyle(fontSize: 14, color: Colors.white),
-        finalTextStyle: TextStyle(fontSize: 16, color: Colors.green),
-        elevation: 3);
-    ButtonStyle incorrectButtonStyle = ButtonStyle(
-        initialColour: Colors.blueAccent,
-        finalColour: Colors.white10,
-        intialTextstyle: TextStyle(fontSize: 14, color: Colors.white),
-        finalTextStyle: TextStyle(fontSize: 16, color: Colors.red),
+        finalTextStyle: TextStyle(fontSize: 16, color: Colors.blueAccent),
         elevation: 3);
     for (ChoiceData x in question.options) {
       children.add(Padding(
           padding: EdgeInsets.all(5),
           child: AnimatedButton(
             initialText: x.text,
-            finalText: x.correct ? "Correct" : "Wrong",
-            buttonStyle: x.correct ? correctButtonStyle : incorrectButtonStyle,
+            finalText: x.text,
+            buttonStyle: buttonStyle,
             animationduration: Duration(seconds: 1),
-            iconData: x.correct ? Icons.check : Icons.close,
+            iconData: Icons.assignment_turned_in,
             iconsize: 14,
-            onTap: () {},
             radius: 14,
           )));
     }

@@ -2,15 +2,15 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:heutagogy/data_models.dart';
-import 'package:heutagogy/tests/test1.dart';
-import 'package:heutagogy/tests/test2.dart';
-import 'package:heutagogy/tests/test3.dart';
-import 'package:heutagogy/tests/test4.dart';
-import 'package:heutagogy/tests/test7.dart';
+import 'package:heutagogy/assessment_tests/test1.dart';
+import 'package:heutagogy/assessment_tests/test2.dart';
+import 'package:heutagogy/assessment_tests/test3.dart';
+import 'package:heutagogy/assessment_tests/test4.dart';
+import 'package:heutagogy/assessment_tests/test7.dart';
+import 'package:heutagogy/assessment_tests/test8.dart';
 
 import 'dart:math';
 
-import 'package:heutagogy/tests/test8.dart';
 
 class SummativeTests extends StatefulWidget {
   final LessonData lessonData;

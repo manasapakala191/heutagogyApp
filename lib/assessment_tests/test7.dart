@@ -7,7 +7,7 @@ class Test7Page extends StatefulWidget {
   final int L, B;
   final List<int> numbers;
 
-  Test7Page(this.L, this.B, this.numbers, {Key key}) : super(key:key);
+  Test7Page(this.L, this.B, this.numbers, {Key key}) : super(key: key);
 
   @override
   _Test7PageState createState() => _Test7PageState(L, B, numbers);
@@ -27,7 +27,7 @@ class _Test7PageState extends State<Test7Page> {
     super.initState();
     for (int i = 1; i <= this.L; i++) {
       for (int j = 1; j <= this.B; j++) {
-        data[(i - 1) * this.B + j] = 1;
+        data[(i - 1) * this.B + j] = -1;
       }
     }
     for (int i in this.numbers) {
@@ -73,7 +73,7 @@ class _Test7PageState extends State<Test7Page> {
       List<Widget> row = [];
       for (int j = 1; j <= this.B; j++) {
         int tmp = (i - 1) * this.B + j;
-        if (data[tmp] == 1) {
+        if (data[tmp] == -1) {
           row.add(ClipRect(
             clipBehavior: Clip.antiAlias,
             child: Container(
@@ -92,57 +92,37 @@ class _Test7PageState extends State<Test7Page> {
             ),
           ));
         } else {
-          if (data[tmp] == 0) {
-            row.add(
-              DragTarget<int>(
-                builder: (BuildContext context, List<int> incoming, List rejected) {
-                  return ClipRect(
-                      clipBehavior: Clip.antiAlias,
-                      child: Container(
-                        margin: EdgeInsets.all(2),
-                        width: 32,
-                        height: 32,
-                        child: Center(
-                          child: Text(
-                            (data[tmp] == 0) ? "" : tmp.toString(),
-                            style: TextStyle(
-                                color: (data[tmp] == 0) ? Colors.black54 : Colors.blue,
-                                fontWeight: FontWeight.bold),
-                          ),
+          row.add(
+            DragTarget<int>(
+              builder: (BuildContext context, List<int> incoming, List rejected) {
+                return ClipRect(
+                    clipBehavior: Clip.antiAlias,
+                    child: Container(
+                      margin: EdgeInsets.all(2),
+                      width: 32,
+                      height: 32,
+                      child: Center(
+                        child: Text(
+                          (data[tmp] == 0) ? "" : data[tmp].toString(),
+                          style: TextStyle(
+                              color: (data[tmp] == 0) ? Colors.black54 : Colors.blue,
+                              fontWeight: FontWeight.bold),
                         ),
-                        decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(100),
-                            border: Border.all(color: Colors.black54, width: 1)),
-                      ));
-                },
-                onAccept: (x) {
-                  setState(() {
-                    data[x] = 2;
-                  });
-                },
-                onWillAccept: (x) => x == tmp,
-                onLeave: (x) {},
-              ),
-            );
-          } else {
-            row.add(ClipRect(
-              clipBehavior: Clip.antiAlias,
-              child: Container(
-                margin: EdgeInsets.all(2),
-                width: 32,
-                height: 32,
-                child: Center(
-                  child: Text(
-                    tmp.toString(),
-                    style: TextStyle(color: Colors.green, fontWeight: FontWeight.bold),
-                  ),
-                ),
-                decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(100),
-                    border: Border.all(color: Colors.blueAccent, width: 1)),
-              ),
-            ));
-          }
+                      ),
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(100),
+                          border: Border.all(color: Colors.black54, width: 1)),
+                    ));
+              },
+              onAccept: (x) {
+                setState(() {
+                  data[tmp] = x;
+                });
+              },
+              onWillAccept: (x) => true,
+              onLeave: (x) {},
+            ),
+          );
         }
       }
       rows.add(Row(
@@ -158,68 +138,66 @@ class _Test7PageState extends State<Test7Page> {
   _buildDraggable() {
     List<Widget> buttons = [];
     for (int i in numbers) {
-      if (data[i] == 0) {
-        buttons.add(Draggable<int>(
-          data: i,
-          child: ClipRect(
-            clipBehavior: Clip.antiAlias,
-            child: Container(
-              margin: EdgeInsets.all(5),
-              width: 40,
-              height: 40,
-              child: Center(
-                child: Text(
-                  i.toString(),
-                  style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
-                ),
+      buttons.add(Draggable<int>(
+        data: i,
+        child: ClipRect(
+          clipBehavior: Clip.antiAlias,
+          child: Container(
+            margin: EdgeInsets.all(5),
+            width: 40,
+            height: 40,
+            child: Center(
+              child: Text(
+                i.toString(),
+                style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
               ),
+            ),
+            decoration: BoxDecoration(
+                color: Colors.blueAccent,
+                borderRadius: BorderRadius.circular(100),
+                border: Border.all(color: Colors.black54, width: 1)),
+          ),
+        ),
+        childWhenDragging: ClipRect(
+          clipBehavior: Clip.antiAlias,
+          child: Container(
+            margin: EdgeInsets.all(5),
+            width: 32,
+            height: 32,
+            child: Center(
+              child: Text(
+                i.toString(),
+                style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+              ),
+            ),
+            decoration: BoxDecoration(
+                color: Colors.blueGrey,
+                borderRadius: BorderRadius.circular(100),
+                border: Border.all(color: Colors.black54, width: 1)),
+          ),
+        ),
+        feedback: Material(
+          child: ClipRRect(
+            borderRadius: BorderRadius.circular(100),
+            clipBehavior: Clip.hardEdge,
+            child: Container(
               decoration: BoxDecoration(
                   color: Colors.blueAccent,
-                  borderRadius: BorderRadius.circular(100),
-                  border: Border.all(color: Colors.black54, width: 1)),
-            ),
-          ),
-          childWhenDragging: ClipRect(
-            clipBehavior: Clip.antiAlias,
-            child: Container(
-              margin: EdgeInsets.all(5),
-              width: 32,
-              height: 32,
+                  border: Border.all(width: 1),
+                  borderRadius: BorderRadius.circular(100)),
+              width: 36,
+              height: 36,
               child: Center(
                 child: Text(
                   i.toString(),
-                  style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
-                ),
-              ),
-              decoration: BoxDecoration(
-                  color: Colors.blueGrey,
-                  borderRadius: BorderRadius.circular(100),
-                  border: Border.all(color: Colors.black54, width: 1)),
-            ),
-          ),
-          feedback: Material(
-            child: ClipRRect(
-              borderRadius: BorderRadius.circular(100),
-              clipBehavior: Clip.hardEdge,
-              child: Container(
-                decoration: BoxDecoration(
-                    color: Colors.blueAccent,
-                    border: Border.all(width: 1),
-                    borderRadius: BorderRadius.circular(100)),
-                width: 36,
-                height: 36,
-                child: Center(
-                  child: Text(
-                    i.toString(),
-                    style: TextStyle(color: Colors.white),
-                  ),
+                  style: TextStyle(color: Colors.white),
                 ),
               ),
             ),
-            color: Colors.transparent,
           ),
-        ));
-      }
+          color: Colors.transparent,
+        ),
+      ));
     }
     return buttons;
   }

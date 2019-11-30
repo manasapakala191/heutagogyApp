@@ -52,8 +52,8 @@ class _Test4PageState extends State<Test4Page> {
                 border: Border.all(width: 2),
                 borderRadius: BorderRadius.circular(100)),
             child: Icon(
-              Icons.check,
-              color: Colors.green,
+              Icons.assignment_turned_in,
+              color: Colors.blue,
               size: 32,
             )));
       } else {
@@ -95,13 +95,13 @@ class _Test4PageState extends State<Test4Page> {
                 child: Container(
                     decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(20),
-                        border: Border.all(color: Colors.greenAccent, width: 2),
-                        color: Colors.green),
+                        border: Border.all(color: Colors.blueAccent, width: 2),
+                        color: Colors.blue),
                     padding: EdgeInsets.all(10),
                     height: 64,
                     child: Center(
                       child: Text(
-                        "Correct",
+                        "Matched",
                         style: TextStyle(
                             fontSize: 20,
                             color: Colors.white,
@@ -117,7 +117,7 @@ class _Test4PageState extends State<Test4Page> {
             });
           },
           onLeave: (data) {},
-          onWillAccept: (data) => data == sound.description,
+          onWillAccept: (data) => true,
         ),
       );
     }
