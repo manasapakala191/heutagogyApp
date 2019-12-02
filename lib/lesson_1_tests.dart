@@ -9,6 +9,8 @@ import 'package:heutagogy/tests/test4.dart';
 import 'package:heutagogy/tests/test5.dart';
 import 'dart:math';
 
+import 'package:heutagogy/tests/test9.dart';
+
 class MyLesson1Tests extends StatefulWidget {
   final LessonData lessonData;
 
@@ -70,6 +72,14 @@ class Lesson1TestsState extends State<MyLesson1Tests> {
         mySteps.add(Step(
           title: Text(''),
           content: Test4Page(lessonData.test4[z]),
+          isActive: true,
+          state: StepState.indexed,
+        ));
+      }
+      if (lessonData.test9 != null && z < lessonData.test9.length) {
+        mySteps.add(Step(
+          title: Text(''),
+          content: Test9Page(lessonData.test9[z]),
           isActive: true,
           state: StepState.indexed,
         ));

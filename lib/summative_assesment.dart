@@ -7,7 +7,7 @@ import 'package:heutagogy/assessment_tests/test2.dart';
 import 'package:heutagogy/assessment_tests/test3.dart';
 import 'package:heutagogy/assessment_tests/test4.dart';
 import 'package:heutagogy/assessment_tests/test7.dart';
-import 'package:heutagogy/assessment_tests/test8.dart';
+import 'package:heutagogy/assessment_tests/test9.dart';
 
 import 'dart:math';
 
@@ -77,7 +77,18 @@ class Lesson1TestsState extends State<SummativeTests> {
           state: StepState.indexed,
         ));
       }
+      if (lessonData.test9 != null && z < lessonData.test9.length) {
+        mySteps.add(Step(
+          title: Text(''),
+          content: Test9Page(
+            lessonData.test9[z],
+          ),
+          isActive: true,
+          state: StepState.indexed,
+        ));
+      }
     }
+
     mySteps.add(Step(
       title: Text(''),
       content: Test7Page(

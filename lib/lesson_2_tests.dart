@@ -63,6 +63,14 @@ class Lesson1TestsState extends State<MyLesson2Tests> {
           state: StepState.indexed,
         ));
       }
+      if (lessonData.test6 != null && z < lessonData.test6.length) {
+        mySteps.add(Step(
+          title: Text(''),
+          content: Test5Page(lessonData.test6[z]),
+          isActive: true,
+          state: StepState.indexed,
+        ));
+      }
     }
 
     mySteps.add(Step(

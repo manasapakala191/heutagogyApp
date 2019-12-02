@@ -1,87 +1,85 @@
+import 'package:cached_network_image/cached_network_image.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:heutagogy/data_models.dart';
 
 class Test5Page extends StatefulWidget {
-  Test5Page({Key key}) : super(key: key);
+  final Test6Data test6data;
+
+  Test5Page(this.test6data, {Key key}) : super(key: key);
 
   @override
-  _Test5PageState createState() => _Test5PageState();
+  _Test5PageState createState() => _Test5PageState(test6data);
 }
 
 class _Test5PageState extends State<Test5Page> {
-  List<FocusNode> inputFieldFocus = [
-    FocusNode(),
-    FocusNode(),
-    FocusNode(),
-    FocusNode()
-  ];
+  Test6Data test6data;
+  Map<String, bool> data;
+
+  _Test5PageState(this.test6data);
+
+  @override
+  void initState() {
+    super.initState();
+    data = Map<String, bool>();
+    for (var x in test6data.choices) {
+      data[x.correctText] = false;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Container(
-      child: Form(
-        child: Column(
-          children: <Widget>[
-            Text(
-              "సందడే సందడి పాటలో ఏ ఏ కూరగాయలు, పండ్లు న ప నులు చేసాయో జతపరచండి:",
-              style: TextStyle(fontSize: 20),
-            ),
-            TextFormField(
-              focusNode: inputFieldFocus[0],
-              decoration: InputDecoration(
-                labelText: "టమాట",
-                labelStyle: TextStyle(fontSize: 24),
-                hintText: "Enter Answer",
-              ),
-              style: TextStyle(fontSize: 20),
-              textInputAction: TextInputAction.next,
-              onFieldSubmitted: (term){
-                _fieldFocusChange(context, 0, 1);
-              },
-            ),
-            TextFormField(
-              focusNode: inputFieldFocus[1],
-              decoration: InputDecoration(
-                labelText: "ఆనపకాయ",
-                labelStyle: TextStyle(fontSize: 24),
-                hintText: "Enter Answer",
-              ),
-              style: TextStyle(fontSize: 20),
-              textInputAction: TextInputAction.next,
-              onFieldSubmitted: (term){
-                _fieldFocusChange(context, 1, 2);
-              },
-            ),
-            TextFormField(
-              focusNode: inputFieldFocus[2],
-              decoration: InputDecoration(
-                labelText: "పాలకూర",
-                labelStyle: TextStyle(fontSize: 24),
-                hintText: "Enter Answer",
-              ),
-              style: TextStyle(fontSize: 20),
-              textInputAction: TextInputAction.next,
-              onFieldSubmitted: (term){
-                _fieldFocusChange(context, 2, 3);
-              },
-            ),
-            TextFormField(
-              focusNode: inputFieldFocus[3],
-              decoration: InputDecoration(
-                labelText: "పనసప౦డు",
-                labelStyle: TextStyle(fontSize: 24),
-                hintText: "Enter Answer",
-              ),
-              style: TextStyle(fontSize: 20),
-            ),
-          ],
-        ),
-      ),
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: _buildImageInput(),
     );
   }
 
-  _fieldFocusChange(BuildContext context, int i, int j){
-    print("$i, $j");
-    inputFieldFocus[i].unfocus();
-    FocusScope.of(context).requestFocus(inputFieldFocus[j]);
+  _buildImageInput() {
+    List<Widget> items = [];
+    if (test6data.heading != null && test6data.heading != "")
+    items.add(Text(test6data.heading, style: TextStyle(fontSize: 20),));
+    for (var x in test6data.choices) {
+      items.add(
+        Column(
+          key: ObjectKey(x),
+          children: <Widget>[
+            CachedNetworkImage(
+              imageUrl: x.picture,
+              width: 250,
+              height: 250,
+            ),
+            (!data[x.correctText])
+                ? Container(
+                margin: EdgeInsets.only(top:10, bottom: 20, left: 50, right: 50),
+                key: UniqueKey(),
+                    decoration: BoxDecoration(border: Border.all(color: Colors.blue, width: 1), borderRadius: BorderRadius.circular(20)),
+                    child: TextField(
+                      textAlign: TextAlign.center,
+                      decoration: InputDecoration(border: InputBorder.none, ),
+                      onChanged: (txt) {
+                        print(txt);
+                        if (x.correctText.toString() == txt) {
+                          data[txt] = true;
+                        }
+                      },
+                      readOnly: (data[x.correctText]),
+                      style: TextStyle(fontSize: 16),
+                    ))
+                : Container(
+                    key: UniqueKey(),
+                    margin: EdgeInsets.only(top:10, bottom: 20),
+                    decoration: BoxDecoration(border: Border.all(color: Colors.blue, width: 1)),
+                    child: Text(
+                      x.correctText,
+                      style: TextStyle(color: Colors.blueAccent, fontSize: 16),
+                    )),
+          ],
+        ),
+      );
+    }
+    items.add(Padding(padding: EdgeInsets.only(bottom: 40),));
+    return items;
   }
 }

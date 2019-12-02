@@ -58,12 +58,6 @@ class ProgressPageState extends State<MyProgressPage> {
       }
     }
 
-    mySteps.add(Step(
-      title: Text(''),
-      content: Test5Page(),
-      isActive: true,
-      state: StepState.indexed,
-    ));
   }
 
   LessonData lessonData;
