@@ -39,7 +39,10 @@ class _Test5PageState extends State<Test5Page> {
   _buildImageInput() {
     List<Widget> items = [];
     if (test6data.heading != null && test6data.heading != "")
-    items.add(Text(test6data.heading, style: TextStyle(fontSize: 20),));
+      items.add(Text(
+        test6data.heading,
+        style: TextStyle(fontSize: 20),
+      ));
     for (var x in test6data.choices) {
       items.add(
         Column(
@@ -52,16 +55,22 @@ class _Test5PageState extends State<Test5Page> {
             ),
             (!data[x.correctText])
                 ? Container(
-                margin: EdgeInsets.only(top:10, bottom: 20, left: 50, right: 50),
-                key: UniqueKey(),
-                    decoration: BoxDecoration(border: Border.all(color: Colors.blue, width: 1), borderRadius: BorderRadius.circular(20)),
+                    margin: EdgeInsets.only(top: 10, bottom: 20, left: 50, right: 50),
+                    key: UniqueKey(),
+                    decoration: BoxDecoration(
+                        border: Border.all(color: Colors.blue, width: 1),
+                        borderRadius: BorderRadius.circular(20)),
                     child: TextField(
                       textAlign: TextAlign.center,
-                      decoration: InputDecoration(border: InputBorder.none, ),
+                      decoration: InputDecoration(
+                        border: InputBorder.none,
+                      ),
                       onChanged: (txt) {
-                        print(txt);
+//                    print(txt);
                         if (x.correctText.toString() == txt) {
-                          data[txt] = true;
+                          setState(() {
+                            data[txt] = true;
+                          });
                         }
                       },
                       readOnly: (data[x.correctText]),
@@ -69,17 +78,31 @@ class _Test5PageState extends State<Test5Page> {
                     ))
                 : Container(
                     key: UniqueKey(),
-                    margin: EdgeInsets.only(top:10, bottom: 20),
-                    decoration: BoxDecoration(border: Border.all(color: Colors.blue, width: 1)),
-                    child: Text(
-                      x.correctText,
-                      style: TextStyle(color: Colors.blueAccent, fontSize: 16),
-                    )),
+                    margin: EdgeInsets.only(top: 10, bottom: 20),
+                    decoration: BoxDecoration(
+                        border: Border.all(color: Colors.blue, width: 2),
+                        borderRadius: BorderRadius.circular(20)),
+                    child: Row(
+                      children: <Widget>[
+                        Text(
+                          x.correctText,
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            color: Colors.green,
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        )
+                      ],
+                    ),
+                  )
           ],
         ),
       );
     }
-    items.add(Padding(padding: EdgeInsets.only(bottom: 40),));
+    items.add(Padding(
+      padding: EdgeInsets.only(bottom: 40),
+    ));
     return items;
   }
 }

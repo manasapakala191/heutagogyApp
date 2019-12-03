@@ -25,12 +25,12 @@ class Lesson1TestsState extends State<MyLesson3Tests> {
 
   Lesson1TestsState(LessonData lessonData) {
     this.mySteps = [];
-    int i = 0;
     int maxLength = [
       lessonData.test1.length,
       lessonData.test2.length,
       lessonData.test3.length,
     ].reduce(max);
+
     for (int z = 0; z < maxLength; z++) {
       if (lessonData.test1 != null && z < lessonData.test1.length) {
         mySteps.add(Step(
@@ -76,11 +76,23 @@ class Lesson1TestsState extends State<MyLesson3Tests> {
           state: StepState.indexed,
         ));
       }
-    }
 
+      if (lessonData.test6 != null && z < lessonData.test6.length) {
+        mySteps.add(Step(
+          title: Text(''),
+          content: Test5Page(
+            lessonData.test6[z],
+            key: UniqueKey(),
+          ),
+          isActive: true,
+          state: StepState.indexed,
+        ));
+      }
+    }
     mySteps.add(Step(
       title: Text(''),
-      content: Test8Page([100,200,300,400,500,600,700,800,900,1000], [200,300,600,800,900]),
+      content:
+          Test8Page([100, 200, 300, 400, 500, 600, 700, 800, 900, 1000], [200, 300, 600, 800, 900]),
       isActive: true,
       state: StepState.indexed,
     ));

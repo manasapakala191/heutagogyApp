@@ -29,6 +29,9 @@ class Lesson1TestsState extends State<MyLesson2Tests> {
       lessonData.test1.length,
       lessonData.test2.length,
       lessonData.test3.length,
+      lessonData.test3.length,
+      lessonData.test4.length,
+      lessonData.test6.length,
     ].reduce(max);
     for (int z = 0; z < maxLength; z++) {
       if (lessonData.test1 != null && z < lessonData.test1.length) {

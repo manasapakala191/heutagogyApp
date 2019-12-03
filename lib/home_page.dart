@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'dart:math';
 import 'dart:ui';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -7,7 +6,6 @@ import 'package:flutter/rendering.dart';
 import 'package:heutagogy/data_models.dart';
 import 'package:heutagogy/lessons.dart';
 import 'package:heutagogy/summative_assesment.dart';
-import 'lesson_detail.dart';
 
 class HomePage extends StatelessWidget {
   final String data;

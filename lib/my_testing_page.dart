@@ -1,11 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:heutagogy/data_models.dart';
-import 'package:heutagogy/tests/test2.dart';
 import 'dart:convert';
 
-import 'package:heutagogy/tests/test4.dart';
-import 'package:heutagogy/tests/test7.dart';
-import 'package:heutagogy/tests/test8.dart';
 import 'package:heutagogy/tests/test9.dart';
 
 class Page1 extends StatelessWidget {

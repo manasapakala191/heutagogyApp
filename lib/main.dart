@@ -2,13 +2,11 @@ import 'dart:convert';
 import 'dart:async';
 import 'dart:io';
 import 'package:heutagogy/home_page.dart';
-import 'package:heutagogy/lessons.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'json_read_write.dart';
-import 'my_testing_page.dart';
 import 'package:heutagogy/json_read_write.dart';
 
 void main() {
@@ -67,7 +65,7 @@ class _MyHomePageState extends State<MyHomePage> {
             loader = Icon(
               Icons.check,
               color: Colors.green,
-              size: 128.0,
+              size: 80.0,
             );
           });
         } else {
@@ -77,7 +75,7 @@ class _MyHomePageState extends State<MyHomePage> {
               loader = Icon(
                 Icons.check,
                 color: Colors.blue,
-                size: 128.0,
+                size: 80.0,
               );
             });
           } else {
@@ -85,7 +83,7 @@ class _MyHomePageState extends State<MyHomePage> {
               loader = Icon(
                 Icons.signal_wifi_off,
                 color: Colors.orange,
-                size: 128.0,
+                size: 80.0,
               );
             });
           }
@@ -100,7 +98,7 @@ class _MyHomePageState extends State<MyHomePage> {
             loader = Icon(
               Icons.check,
               color: Colors.green,
-              size: 128.0,
+              size: 80.0,
             );
           });
         } else {
@@ -110,7 +108,7 @@ class _MyHomePageState extends State<MyHomePage> {
               loader = Icon(
                 Icons.check,
                 color: Colors.blue,
-                size: 128.0,
+                size: 80.0,
               );
             });
           } else {
@@ -118,7 +116,7 @@ class _MyHomePageState extends State<MyHomePage> {
               loader = Icon(
                 Icons.signal_wifi_off,
                 color: Colors.orange,
-                size: 128.0,
+                size: 80.0,
               );
             });
           }
@@ -131,7 +129,7 @@ class _MyHomePageState extends State<MyHomePage> {
             loader = Icon(
               Icons.check,
               color: Colors.grey,
-              size: 128.0,
+              size: 80.0,
             );
           });
         } else {
@@ -139,7 +137,7 @@ class _MyHomePageState extends State<MyHomePage> {
             loader = Icon(
               Icons.signal_wifi_off,
               color: Colors.red,
-              size: 128.0,
+              size: 80.0,
             );
           });
         }

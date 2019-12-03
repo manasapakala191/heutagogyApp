@@ -1,11 +1,13 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:heutagogy/assessment_tests/test5.dart';
 import 'package:heutagogy/data_models.dart';
 import 'package:heutagogy/assessment_tests/test1.dart';
 import 'package:heutagogy/assessment_tests/test2.dart';
 import 'package:heutagogy/assessment_tests/test3.dart';
 import 'package:heutagogy/assessment_tests/test4.dart';
+import 'package:heutagogy/assessment_tests/test6.dart';
 import 'package:heutagogy/assessment_tests/test7.dart';
 import 'package:heutagogy/assessment_tests/test9.dart';
 
@@ -26,11 +28,12 @@ class Lesson1TestsState extends State<SummativeTests> {
 
   Lesson1TestsState(LessonData lessonData) {
     this.mySteps = [];
-    int i = 0;
     int maxLength = [
       lessonData.test1.length,
       lessonData.test2.length,
       lessonData.test3.length,
+      lessonData.test4.length,
+      lessonData.test6.length,
     ].reduce(max);
     for (int z = 0; z < maxLength; z++) {
       if (lessonData.test1 != null && z < lessonData.test1.length) {
@@ -77,6 +80,17 @@ class Lesson1TestsState extends State<SummativeTests> {
           state: StepState.indexed,
         ));
       }
+      if (lessonData.test6 != null && z < lessonData.test6.length) {
+        mySteps.add(Step(
+          title: Text(''),
+          content: Test5Page(
+            lessonData.test6[z],
+            key: UniqueKey(),
+          ),
+          isActive: true,
+          state: StepState.indexed,
+        ));
+      }
       if (lessonData.test9 != null && z < lessonData.test9.length) {
         mySteps.add(Step(
           title: Text(''),
@@ -100,12 +114,12 @@ class Lesson1TestsState extends State<SummativeTests> {
       state: StepState.indexed,
     ));
 
-//    mySteps.add(Step(
-//      title: Text(''),
-//      content: Test5Page(),
-//      isActive: true,
-//      state: StepState.indexed,
-//    ));
+    mySteps.add(Step(
+      title: Text(''),
+      content: Test6Page(),
+      isActive: true,
+      state: StepState.indexed,
+    ));
   }
 
   LessonData lessonData;

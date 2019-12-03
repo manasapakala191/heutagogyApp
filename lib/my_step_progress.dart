@@ -5,8 +5,6 @@ import 'package:heutagogy/data_models.dart';
 import 'package:heutagogy/tests/test1.dart';
 import 'package:heutagogy/tests/test3.dart';
 import 'package:heutagogy/tests/test4.dart';
-import 'package:heutagogy/tests/test5.dart';
-import 'package:heutagogy/tests/test6.dart';
 import 'dart:math';
 
 class MyProgressPage extends StatefulWidget {
@@ -23,7 +21,6 @@ class ProgressPageState extends State<MyProgressPage> {
 
   ProgressPageState(LessonData lessonData) {
     this.mySteps = [];
-    int i = 0;
     int maxLength = [
       lessonData.test1.length,
       lessonData.test2.length,

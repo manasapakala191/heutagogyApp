@@ -7,6 +7,7 @@ import 'package:heutagogy/data_models.dart';
 import 'package:heutagogy/lesson_1_tests.dart';
 import 'package:heutagogy/lesson_2_tests.dart';
 import 'package:heutagogy/lesson_3_tests.dart';
+import 'package:youtube_player/youtube_player.dart';
 
 class LessonDetail extends StatefulWidget {
   final LessonData lessonData;
@@ -163,6 +164,42 @@ class LessonDetailState extends State<LessonDetail> {
           itemCount: 1,
           padding: EdgeInsets.fromLTRB(0, 0, 0, 40),
           itemBuilder: (context, i) {
+            if (i == 2) {
+              return Padding(
+                  padding: EdgeInsets.fromLTRB(20, 30, 20, 40),
+                  child: Column(
+                    children: <Widget>[
+                      Text(
+                        lessonData.studyText,
+                        style: TextStyle(fontSize: 16, wordSpacing: 2),
+                      ),
+                      YoutubePlayer(
+                        width: 360,
+                        context: context,
+                        source: "https://www.youtube.com/watch?v=1KwAhTF8cXg",
+                        quality: YoutubeQuality.HIGH,
+                        autoPlay: false,
+                        showVideoProgressbar: true,
+                      ),
+                      YoutubePlayer(
+                        width: 360,
+                        context: context,
+                        source: "https://www.youtube.com/watch?v=6_PiAF4wEFQ",
+                        quality: YoutubeQuality.HIGH,
+                        autoPlay: false,
+                        showVideoProgressbar: true,
+                      ),
+                      YoutubePlayer(
+                        width: 360,
+                        context: context,
+                        source: "https://www.youtube.com/watch?v=H8atgJjtJUI",
+                        quality: YoutubeQuality.HIGH,
+                        autoPlay: false,
+                        showVideoProgressbar: true,
+                      )
+                    ],
+                  ));
+            }
             return Padding(
               padding: EdgeInsets.fromLTRB(20, 30, 20, 40),
               child: Text(
