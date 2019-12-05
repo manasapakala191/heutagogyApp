@@ -13,6 +13,8 @@ import 'package:heutagogy/assessment_tests/test9.dart';
 
 import 'dart:math';
 
+import 'package:heutagogy/my_stepper.dart';
+
 
 class SummativeTests extends StatefulWidget {
   final LessonData lessonData;
@@ -162,10 +164,10 @@ class Lesson1TestsState extends State<SummativeTests> {
         data: ThemeData(
           canvasColor: Colors.white,
         ),
-        child: Stepper(
-          type: StepperType.horizontal,
-          currentStep: this.currentStep,
-          onStepTapped: onStepTapped,
+        child: MyStepper(
+          type: MyStepperType.horizontal,
+          currentMyStep: this.currentStep,
+          onMyStepTapped: onStepTapped,
           steps: mySteps,
           controlsBuilder: (BuildContext context,
               {VoidCallback onStepContinue, VoidCallback onStepCancel}) {

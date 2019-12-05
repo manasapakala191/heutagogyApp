@@ -164,7 +164,7 @@ class LessonDetailState extends State<LessonDetail> {
           itemCount: 1,
           padding: EdgeInsets.fromLTRB(0, 0, 0, 40),
           itemBuilder: (context, i) {
-            if (i == 2) {
+            if (id == 3) {
               return Padding(
                   padding: EdgeInsets.fromLTRB(20, 30, 20, 40),
                   child: Column(
@@ -173,6 +173,7 @@ class LessonDetailState extends State<LessonDetail> {
                         lessonData.studyText,
                         style: TextStyle(fontSize: 16, wordSpacing: 2),
                       ),
+                      Padding(padding: EdgeInsets.only(bottom: 20)),
                       YoutubePlayer(
                         width: 360,
                         context: context,
@@ -180,7 +181,9 @@ class LessonDetailState extends State<LessonDetail> {
                         quality: YoutubeQuality.HIGH,
                         autoPlay: false,
                         showVideoProgressbar: true,
+                        hideShareButton: true,
                       ),
+                      Padding(padding: EdgeInsets.only(bottom: 20)),
                       YoutubePlayer(
                         width: 360,
                         context: context,
@@ -188,7 +191,9 @@ class LessonDetailState extends State<LessonDetail> {
                         quality: YoutubeQuality.HIGH,
                         autoPlay: false,
                         showVideoProgressbar: true,
+                        hideShareButton: true,
                       ),
+                      Padding(padding: EdgeInsets.only(bottom: 20)),
                       YoutubePlayer(
                         width: 360,
                         context: context,
@@ -196,6 +201,7 @@ class LessonDetailState extends State<LessonDetail> {
                         quality: YoutubeQuality.HIGH,
                         autoPlay: false,
                         showVideoProgressbar: true,
+                        hideShareButton: true,
                       )
                     ],
                   ));

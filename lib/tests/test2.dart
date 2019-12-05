@@ -6,6 +6,7 @@ import 'package:heutagogy/data_models.dart';
 
 class Test2Page extends StatefulWidget {
   final Test2Data test2data;
+
   Test2Page(this.test2data, {Key key}) : super(key: key);
 
   @override
@@ -15,6 +16,7 @@ class Test2Page extends StatefulWidget {
 class _Test2PageState extends State<Test2Page> {
   Test2Data test2data;
   Map<String, bool> correct;
+
   _Test2PageState(Test2Data data) {
     this.test2data = data;
     this.correct = Map();
@@ -26,10 +28,21 @@ class _Test2PageState extends State<Test2Page> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      child: Container(
-        child: Column(
-          children: _builder(correct),
-        ),
+      child: Column(
+        children: <Widget>[
+          (test2data.heading == "" || test2data.heading == null)
+              ? Container()
+              : Center(
+                  child: Text(
+                    test2data.heading,
+                    style: TextStyle(fontSize: 18),
+                  ),
+                ),
+          Padding(padding: EdgeInsets.only(top: 20),),
+          Column(
+            children: _builder(correct),
+          ),
+        ],
       ),
     );
   }
@@ -54,13 +67,11 @@ class _Test2PageState extends State<Test2Page> {
               size: 32,
             )));
       } else {
-        drops.add(
-            DraggableImage(image: image, active: correct[image.description]));
+        drops.add(DraggableImage(image: image, active: correct[image.description]));
       }
       targets.add(
         DragTarget(
-          builder:
-              (BuildContext context, List<String> incoming, List rejected) {
+          builder: (BuildContext context, List<String> incoming, List rejected) {
             if (!correct[image.description]) {
               return Container(
                 padding: EdgeInsets.only(bottom: 4),
@@ -77,10 +88,8 @@ class _Test2PageState extends State<Test2Page> {
                   child: Center(
                       child: Text(
                     image.description,
-                    style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold),
+                    style:
+                        TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold),
                   )),
                 ),
               );
@@ -100,9 +109,7 @@ class _Test2PageState extends State<Test2Page> {
                       child: Text(
                         "Correct",
                         style: TextStyle(
-                            fontSize: 18,
-                            color: Colors.white,
-                            fontWeight: FontWeight.bold),
+                            fontSize: 18, color: Colors.white, fontWeight: FontWeight.bold),
                       ),
                     )),
               );
@@ -134,36 +141,39 @@ class _Test2PageState extends State<Test2Page> {
 class DraggableImage extends StatelessWidget {
   final PicturePairData image;
   final bool active;
+
   DraggableImage({this.image, this.active});
+
   @override
   Widget build(BuildContext context) {
     if (!this.active) {
       return Draggable<String>(
-        data: image.description,
-        child: ClipRRect(
-          borderRadius: BorderRadius.circular(15),
-          child: CachedNetworkImage(
-            imageUrl: image.picture,
-            width: 128,
-            height: 128,
-            placeholder: (context, data) => CircularProgressIndicator(),
-            placeholderFadeInDuration: Duration(milliseconds: 500),
+          data: image.description,
+          child: ClipRRect(
+            borderRadius: BorderRadius.circular(15),
+            child: CachedNetworkImage(
+              imageUrl: image.picture,
+              width: 128,
+              height: 128,
+              placeholder: (context, data) => CircularProgressIndicator(),
+              placeholderFadeInDuration: Duration(milliseconds: 500),
+            ),
+            clipBehavior: Clip.hardEdge,
           ),
-          clipBehavior: Clip.hardEdge,
-        ),
-        feedback: ClipRRect(
-          borderRadius: BorderRadius.circular(15),
-          child: CachedNetworkImage(
-            placeholder: (context,url) => CircularProgressIndicator(),
-            placeholderFadeInDuration: Duration(milliseconds: 100),
-            imageUrl: image.picture,
-            width: 128,
-            height: 128,
+          feedback: ClipRRect(
+            borderRadius: BorderRadius.circular(15),
+            child: CachedNetworkImage(
+              placeholder: (context, url) => CircularProgressIndicator(),
+              placeholderFadeInDuration: Duration(milliseconds: 100),
+              imageUrl: image.picture,
+              width: 128,
+              height: 128,
+            ),
+            clipBehavior: Clip.hardEdge,
           ),
-          clipBehavior: Clip.hardEdge,
-        ),
-        childWhenDragging: Container(width: 128,)
-      );
+          childWhenDragging: Container(
+            width: 128,
+          ));
     } else {
       return ClipRect(
         child: Container(

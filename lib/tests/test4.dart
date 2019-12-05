@@ -7,6 +7,7 @@ import 'package:heutagogy/data_models.dart';
 
 class Test4Page extends StatefulWidget {
   final Test4Data test4data;
+
   Test4Page(this.test4data, {Key key}) : super(key: key);
 
   @override
@@ -17,6 +18,7 @@ class _Test4PageState extends State<Test4Page> {
   Test4Data test4data;
   var correct;
   var seed;
+
   _Test4PageState(Test4Data data) {
     seed = Random().nextInt(100);
     this.test4data = data;
@@ -29,11 +31,19 @@ class _Test4PageState extends State<Test4Page> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      child: Container(
-        child: Column(
+      child: Column(children: <Widget>[
+        (test4data.heading == null || test4data.heading == "")
+            ? Container()
+            : Center(
+                child: Text(
+                test4data.heading,
+                style: TextStyle(fontSize: 18),
+              )),
+        Padding(padding: EdgeInsets.only(top: 20),),
+        Column(
           children: _builder(test4data, correct, seed),
         ),
-      ),
+      ]),
     );
   }
 
@@ -62,8 +72,7 @@ class _Test4PageState extends State<Test4Page> {
       }
       targets.add(
         DragTarget(
-          builder:
-              (BuildContext context, List<String> incoming, List rejected) {
+          builder: (BuildContext context, List<String> incoming, List rejected) {
             if (!correct[sound.description]) {
               return Container(
                 padding: EdgeInsets.only(bottom: 4),
@@ -80,10 +89,8 @@ class _Test4PageState extends State<Test4Page> {
                   child: Center(
                       child: Text(
                     sound.description,
-                    style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold),
+                    style:
+                        TextStyle(color: Colors.white, fontSize: 20, fontWeight: FontWeight.bold),
                   )),
                 ),
               );
@@ -103,9 +110,7 @@ class _Test4PageState extends State<Test4Page> {
                       child: Text(
                         "Correct",
                         style: TextStyle(
-                            fontSize: 20,
-                            color: Colors.white,
-                            fontWeight: FontWeight.bold),
+                            fontSize: 20, color: Colors.white, fontWeight: FontWeight.bold),
                       ),
                     )),
               );
@@ -137,11 +142,11 @@ class _Test4PageState extends State<Test4Page> {
 class DraggableAudioButton extends StatefulWidget {
   final String audioPath;
   final bool active;
-  DraggableAudioButton({Key key, this.audioPath, this.active})
-      : super(key: key);
+
+  DraggableAudioButton({Key key, this.audioPath, this.active}) : super(key: key);
+
   @override
-  _DraggableAudioButtonState createState() =>
-      _DraggableAudioButtonState(audioPath, active);
+  _DraggableAudioButtonState createState() => _DraggableAudioButtonState(audioPath, active);
 }
 
 class _DraggableAudioButtonState extends State<DraggableAudioButton>
@@ -151,15 +156,16 @@ class _DraggableAudioButtonState extends State<DraggableAudioButton>
   AnimationController _controller;
 
   _DraggableAudioButtonState(this.audioPath, this.enabled);
+
   AudioCache audioCache;
+
   @override
   void initState() {
     super.initState();
     audioCache = AudioCache(prefix: 'audio/');
     audioCache.load("$audioPath.mp3");
     playing = false;
-    _controller =
-        AnimationController(duration: Duration(milliseconds: 200), vsync: this);
+    _controller = AnimationController(duration: Duration(milliseconds: 200), vsync: this);
   }
 
   @override
@@ -173,9 +179,8 @@ class _DraggableAudioButtonState extends State<DraggableAudioButton>
     var aud = Container(
       width: 64,
       height: 64,
-      decoration: BoxDecoration(
-          border: Border.all(width: 2),
-          borderRadius: BorderRadius.circular(100)),
+      decoration:
+          BoxDecoration(border: Border.all(width: 2), borderRadius: BorderRadius.circular(100)),
       child: IconButton(
         disabledColor: Colors.black,
         splashColor: Color.fromARGB(29, 42, 242, 121),
@@ -191,8 +196,7 @@ class _DraggableAudioButtonState extends State<DraggableAudioButton>
                     playing = true;
                   });
                   _controller.forward();
-                  AudioPlayer audioPlayer =
-                      await audioCache.play("$audioPath.mp3");
+                  AudioPlayer audioPlayer = await audioCache.play("$audioPath.mp3");
                   audioPlayer.onPlayerCompletion.listen((event) {
                     setState(() {
                       playing = false;

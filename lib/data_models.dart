@@ -41,10 +41,10 @@ class LessonData {
     for (var x in jsonData['test9']) {
       test9DataList.add(Test9Data.fromJSON(x));
     }
-     List<Test6Data> test6DataList = [];
-     for (var x in jsonData['test6']) {
-       test6DataList.add(Test6Data.fromJSON(x));
-     }
+    List<Test6Data> test6DataList = [];
+    for (var x in jsonData['test6']) {
+      test6DataList.add(Test6Data.fromJSON(x));
+    }
     return LessonData(
       title: jsonData['title'],
       introText: jsonData['intro_text'],
@@ -120,16 +120,17 @@ class PicturePairData {
 
 class Test2Data {
   String name;
+  String heading;
   List<PicturePairData> pictures;
 
-  Test2Data({this.name, this.pictures});
+  Test2Data({this.name, this.pictures, this.heading});
 
   factory Test2Data.fromJSON(Map<String, dynamic> jsonData) {
     List<PicturePairData> pics = [];
     for (var x in jsonData['pictures']) {
       pics.add(PicturePairData.fromJSON(x));
     }
-    return Test2Data(name: jsonData['name'], pictures: pics);
+    return Test2Data(name: jsonData['name'], pictures: pics, heading: jsonData['heading']);
   }
 }
 
@@ -149,16 +150,18 @@ class NumberList {
 
 class Test3Data {
   String name;
+  String heading;
   List<NumberList> numberLists;
 
-  Test3Data({this.name, this.numberLists});
+  Test3Data({this.name, this.numberLists, this.heading});
 
   factory Test3Data.fromJSON(Map<String, dynamic> jsonData) {
     List<NumberList> numbersList = [];
     for (var x in jsonData['number_lists']) {
       numbersList.add(NumberList.fromJSON(x));
     }
-    return Test3Data(name: jsonData['name'], numberLists: numbersList);
+    return Test3Data(
+        name: jsonData['name'], numberLists: numbersList, heading: jsonData['heading']);
   }
 }
 
@@ -175,16 +178,17 @@ class AudioPairData {
 
 class Test4Data {
   String name;
+  String heading;
   List<AudioPairData> audios;
 
-  Test4Data({this.name, this.audios});
+  Test4Data({this.name, this.audios, this.heading});
 
   factory Test4Data.fromJSON(Map<String, dynamic> jsonData) {
     List<AudioPairData> pics = [];
     for (var x in jsonData['audios']) {
       pics.add(AudioPairData.fromJSON(x));
     }
-    return Test4Data(name: jsonData['name'], audios: pics);
+    return Test4Data(name: jsonData['name'], audios: pics, heading: jsonData['heading']);
   }
 }
 

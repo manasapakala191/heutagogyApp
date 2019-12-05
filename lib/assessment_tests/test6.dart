@@ -47,9 +47,15 @@ class _Test6PageState extends State<Test6Page> {
                     width: 150,
                     height: 100,
                     decoration: BoxDecoration(
-                        border: Border.all(width: 2), borderRadius: BorderRadius.circular(20)),
+                        color: Colors.blueAccent,
+                        borderRadius: BorderRadius.circular(20)),
                     child: Center(
-                      child: Text("Wild Animals"),
+                      child: Text(
+                        "Wild Animals",
+                        style: TextStyle(
+                            fontSize: 20, color: Colors.white, fontWeight: FontWeight.bold),
+                        textAlign: TextAlign.center,
+                      ),
                     ),
                   );
                 },
@@ -66,9 +72,15 @@ class _Test6PageState extends State<Test6Page> {
                     width: 150,
                     height: 100,
                     decoration: BoxDecoration(
-                        border: Border.all(width: 2), borderRadius: BorderRadius.circular(20)),
+                        color: Colors.blueAccent,
+                        borderRadius: BorderRadius.circular(20)),
                     child: Center(
-                      child: Text("Domestic Animals"),
+                      child: Text(
+                        "Domestic Animals",
+                        style: TextStyle(
+                            fontSize: 20, color: Colors.white, fontWeight: FontWeight.bold),
+                        textAlign: TextAlign.center,
+                      ),
                     ),
                   );
                 },
@@ -100,12 +112,14 @@ class _Test6PageState extends State<Test6Page> {
         child: Container(
           margin: EdgeInsets.all(5),
           decoration: BoxDecoration(
-              border: Border.all(color: Colors.blueAccent),
+              color: (animals[x] == "") ? Colors.white54 : Colors.blueAccent,
+              border: Border.all(color: Colors.black54),
               borderRadius: BorderRadius.circular(20)),
           padding: EdgeInsets.fromLTRB(25, 10, 25, 10),
           child: Text(
             (animals[x] == "") ? x : "$x (${animals[x]})",
-            style: TextStyle(fontSize: 16, color: Colors.blueAccent),
+            style: TextStyle(
+                fontSize: 16, color: (animals[x] != "") ? Colors.white : Colors.blueAccent),
           ),
         ),
         feedback: Material(
@@ -113,7 +127,7 @@ class _Test6PageState extends State<Test6Page> {
           child: Container(
             margin: EdgeInsets.all(5),
             decoration: BoxDecoration(
-              color: Colors.white70,
+                color: Colors.white70,
                 border: Border.all(color: Colors.blueAccent),
                 borderRadius: BorderRadius.circular(20)),
             padding: EdgeInsets.fromLTRB(25, 10, 25, 10),
