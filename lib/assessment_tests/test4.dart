@@ -16,13 +16,16 @@ class Test4Page extends StatefulWidget {
 class _Test4PageState extends State<Test4Page> {
   Test4Data test4data;
   var correct;
+  var correct2;
   var seed;
   _Test4PageState(Test4Data data) {
     seed = Random().nextInt(100);
     this.test4data = data;
     this.correct = Map();
+    this.correct2 = Map();
     for (var audio in this.test4data.audios) {
       correct[audio.description] = false;
+      correct2[audio.description] = false;
     }
   }
 
@@ -35,7 +38,7 @@ class _Test4PageState extends State<Test4Page> {
             : Center(
             child: Text(
               test4data.heading,
-              style: TextStyle(fontSize: 18),
+              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
             )),
         Padding(padding: EdgeInsets.only(top: 20),),
         Column(
@@ -60,7 +63,7 @@ class _Test4PageState extends State<Test4Page> {
                 border: Border.all(width: 2),
                 borderRadius: BorderRadius.circular(100)),
             child: Icon(
-              Icons.assignment_turned_in,
+              Icons.check,
               color: Colors.blue,
               size: 32,
             )));
@@ -72,7 +75,7 @@ class _Test4PageState extends State<Test4Page> {
         DragTarget(
           builder:
               (BuildContext context, List<String> incoming, List rejected) {
-            if (!correct[sound.description]) {
+            if (!correct2[sound.description]) {
               return Container(
                 padding: EdgeInsets.only(bottom: 4),
                 width: 140,
@@ -122,6 +125,7 @@ class _Test4PageState extends State<Test4Page> {
           onAccept: (data) {
             setState(() {
               correct[data] = true;
+              correct2[sound.description] = true;
             });
           },
           onLeave: (data) {},

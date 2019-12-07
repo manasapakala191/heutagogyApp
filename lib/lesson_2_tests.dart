@@ -83,7 +83,7 @@ class Lesson1TestsState extends State<MyLesson2Tests> {
       isActive: true,
       state: StepState.indexed,
     ));
-    mySteps.add(Step(title: Text(''), content: WellDonePage()));
+    mySteps.add(Step(title: Text(''), content: WellDonePage(), isActive: true, state: StepState.indexed));
 
   }
 

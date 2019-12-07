@@ -37,7 +37,7 @@ class _Test4PageState extends State<Test4Page> {
             : Center(
                 child: Text(
                 test4data.heading,
-                style: TextStyle(fontSize: 18),
+                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
               )),
         Padding(padding: EdgeInsets.only(top: 20),),
         Column(
@@ -118,7 +118,7 @@ class _Test4PageState extends State<Test4Page> {
           },
           onAccept: (data) {
             setState(() {
-              correct[data] = true;
+              correct[sound.description] = true;
             });
           },
           onLeave: (data) {},

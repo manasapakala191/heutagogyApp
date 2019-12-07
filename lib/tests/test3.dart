@@ -33,13 +33,26 @@ class _Test3PageState extends State<Test3Page> {
 
 
     return Center(
-      child: Container(
-        height: 400,
-        child: PageView(
-          controller: pageController,
-          scrollDirection: Axis.vertical,
-          children: _buildChildren()
-        ),
+      child: Column(
+        children: <Widget>[
+          Text(
+            "Sort the numbers correctly",
+            textAlign: TextAlign.center,
+            style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+          ),
+          Container(
+            height: 400,
+            child: PageView(
+                controller: pageController,
+                scrollDirection: Axis.vertical,
+                children: _buildChildren()),
+          ),
+          Text(
+            "Swipe Up for More!",
+            textAlign: TextAlign.center,
+            style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+          )
+        ],
       ),
     );
   }

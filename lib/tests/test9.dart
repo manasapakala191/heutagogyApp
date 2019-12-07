@@ -33,7 +33,7 @@ class _Test9PageState extends State<Test9Page> {
     List<Widget> dragTargets = _buildDragTargets();
     dragTargets..shuffle(Random(2));
     List<Widget> rows = [];
-    rows.add(Text(test9data.heading, style: TextStyle(fontSize: 20)),);
+    rows.add(Text(test9data.heading, style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),);
     for (int i = 0; i < drags.length; i++) {
       rows.add(Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,

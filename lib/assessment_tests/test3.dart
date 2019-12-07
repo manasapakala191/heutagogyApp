@@ -99,7 +99,7 @@ class _NumberPuzzleState extends State<NumberPuzzle>
             padding: EdgeInsets.only(top: 10, bottom: 20),
             child: Text(
               "Sort in Ascending Order",
-              style: TextStyle(fontSize: 20),
+              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
             ),
           ),
           NumberPuzzleSub(receivedNumbers: numbers, order: "ASC"),
@@ -107,7 +107,7 @@ class _NumberPuzzleState extends State<NumberPuzzle>
             padding: EdgeInsets.only(top: 20, bottom: 20),
             child: Text(
               "Sort in Descending Order",
-              style: TextStyle(fontSize: 20),
+              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
             ),
           ),
           NumberPuzzleSub(receivedNumbers: numbers, order: "DESC"),

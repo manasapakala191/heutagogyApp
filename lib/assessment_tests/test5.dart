@@ -41,7 +41,7 @@ class _Test5PageState extends State<Test5Page> {
     if (test6data.heading != null && test6data.heading != "")
       items.add(Text(
         test6data.heading,
-        style: TextStyle(fontSize: 20),
+        style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
       ));
     for (var x in test6data.choices) {
       items.add(

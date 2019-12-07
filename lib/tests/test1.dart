@@ -43,7 +43,7 @@ class Test1PageState extends State<Test1Page> {
       questionsList.add(Center(
         child: Text(
           this.data.heading,
-          style: TextStyle(fontSize: 18),
+          style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
         ),
       ));
     }

@@ -16,12 +16,15 @@ class Test2Page extends StatefulWidget {
 class _Test2PageState extends State<Test2Page> {
   Test2Data test2data;
   Map<String, bool> correct;
+  Map<String, bool> correct2;
 
   _Test2PageState(Test2Data data) {
     this.test2data = data;
     this.correct = Map();
+    this.correct2 = Map();
     for (var image in this.test2data.pictures) {
       correct[image.description] = false;
+      correct2[image.description] = false;
     }
   }
 
@@ -35,7 +38,7 @@ class _Test2PageState extends State<Test2Page> {
               : Center(
             child: Text(
               test2data.heading,
-              style: TextStyle(fontSize: 18),
+              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
             ),
           ),
           Padding(padding: EdgeInsets.only(top: 20),),
@@ -72,7 +75,7 @@ class _Test2PageState extends State<Test2Page> {
       targets.add(
         DragTarget(
           builder: (BuildContext context, List<String> incoming, List rejected) {
-            if (!correct[image.description]) {
+            if (!correct2[image.description]) {
               return Container(
                 padding: EdgeInsets.only(bottom: 4),
                 width: 140,
@@ -117,11 +120,13 @@ class _Test2PageState extends State<Test2Page> {
           },
           onAccept: (data) {
             setState(() {
+
               correct[data] = true;
+              correct2[image.description] = true;
             });
           },
           onLeave: (data) {},
-          onWillAccept: (data) => data == image.description,
+          onWillAccept: (data) => true,
         ),
       );
     }
@@ -181,7 +186,7 @@ class DraggableImage extends StatelessWidget {
           height: 128,
           child: Center(
             child: Icon(
-              Icons.assignment_turned_in,
+              Icons.check,
               color: Colors.blueAccent,
             ),
           ),

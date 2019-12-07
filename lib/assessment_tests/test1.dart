@@ -43,7 +43,7 @@ class Test1PageState extends State<Test1Page> {
       questionsList.add(Center(
         child: Text(
           this.data.heading,
-          style: TextStyle(fontSize: 18),
+          style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
         ),
       ));
     }
@@ -135,7 +135,7 @@ class QuestionWidgetState extends State<StatefulWidget> {
             finalText: x.text,
             buttonStyle: buttonStyle,
             animationduration: Duration(seconds: 1),
-            iconData: Icons.assignment_turned_in,
+            iconData: Icons.check,
             iconsize: 14,
             radius: 14,
           )));
