@@ -7,6 +7,7 @@ import 'package:heutagogy/tests/test2.dart';
 import 'package:heutagogy/tests/test3.dart';
 import 'package:heutagogy/tests/test4.dart';
 import 'package:heutagogy/tests/test5.dart';
+import 'package:heutagogy/tests/test10.dart';
 import 'dart:math';
 import 'dart:io';
 import 'package:heutagogy/tests/test8.dart';
@@ -32,7 +33,12 @@ class Lesson1TestsState extends State<MyLesson3Tests> {
       lessonData.test2.length,
       lessonData.test3.length,
     ].reduce(max);
-
+    mySteps.add(Step(
+      title: Text(''),
+      content: Test10Page(),
+      isActive: true,
+      state: StepState.indexed,
+    ));
     mySteps.add(Step(
       title: Text(''),
       content: Lesson3Videos(),
