@@ -40,54 +40,29 @@ class _LessonsPageState extends State<_LessonsPage> {
   Widget lessonsBuilder(BuildContext context, int index) {
     if (index == 0) {
       return Padding(
-        padding: EdgeInsets.fromLTRB(0, 10, 0, 10),
+        padding: EdgeInsets.fromLTRB(0, 10, 0, 0),
         // child: Center(
         child: Column(
           children: <Widget>[
             Padding(
-              padding: EdgeInsets.fromLTRB(0, 10, 0, 20),
+              padding: EdgeInsets.fromLTRB(0, 10, 0, 0),
               child: Row(
+                mainAxisAlignment: MainAxisAlignment.start,
                 children: <Widget>[
-                  Expanded(
-                    flex: 1,
-                    child: IconButton(
-                      icon: Icon(Icons.arrow_back),
-                      onPressed: () {
-                        Navigator.pop(context);
-                      },
-                    ),
+                  IconButton(
+                    icon: Icon(Icons.arrow_back),
+                    onPressed: () {
+                      Navigator.pop(context);
+                    },
                   ),
-                  Expanded(
-                    flex: 7,
-                    child: Container(
-                      margin: EdgeInsets.fromLTRB(10, 0, 10, 0),
-                      child: TextField(
-                        style: TextStyle(
-                          fontSize: 20,
-                        ),
-                        decoration: InputDecoration(
-                          hintText: 'Search',
-                          suffixIcon: Icon(Icons.search),
-                          contentPadding: EdgeInsets.fromLTRB(20.0, 10.0, 0.0, 10.0),
-                          border: OutlineInputBorder(borderRadius: BorderRadius.circular(20.0)),
-                        ),
-                      ),
-                    ),
-                  ),
-                  Expanded(
-                    flex: 1,
-                    child: Icon(
-                      Icons.filter_list,
+                  Text(
+                    "Choose any lesson to begin",
+                    style: TextStyle(
+                      fontSize: 25,
+                      // fontWeight: FontWeight.bold
                     ),
                   ),
                 ],
-              ),
-            ),
-            Text(
-              "Choose any lesson to begin",
-              style: TextStyle(
-                fontSize: 25,
-                // fontWeight: FontWeight.bold
               ),
             ),
           ],
@@ -158,7 +133,10 @@ class LessonState extends State<Lesson> {
             clipBehavior: Clip.antiAlias,
             elevation: 3,
             shape: RoundedRectangleBorder(
-              side: BorderSide(color: Colors.blueAccent, style: BorderStyle.solid, width: 1.0),
+              side: BorderSide(
+                  color: Colors.blueAccent,
+                  style: BorderStyle.solid,
+                  width: 1.0),
               borderRadius: BorderRadius.circular(16.0),
             ),
             child: InkWell(
@@ -202,7 +180,8 @@ class LessonState extends State<Lesson> {
                   LinearProgressIndicator(
                     value: progress,
                     backgroundColor: Colors.transparent,
-                    valueColor: AlwaysStoppedAnimation<Color>(Colors.blueAccent),
+                    valueColor:
+                        AlwaysStoppedAnimation<Color>(Colors.blueAccent),
                   ),
                 ],
               ),
