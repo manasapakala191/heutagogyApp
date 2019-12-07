@@ -63,6 +63,7 @@ class _Test5PageState extends State<Test5Page> {
                     child: TextField(
                       textAlign: TextAlign.center,
                       decoration: InputDecoration(
+                        hintText: "Type Here",
                         border: InputBorder.none,
                       ),
                       onChanged: (txt) {

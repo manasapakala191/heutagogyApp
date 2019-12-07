@@ -10,12 +10,11 @@ import 'package:heutagogy/assessment_tests/test4.dart';
 import 'package:heutagogy/assessment_tests/test6.dart';
 import 'package:heutagogy/assessment_tests/test7.dart';
 import 'package:heutagogy/assessment_tests/test9.dart';
-
+import 'package:heutagogy/assessment_tests/transition.dart';
 import 'dart:math';
 
 import 'package:heutagogy/my_stepper.dart';
 import 'package:heutagogy/well_done_page.dart';
-
 
 class SummativeTests extends StatefulWidget {
   final LessonData lessonData;
@@ -38,93 +37,143 @@ class Lesson1TestsState extends State<SummativeTests> {
       lessonData.test4.length,
       lessonData.test6.length,
     ].reduce(max);
-    for (int z = 0; z < maxLength; z++) {
-      if (lessonData.test1 != null && z < lessonData.test1.length) {
+
+    List<String> subjects = ["english", "maths", "evs", "telegu", "biology"];
+
+    for (String sub in subjects) {
+
+      mySteps.add(Step(
+          title: Text(''),
+          content:TransitionPage(subject: sub),isActive: true));
+      if (sub == "maths") {
         mySteps.add(Step(
           title: Text(''),
-          content: Test1Page(
-            lessonData.test1[z],
-            key: UniqueKey(),
-          ),
+          content: Test7Page(
+              10,
+              10,
+              [
+                2,
+                7,
+                12,
+                15,
+                19,
+                23,
+                27,
+                40,
+                41,
+                43,
+                45,
+                58,
+                62,
+                64,
+                66,
+                70,
+                73,
+                77,
+                81,
+                85,
+                93,
+                96,
+                99
+              ]..shuffle()),
           isActive: true,
           state: StepState.indexed,
         ));
       }
-      if (lessonData.test2 != null && z < lessonData.test2.length) {
+      if (sub == "evs") {
         mySteps.add(Step(
           title: Text(''),
-          content: Test2Page(
-            lessonData.test2[z],
-            key: ObjectKey(lessonData.test2[z]),
-          ),
+          content: Test6Page(),
           isActive: true,
           state: StepState.indexed,
         ));
       }
-      if (lessonData.test3 != null && z < lessonData.test3.length) {
-        mySteps.add(Step(
-          title: Text(''),
-          content: Test3Page(
-            lessonData.test3[z],
-            key: UniqueKey(),
-          ),
-          isActive: true,
-          state: StepState.indexed,
-        ));
-      }
-      if (lessonData.test4 != null && z < lessonData.test4.length) {
-        mySteps.add(Step(
-          title: Text(''),
-          content: Test4Page(
-            lessonData.test4[z],
-            key: UniqueKey(),
-          ),
-          isActive: true,
-          state: StepState.indexed,
-        ));
-      }
-      if (lessonData.test6 != null && z < lessonData.test6.length) {
-        mySteps.add(Step(
-          title: Text(''),
-          content: Test5Page(
-            lessonData.test6[z],
-            key: UniqueKey(),
-          ),
-          isActive: true,
-          state: StepState.indexed,
-        ));
-      }
-      if (lessonData.test9 != null && z < lessonData.test9.length) {
-        mySteps.add(Step(
-          title: Text(''),
-          content: Test9Page(
-            lessonData.test9[z],
-          ),
-          isActive: true,
-          state: StepState.indexed,
-        ));
+      for (int z = 0; z < maxLength; z++) {
+        if (lessonData.test1 != null && z < lessonData.test1.length) {
+          if (lessonData.test1[z].subject == sub) {
+            mySteps.add(Step(
+              title: Text(''),
+              content: Test1Page(
+                lessonData.test1[z],
+                key: UniqueKey(),
+              ),
+              isActive: true,
+              state: StepState.indexed,
+            ));
+          }
+        }
+        if (lessonData.test2 != null && z < lessonData.test2.length) {
+          if (lessonData.test2[z].subject == sub) {
+            mySteps.add(Step(
+              title: Text(''),
+              content: Test2Page(
+                lessonData.test2[z],
+                key: ObjectKey(lessonData.test2[z]),
+              ),
+              isActive: true,
+              state: StepState.indexed,
+            ));
+          }
+        }
+        if (lessonData.test3 != null && z < lessonData.test3.length) {
+          if (lessonData.test3[z].subject == sub) {
+            mySteps.add(Step(
+              title: Text(''),
+              content: Test3Page(
+                lessonData.test3[z],
+                key: UniqueKey(),
+              ),
+              isActive: true,
+              state: StepState.indexed,
+            ));
+          }
+        }
+        if (lessonData.test4 != null && z < lessonData.test4.length) {
+          if (lessonData.test4[z].subject == sub) {
+            mySteps.add(Step(
+              title: Text(''),
+              content: Test4Page(
+                lessonData.test4[z],
+                key: UniqueKey(),
+              ),
+              isActive: true,
+              state: StepState.indexed,
+            ));
+          }
+        }
+        if (lessonData.test6 != null && z < lessonData.test6.length) {
+          if (lessonData.test6[z].subject == sub) {
+            mySteps.add(Step(
+              title: Text(''),
+              content: Test5Page(
+                lessonData.test6[z],
+                key: UniqueKey(),
+              ),
+              isActive: true,
+              state: StepState.indexed,
+            ));
+          }
+        }
+        if (lessonData.test9 != null && z < lessonData.test9.length) {
+          if (lessonData.test9[z].subject == sub) {
+            mySteps.add(Step(
+              title: Text(''),
+              content: Test9Page(
+                lessonData.test9[z],
+              ),
+              isActive: true,
+              state: StepState.indexed,
+            ));
+          }
+        }
       }
     }
 
     mySteps.add(Step(
-      title: Text(''),
-      content: Test7Page(
-          10,
-          10,
-          [2, 7, 12, 15, 19, 23, 27, 40, 41, 43, 45, 58, 62, 64, 66, 70, 73, 77, 81, 85, 93, 96, 99]
-            ..shuffle()),
-      isActive: true,
-      state: StepState.indexed,
-    ));
-
-    mySteps.add(Step(
-      title: Text(''),
-      content: Test6Page(),
-      isActive: true,
-      state: StepState.indexed,
-    ));
-    mySteps.add(Step(title: Text(''), content: WellDonePage(), isActive: true, state: StepState.indexed));
-
+        title: Text(''),
+        content: WellDonePage(),
+        isActive: true,
+        state: StepState.indexed));
   }
 
   LessonData lessonData;
@@ -211,7 +260,9 @@ class Lesson1TestsState extends State<SummativeTests> {
                       label: Text(
                         "Next",
                         style: TextStyle(
-                            color: Colors.blue, fontSize: 16, fontWeight: FontWeight.bold),
+                            color: Colors.blue,
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold),
                       ),
                       shape: RoundedRectangleBorder(
                           side: BorderSide(color: Colors.blue, width: 1),
@@ -240,7 +291,8 @@ class Lesson1TestsState extends State<SummativeTests> {
                           Navigator.pop(context);
                         }
                       },
-                      shape: CircleBorder(side: BorderSide(color: Colors.blue, width: 1)),
+                      shape: CircleBorder(
+                          side: BorderSide(color: Colors.blue, width: 1)),
                       child: Icon(
                         Icons.arrow_back,
                         color: Colors.blue,

@@ -94,16 +94,17 @@ class QuestionData {
 class Test1Data {
   String name;
   String heading;
+  String subject;
   List<QuestionData> questions;
 
-  Test1Data({this.name, this.questions, this.heading});
+  Test1Data({this.name, this.questions, this.heading, this.subject});
 
   factory Test1Data.fromJSON(Map<String, dynamic> jsonData) {
     List<QuestionData> ques = [];
     for (var q in jsonData['questions']) {
       ques.add(QuestionData.fromJSON(q));
     }
-    return Test1Data(name: jsonData['name'], questions: ques, heading: jsonData['heading']);
+    return Test1Data(name: jsonData['name'], questions: ques, heading: jsonData['heading'], subject: jsonData['subject']);
   }
 }
 
@@ -121,16 +122,17 @@ class PicturePairData {
 class Test2Data {
   String name;
   String heading;
+  String subject;
   List<PicturePairData> pictures;
 
-  Test2Data({this.name, this.pictures, this.heading});
+  Test2Data({this.name, this.pictures, this.heading, this.subject});
 
   factory Test2Data.fromJSON(Map<String, dynamic> jsonData) {
     List<PicturePairData> pics = [];
     for (var x in jsonData['pictures']) {
       pics.add(PicturePairData.fromJSON(x));
     }
-    return Test2Data(name: jsonData['name'], pictures: pics, heading: jsonData['heading']);
+    return Test2Data(name: jsonData['name'], pictures: pics, heading: jsonData['heading'], subject: jsonData['subject']);
   }
 }
 
@@ -151,9 +153,10 @@ class NumberList {
 class Test3Data {
   String name;
   String heading;
+  String subject;
   List<NumberList> numberLists;
 
-  Test3Data({this.name, this.numberLists, this.heading});
+  Test3Data({this.name, this.numberLists, this.heading, this.subject});
 
   factory Test3Data.fromJSON(Map<String, dynamic> jsonData) {
     List<NumberList> numbersList = [];
@@ -161,7 +164,7 @@ class Test3Data {
       numbersList.add(NumberList.fromJSON(x));
     }
     return Test3Data(
-        name: jsonData['name'], numberLists: numbersList, heading: jsonData['heading']);
+        name: jsonData['name'], numberLists: numbersList, heading: jsonData['heading'], subject: jsonData['subject']);
   }
 }
 
@@ -179,16 +182,17 @@ class AudioPairData {
 class Test4Data {
   String name;
   String heading;
+  String subject;
   List<AudioPairData> audios;
 
-  Test4Data({this.name, this.audios, this.heading});
+  Test4Data({this.name, this.audios, this.heading, this.subject});
 
   factory Test4Data.fromJSON(Map<String, dynamic> jsonData) {
     List<AudioPairData> pics = [];
     for (var x in jsonData['audios']) {
       pics.add(AudioPairData.fromJSON(x));
     }
-    return Test4Data(name: jsonData['name'], audios: pics, heading: jsonData['heading']);
+    return Test4Data(name: jsonData['name'], audios: pics, heading: jsonData['heading'], subject: jsonData['subject']);
   }
 }
 
@@ -223,15 +227,16 @@ class ImageQuestionData {
 class Test5Data {
   String name;
   List<ImageQuestionData> questions;
+  String subject;
 
-  Test5Data({this.name, this.questions});
+  Test5Data({this.name, this.questions,this.subject});
 
   factory Test5Data.fromJSON(Map<String, dynamic> jsonData) {
     List<ImageQuestionData> ques = [];
     for (var q in jsonData['questions']) {
       ques.add(ImageQuestionData.fromJSON(q));
     }
-    return Test5Data(name: jsonData['name'], questions: ques);
+    return Test5Data(name: jsonData['name'], questions: ques, subject: jsonData['subject']);
   }
 }
 
@@ -250,15 +255,15 @@ class Test6Data {
   String name;
   String heading;
   List<PictureTextInput> choices;
-
-  Test6Data({this.name, this.choices, this.heading});
+  String subject;
+  Test6Data({this.name, this.choices, this.heading, this.subject});
 
   factory Test6Data.fromJSON(Map<String, dynamic> jsonData) {
     List<PictureTextInput> pics = [];
     for (var x in jsonData['pictures']) {
       pics.add(PictureTextInput.fromJSON(x));
     }
-    return Test6Data(name: jsonData['name'], heading: jsonData['heading'], choices: pics);
+    return Test6Data(name: jsonData['name'], heading: jsonData['heading'], choices: pics, subject: jsonData['subject']);
   }
 }
 
@@ -275,14 +280,14 @@ class TextPair {
 class Test9Data {
   String heading;
   List<TextPair> questions;
-
-  Test9Data({this.heading, this.questions});
+  String subject;
+  Test9Data({this.heading, this.questions, this.subject});
 
   factory Test9Data.fromJSON(Map<String, dynamic> jsonData) {
     List<TextPair> ques = [];
     for (var x in jsonData['questions']) {
       ques.add(TextPair.fromJSON(x));
     }
-    return Test9Data(heading: jsonData['heading'], questions: ques);
+    return Test9Data(heading: jsonData['heading'], questions: ques, subject: jsonData['subject']);
   }
 }

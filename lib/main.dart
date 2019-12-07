@@ -15,6 +15,7 @@ void main() {
 
 class MyHomePage extends StatefulWidget {
   MyHomePage({Key key}) : super(key: key);
+
   @override
   _MyHomePageState createState() => _MyHomePageState();
 }
@@ -24,6 +25,7 @@ class _MyHomePageState extends State<MyHomePage> {
   var loader;
 
   final JsonEncoder jsonEncoder = new JsonEncoder.withIndent('    ');
+
   @override
   void initState() {
     data = "";
@@ -44,7 +46,31 @@ class _MyHomePageState extends State<MyHomePage> {
             child: child,
             scale: animation,
           ),
-          child: loader,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              Text(
+                "HEUTAGOGY",
+                style: TextStyle(fontSize: 60),
+              ),
+              Padding(
+                padding: EdgeInsets.only(bottom: 60),
+              ),
+              loader,
+              Padding(
+                padding: EdgeInsets.only(bottom: 100),
+              ),
+              Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  Text(
+                    "by HAPPY ADDA STUDIOS",
+                    style: TextStyle(fontSize: 20),
+                  )
+                ],
+              ),
+            ],
+          ),
         ),
       ),
     );
@@ -63,7 +89,7 @@ class _MyHomePageState extends State<MyHomePage> {
           setState(() {
             data = body;
             loader = Icon(
-              Icons.check,
+              Icons.check_circle,
               color: Colors.green,
               size: 80.0,
             );
@@ -73,7 +99,7 @@ class _MyHomePageState extends State<MyHomePage> {
             setState(() {
               data = offlineData;
               loader = Icon(
-                Icons.check,
+                Icons.check_circle,
                 color: Colors.blue,
                 size: 80.0,
               );
@@ -88,15 +114,15 @@ class _MyHomePageState extends State<MyHomePage> {
             });
           }
         }
-        final response2 =
-            await http.get("https://1ashutosh.pythonanywhere.com/api/assessment");
+        final response2 = await http
+            .get("https://1ashutosh.pythonanywhere.com/api/assessment");
         if (response.statusCode == 200) {
           String body = response2.body;
           writeData2(body);
           setState(() {
             assessment = body;
             loader = Icon(
-              Icons.check,
+              Icons.check_circle,
               color: Colors.green,
               size: 80.0,
             );
@@ -106,7 +132,7 @@ class _MyHomePageState extends State<MyHomePage> {
             setState(() {
               data = offlineData;
               loader = Icon(
-                Icons.check,
+                Icons.check_circle,
                 color: Colors.blue,
                 size: 80.0,
               );
@@ -127,7 +153,7 @@ class _MyHomePageState extends State<MyHomePage> {
           setState(() {
             data = offlineData;
             loader = Icon(
-              Icons.check,
+              Icons.check_circle,
               color: Colors.grey,
               size: 80.0,
             );
@@ -146,7 +172,9 @@ class _MyHomePageState extends State<MyHomePage> {
       Timer(Duration(milliseconds: 1100), () {
         print(assessment);
         Navigator.pushReplacement(
-            context, MaterialPageRoute(builder: (context) => HomePage(data, assessment)));
+            context,
+            MaterialPageRoute(
+                builder: (context) => HomePage(data, assessment)));
       });
     }
   }

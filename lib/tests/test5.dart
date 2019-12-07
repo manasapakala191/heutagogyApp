@@ -55,7 +55,8 @@ class _Test5PageState extends State<Test5Page> {
             ),
             (!data[x.correctText])
                 ? Container(
-                    margin: EdgeInsets.only(top: 10, bottom: 20, left: 50, right: 50),
+                    margin: EdgeInsets.only(
+                        top: 10, bottom: 20, left: 50, right: 50),
                     key: UniqueKey(),
                     decoration: BoxDecoration(
                         border: Border.all(color: Colors.blue, width: 1),
@@ -64,10 +65,11 @@ class _Test5PageState extends State<Test5Page> {
                       textAlign: TextAlign.center,
                       decoration: InputDecoration(
                         border: InputBorder.none,
+                        hintText: "Type here",
                       ),
                       onChanged: (txt) {
 //                    print(txt);
-                        if (x.correctText.toString() == txt) {
+                        if (x.correctText.toString().toLowerCase() == txt.toLowerCase()) {
                           setState(() {
                             data[txt] = true;
                           });
@@ -78,24 +80,24 @@ class _Test5PageState extends State<Test5Page> {
                     ))
                 : Container(
                     key: UniqueKey(),
-                    margin: EdgeInsets.only(top: 10, bottom: 20),
+                    height: 45.00,
+                    margin: EdgeInsets.only(
+                        top: 10, bottom: 20, left: 50, right: 50),
                     decoration: BoxDecoration(
-                        border: Border.all(color: Colors.blue, width: 2),
+                        border: Border.all(color: Colors.green, width: 2),
                         borderRadius: BorderRadius.circular(20)),
-                    child: Row(
-                      children: <Widget>[
-                        Text(
-                          x.correctText,
-                          textAlign: TextAlign.center,
-                          style: TextStyle(
-                            color: Colors.green,
-                            fontSize: 18,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        )
-                      ],
+                    child: Center(
+                      child: Text(
+                        x.correctText,
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          color: Colors.green,
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
                     ),
-                  )
+                  ),
           ],
         ),
       );
