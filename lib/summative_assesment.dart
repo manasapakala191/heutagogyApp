@@ -41,10 +41,15 @@ class Lesson1TestsState extends State<SummativeTests> {
     List<String> subjects = ["english", "maths", "evs", "telegu", "biology"];
 
     for (String sub in subjects) {
+      mySteps.add(
+        Step(
+          content: TransitionPage(subject: sub),
+          isActive: true,
+          title: Text(sub.toUpperCase()),
+          state: StepState.indexed,
+        ),
+      );
 
-      mySteps.add(Step(
-          title: Text(''),
-          content:TransitionPage(subject: sub),isActive: true));
       if (sub == "maths") {
         mySteps.add(Step(
           title: Text(''),
@@ -169,11 +174,8 @@ class Lesson1TestsState extends State<SummativeTests> {
       }
     }
 
-    mySteps.add(Step(
-        title: Text(''),
-        content: WellDonePage(),
-        isActive: true,
-        state: StepState.indexed));
+    mySteps.add(
+        Step(title: Text(''), content: WellDonePage(), isActive: true, state: StepState.indexed));
   }
 
   LessonData lessonData;
@@ -245,8 +247,11 @@ class Lesson1TestsState extends State<SummativeTests> {
                   child: Padding(
                     padding: EdgeInsets.fromLTRB(0, 0, 20, 0),
                     child: FloatingActionButton.extended(
-                      backgroundColor: Colors.white,
-                      splashColor: Colors.lightBlueAccent,
+                      backgroundColor:
+                          (currentStep == mySteps.length - 1) ? Colors.blueAccent : Colors.white,
+                      splashColor: (currentStep == mySteps.length - 1)
+                          ? Colors.white54
+                          : Colors.lightBlueAccent,
                       heroTag: 'NextStep',
                       onPressed: () {
                         if (currentStep < mySteps.length - 1) {
@@ -258,19 +263,21 @@ class Lesson1TestsState extends State<SummativeTests> {
                         }
                       },
                       label: Text(
-                        "Next",
+                        (currentStep == mySteps.length - 1) ? "Finish" : "Next",
                         style: TextStyle(
-                            color: Colors.blue,
+                            color: (currentStep == mySteps.length - 1) ? Colors.white : Colors.blue,
                             fontSize: 16,
                             fontWeight: FontWeight.bold),
                       ),
                       shape: RoundedRectangleBorder(
                           side: BorderSide(color: Colors.blue, width: 1),
                           borderRadius: BorderRadius.circular(40)),
-                      icon: Icon(
-                        Icons.navigate_next,
-                        color: Colors.blue,
-                      ),
+                      icon: (currentStep == mySteps.length - 1)
+                          ? null
+                          : Icon(
+                              Icons.navigate_next,
+                              color: Colors.blue,
+                            ),
                     ),
                   ),
                 ),
@@ -291,8 +298,7 @@ class Lesson1TestsState extends State<SummativeTests> {
                           Navigator.pop(context);
                         }
                       },
-                      shape: CircleBorder(
-                          side: BorderSide(color: Colors.blue, width: 1)),
+                      shape: CircleBorder(side: BorderSide(color: Colors.blue, width: 1)),
                       child: Icon(
                         Icons.arrow_back,
                         color: Colors.blue,

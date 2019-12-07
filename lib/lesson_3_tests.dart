@@ -2,6 +2,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:heutagogy/data_models.dart';
+import 'package:heutagogy/my_stepper.dart';
+import 'package:heutagogy/tests/star_rating.dart';
 import 'package:heutagogy/tests/test1.dart';
 import 'package:heutagogy/tests/test2.dart';
 import 'package:heutagogy/tests/test3.dart';
@@ -45,7 +47,13 @@ class Lesson1TestsState extends State<MyLesson3Tests> {
       isActive: true,
       state: StepState.indexed,
     ));
-
+    mySteps.add(Step(
+        title: Text(''),
+        content: StarTest(
+          "Put a bowl of water for birds everyday in your school and give yourself 3 stars.",
+          key: ObjectKey(1),
+        ),
+        isActive: true));
     for (int z = 0; z < maxLength; z++) {
       if (lessonData.test1 != null && z < lessonData.test1.length) {
         mySteps.add(Step(
@@ -104,6 +112,14 @@ class Lesson1TestsState extends State<MyLesson3Tests> {
         ));
       }
     }
+
+    mySteps.add(Step(
+        title: Text(''),
+        content: StarTest(
+          "Does the air and water have weight? Prove it and give yourself 3 stars.",
+          key: ObjectKey(2),
+        ),
+        isActive: true));
     mySteps.add(Step(
       title: Text(''),
       content:
@@ -111,7 +127,8 @@ class Lesson1TestsState extends State<MyLesson3Tests> {
       isActive: true,
       state: StepState.indexed,
     ));
-    mySteps.add(Step(title: Text(''), content: WellDonePage(), isActive: true, state: StepState.indexed));
+    mySteps.add(
+        Step(title: Text(''), content: WellDonePage(), isActive: true, state: StepState.indexed));
   }
 
   LessonData lessonData;
@@ -148,10 +165,10 @@ class Lesson1TestsState extends State<MyLesson3Tests> {
         data: ThemeData(
           canvasColor: Colors.white,
         ),
-        child: Stepper(
-          type: StepperType.horizontal,
-          currentStep: this.currentStep,
-          onStepTapped: onStepTapped,
+        child: MyStepper(
+          type: MyStepperType.horizontal,
+          currentMyStep: this.currentStep,
+          onMyStepTapped: onStepTapped,
           steps: mySteps,
           controlsBuilder: (BuildContext context,
               {VoidCallback onStepContinue, VoidCallback onStepCancel}) {
