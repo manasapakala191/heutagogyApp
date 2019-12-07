@@ -38,6 +38,13 @@ class _Test6PageState extends State<Test6Page> {
     return SingleChildScrollView(
       child: Column(
         children: <Widget>[
+          Center(
+            child: Text(
+              "Drag animals to the correct group.",
+              style: TextStyle(fontSize: 18),
+            ),
+          ),
+          Padding(padding: EdgeInsets.only(top: 20,)),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: <Widget>[
@@ -47,8 +54,7 @@ class _Test6PageState extends State<Test6Page> {
                     width: 150,
                     height: 100,
                     decoration: BoxDecoration(
-                        color: Colors.blueAccent,
-                        borderRadius: BorderRadius.circular(20)),
+                        color: Colors.blueAccent, borderRadius: BorderRadius.circular(20)),
                     child: Center(
                       child: Text(
                         "Wild Animals",
@@ -72,8 +78,7 @@ class _Test6PageState extends State<Test6Page> {
                     width: 150,
                     height: 100,
                     decoration: BoxDecoration(
-                        color: Colors.blueAccent,
-                        borderRadius: BorderRadius.circular(20)),
+                        color: Colors.blueAccent, borderRadius: BorderRadius.circular(20)),
                     child: Center(
                       child: Text(
                         "Domestic Animals",

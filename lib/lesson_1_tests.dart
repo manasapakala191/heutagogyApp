@@ -10,6 +10,8 @@ import 'package:heutagogy/tests/test5.dart';
 import 'package:heutagogy/tests/test9.dart';
 import 'dart:math';
 
+import 'package:heutagogy/well_done_page.dart';
+
 
 class MyLesson1Tests extends StatefulWidget {
   final LessonData lessonData;
@@ -84,7 +86,9 @@ class Lesson1TestsState extends State<MyLesson1Tests> {
           state: StepState.indexed,
         ));
       }
+
     }
+      mySteps.add(Step(title: Text(''), content: WellDonePage()));
 
 //    mySteps.add(Step(
 //      title: Text(''),

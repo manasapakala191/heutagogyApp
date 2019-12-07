@@ -14,6 +14,7 @@ import 'package:heutagogy/assessment_tests/test9.dart';
 import 'dart:math';
 
 import 'package:heutagogy/my_stepper.dart';
+import 'package:heutagogy/well_done_page.dart';
 
 
 class SummativeTests extends StatefulWidget {
@@ -122,6 +123,8 @@ class Lesson1TestsState extends State<SummativeTests> {
       isActive: true,
       state: StepState.indexed,
     ));
+    mySteps.add(Step(title: Text(''), content: WellDonePage()));
+
   }
 
   LessonData lessonData;

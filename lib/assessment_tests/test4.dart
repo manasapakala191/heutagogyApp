@@ -29,11 +29,19 @@ class _Test4PageState extends State<Test4Page> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      child: Container(
-        child: Column(
+      child: Column(children: <Widget>[
+        (test4data.heading == null || test4data.heading == "")
+            ? Container()
+            : Center(
+            child: Text(
+              test4data.heading,
+              style: TextStyle(fontSize: 18),
+            )),
+        Padding(padding: EdgeInsets.only(top: 20),),
+        Column(
           children: _builder(test4data, correct, seed),
         ),
-      ),
+      ]),
     );
   }
 

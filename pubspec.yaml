@@ -89,6 +89,7 @@ flutter:
     - assets/images/pb6/spinach.png
     - assets/images/pb6/eggplant.png
     - assets/images/pb6/jackfruit.png
+    - assets/images/well_done.png
 
   # Assets (Sounds)
     - assets/audio/parrot.mp3

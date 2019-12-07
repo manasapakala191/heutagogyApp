@@ -8,8 +8,10 @@ import 'package:heutagogy/tests/test3.dart';
 import 'package:heutagogy/tests/test4.dart';
 import 'package:heutagogy/tests/test5.dart';
 import 'dart:math';
-
+import 'dart:io';
 import 'package:heutagogy/tests/test8.dart';
+import 'package:heutagogy/well_done_page.dart';
+import 'package:youtube_player/youtube_player.dart';
 
 class MyLesson3Tests extends StatefulWidget {
   final LessonData lessonData;
@@ -30,6 +32,13 @@ class Lesson1TestsState extends State<MyLesson3Tests> {
       lessonData.test2.length,
       lessonData.test3.length,
     ].reduce(max);
+
+    mySteps.add(Step(
+      title: Text(''),
+      content: Lesson3Videos(),
+      isActive: true,
+      state: StepState.indexed,
+    ));
 
     for (int z = 0; z < maxLength; z++) {
       if (lessonData.test1 != null && z < lessonData.test1.length) {
@@ -96,6 +105,7 @@ class Lesson1TestsState extends State<MyLesson3Tests> {
       isActive: true,
       state: StepState.indexed,
     ));
+    mySteps.add(Step(title: Text(''), content: WellDonePage()));
   }
 
   LessonData lessonData;
@@ -216,6 +226,65 @@ class Lesson1TestsState extends State<MyLesson3Tests> {
               ],
             )
           : null),
+    );
+  }
+}
+
+class Lesson3Videos extends StatefulWidget {
+  @override
+  _Lesson3VideosState createState() => _Lesson3VideosState();
+}
+
+class _Lesson3VideosState extends State<Lesson3Videos> {
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      child: Column(
+        children: <Widget>[
+          Padding(
+            child: Text("chitti chitti miriyalu"),
+            padding: EdgeInsets.only(top: 20),
+          ),
+          Padding(padding: EdgeInsets.only(bottom: 10)),
+          YoutubePlayer(
+            width: 360,
+            context: context,
+            source: "https://www.youtube.com/watch?v=1KwAhTF8cXg",
+            quality: YoutubeQuality.HIGH,
+            autoPlay: false,
+            showVideoProgressbar: true,
+            hideShareButton: true,
+          ),
+          Padding(
+            child: Text("pottelu kanna talli gorre"),
+            padding: EdgeInsets.only(top: 20),
+          ),
+          Padding(padding: EdgeInsets.only(bottom: 10)),
+          YoutubePlayer(
+            width: 360,
+            context: context,
+            source: "https://www.youtube.com/watch?v=6_PiAF4wEFQ",
+            quality: YoutubeQuality.HIGH,
+            autoPlay: false,
+            showVideoProgressbar: true,
+            hideShareButton: true,
+          ),
+          Padding(
+            child: Text("my day songs and rhyme"),
+            padding: EdgeInsets.only(top: 20),
+          ),
+          Padding(padding: EdgeInsets.only(bottom: 10)),
+          YoutubePlayer(
+            width: 360,
+            context: context,
+            source: "https://www.youtube.com/watch?v=H8atgJjtJUI",
+            quality: YoutubeQuality.HIGH,
+            autoPlay: false,
+            showVideoProgressbar: true,
+            hideShareButton: true,
+          )
+        ],
+      ),
     );
   }
 }

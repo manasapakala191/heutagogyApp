@@ -28,10 +28,21 @@ class _Test2PageState extends State<Test2Page> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      child: Container(
-        child: Column(
-          children: _builder(correct),
-        ),
+      child: Column(
+        children: <Widget>[
+          (test2data.heading == "" || test2data.heading == null)
+              ? Container()
+              : Center(
+            child: Text(
+              test2data.heading,
+              style: TextStyle(fontSize: 18),
+            ),
+          ),
+          Padding(padding: EdgeInsets.only(top: 20),),
+          Column(
+            children: _builder(correct),
+          ),
+        ],
       ),
     );
   }
