@@ -7,7 +7,6 @@ import 'package:heutagogy/data_models.dart';
 import 'package:heutagogy/lesson_1_tests.dart';
 import 'package:heutagogy/lesson_2_tests.dart';
 import 'package:heutagogy/lesson_3_tests.dart';
-import 'package:youtube_player/youtube_player.dart';
 
 class LessonDetail extends StatefulWidget {
   final LessonData lessonData;
