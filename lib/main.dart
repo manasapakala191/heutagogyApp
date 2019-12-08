@@ -64,9 +64,10 @@ class _MyHomePageState extends State<MyHomePage> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
                   Text(
-                    "by HAPPY ADDA STUDIOS",
-                    style: TextStyle(fontSize: 20),
-                  )
+                    "by",
+                    style: TextStyle(fontSize: 18),
+                  ),
+                  Image.asset("assets/images/HappyAddaLogo.png", width: 200, height: 70,),
                 ],
               ),
             ],

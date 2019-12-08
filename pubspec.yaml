@@ -89,6 +89,7 @@ flutter:
 
   #  Assets (Images)
   assets:
+    - assets/images/HappyAddaLogo.png
     - assets/images/books.jpg
     - assets/images/pb6/gaurd.png
     - assets/images/pb6/spinach.png

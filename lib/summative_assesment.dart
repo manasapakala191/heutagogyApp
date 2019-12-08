@@ -38,7 +38,12 @@ class Lesson1TestsState extends State<SummativeTests> {
       lessonData.test6.length,
     ].reduce(max);
 
-    List<String> subjects = ["english", "maths", "evs", "telegu", "biology"];
+    List<String> subjects = [
+      "english",
+      "maths",
+      "evs",
+      "telugu",
+    ];
 
     for (String sub in subjects) {
       mySteps.add(
@@ -92,6 +97,23 @@ class Lesson1TestsState extends State<SummativeTests> {
           isActive: true,
           state: StepState.indexed,
         ));
+      }
+      if (sub == "telugu") {
+        mySteps.add(Step(
+            title: Text(''),
+            content: HardCoded("వినడం, ఆలోచించి మాట్లాడటం, ప్రశంస:",
+                "గువ్వకు జొరమమ్మ గేయం వినండి, మీకు ఆ గేయంలో నచ్చిన పదాలు చెప్పండి."),
+            isActive: true));
+        mySteps.add(Step(
+            title: Text(''),
+            content: HardCoded("చదవడం:\n క్రింది పదాలు చదవండి",
+                "ముద్ద\nఅమ్మ \nబల్లి \nఅక్క \nమువ్వ \nబొజ్జ \nచద్ది \nబొమ్మ \nకొమ్మ \nమల్లి \nపిల్లి \nఅవ్వ \nగువ్వ\nసజ్జ \nలెక్క"),
+            isActive: true));
+        mySteps.add(Step(
+            title: Text(''),
+            content: HardCoded("ఈ వాక్యాలను మీ పుస్తకంలో గుండ్రంగా రాయండి:",
+                "అమ్మ అంటే నాకు మక్కువ\nఅక్క మొక్క నాటింది\nఅయ్య కొయ్య తెచ్చాడు"),
+            isActive: true));
       }
       for (int z = 0; z < maxLength; z++) {
         if (lessonData.test1 != null && z < lessonData.test1.length) {
@@ -174,8 +196,11 @@ class Lesson1TestsState extends State<SummativeTests> {
       }
     }
 
-    mySteps.add(
-        Step(title: Text(''), content: WellDonePage(), isActive: true, state: StepState.indexed));
+    mySteps.add(Step(
+        title: Text(''),
+        content: WellDonePage(),
+        isActive: true,
+        state: StepState.indexed));
   }
 
   LessonData lessonData;
@@ -247,8 +272,9 @@ class Lesson1TestsState extends State<SummativeTests> {
                   child: Padding(
                     padding: EdgeInsets.fromLTRB(0, 0, 20, 0),
                     child: FloatingActionButton.extended(
-                      backgroundColor:
-                          (currentStep == mySteps.length - 1) ? Colors.blueAccent : Colors.white,
+                      backgroundColor: (currentStep == mySteps.length - 1)
+                          ? Colors.blueAccent
+                          : Colors.white,
                       splashColor: (currentStep == mySteps.length - 1)
                           ? Colors.white54
                           : Colors.lightBlueAccent,
@@ -265,7 +291,9 @@ class Lesson1TestsState extends State<SummativeTests> {
                       label: Text(
                         (currentStep == mySteps.length - 1) ? "Finish" : "Next",
                         style: TextStyle(
-                            color: (currentStep == mySteps.length - 1) ? Colors.white : Colors.blue,
+                            color: (currentStep == mySteps.length - 1)
+                                ? Colors.white
+                                : Colors.blue,
                             fontSize: 16,
                             fontWeight: FontWeight.bold),
                       ),
@@ -298,7 +326,8 @@ class Lesson1TestsState extends State<SummativeTests> {
                           Navigator.pop(context);
                         }
                       },
-                      shape: CircleBorder(side: BorderSide(color: Colors.blue, width: 1)),
+                      shape: CircleBorder(
+                          side: BorderSide(color: Colors.blue, width: 1)),
                       child: Icon(
                         Icons.arrow_back,
                         color: Colors.blue,
@@ -309,6 +338,32 @@ class Lesson1TestsState extends State<SummativeTests> {
               ],
             )
           : null),
+    );
+  }
+}
+
+class HardCoded extends StatelessWidget {
+  final String text, text2;
+  const HardCoded(this.text, this.text2, {Key key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      child: Container(
+          child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: <Widget>[
+          Padding(
+            padding: EdgeInsets.only(top: 20, bottom: 10),
+            child: Text(text,
+                style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
+          ),
+          Padding(
+            padding: const EdgeInsets.only(top: 20, bottom: 10),
+            child: Text(text2, style: TextStyle(fontSize: 20)),
+          )
+        ],
+      )),
     );
   }
 }
