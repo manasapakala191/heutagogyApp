@@ -38,62 +38,40 @@ class _LessonsPageState extends State<_LessonsPage> {
   List<LessonData> lessonsData = [];
 
   Widget lessonsBuilder(BuildContext context, int index) {
-    if (index == 0) {
-      return Padding(
-        padding: EdgeInsets.fromLTRB(0, 10, 0, 0),
-        // child: Center(
-        child: Column(
-          children: <Widget>[
-            Padding(
-              padding: EdgeInsets.fromLTRB(0, 10, 0, 0),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: <Widget>[
-                  IconButton(
-                    icon: Icon(Icons.arrow_back),
-                    onPressed: () {
-                      Navigator.pop(context);
-                    },
-                  ),
-                  Text(
-                    "Choose any lesson to begin",
-                    style: TextStyle(
-                      fontSize: 25,
-                      // fontWeight: FontWeight.bold
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ],
-        ),
-        // ),
-      );
-    } else {
-      return Lesson(
-        title: this.lessonsData[index - 1].title,
-        summary: this.lessonsData[index - 1].introText,
-        func: () {
-          if (index >= 0 && index <= this.lessonsData.length) {
-            Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (context) => LessonDetail(
-                          this.lessonsData[index - 1],
-                          id: index,
-                        )));
-          }
-        },
-      );
-    }
+    return Lesson(
+      title: this.lessonsData[index].title,
+      summary: this.lessonsData[index].introText,
+      func: () {
+        if (index >= 0 && index <= this.lessonsData.length - 1) {
+          Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => LessonDetail(
+                        this.lessonsData[index],
+                        id: index + 1,
+                      )));
+        }
+      },
+    );
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-//        appBar: AppBar(),
+      appBar: AppBar(
+        backgroundColor: Colors.white,
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back_ios, color: Colors.black,),
+          onPressed: () {
+            Navigator.of(context).pop();
+          },
+        ),
+        centerTitle: true,
+        title: Text("Choose any lesson to begin",
+            style: TextStyle(fontSize: 22, color: Colors.black)),
+      ),
       body: ListView.builder(
-        itemCount: this.lessonsData.length + 1,
+        itemCount: this.lessonsData.length,
         itemBuilder: lessonsBuilder,
       ),
     );

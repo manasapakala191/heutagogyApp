@@ -53,7 +53,7 @@ class Lesson1TestsState extends State<MyLesson3Tests> {
           key: ObjectKey(1),
         ),
         isActive: (i++) == this.currentStep));
-    for (int z = 0; z < maxLength; z++) {
+    for (int z = 0; z < 10; z++) {
       if (lessonData.test1 != null && z < lessonData.test1.length) {
         mySteps.add(Step(
           title: Text(''),

@@ -29,7 +29,8 @@ class Lesson1TestsState extends State<MyLesson1Tests> {
   _buildSteps() {
     List<Step> mySteps = [];
     int i = 0;
-    for (int z = 0; z < maxLength; z++) {
+
+    for (int z = 0; z < 10; z++) {
       if (lessonData.test1 != null && z < lessonData.test1.length) {
         mySteps.add(Step(
           title: Text(''),
