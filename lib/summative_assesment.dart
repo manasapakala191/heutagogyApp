@@ -39,6 +39,7 @@ class Lesson1TestsState extends State<SummativeTests> {
       lessonData.test6.length,
     ].reduce(max);
     this.lessonData = lessonData;
+    this.scrollController = ScrollController();
   }
 
   _buildSteps() {
@@ -215,11 +216,13 @@ class Lesson1TestsState extends State<SummativeTests> {
 
   LessonData lessonData;
   int currentStep = 0;
+  ScrollController scrollController;
 
   onStepTapped(step) {
     setState(() {
       currentStep = step;
     });
+    scrollController.jumpTo(20.0 * currentStep);
     print("On Step Tapped: " + step.toString());
   }
 
@@ -258,6 +261,7 @@ class Lesson1TestsState extends State<SummativeTests> {
           currentMyStep: this.currentStep,
           onMyStepTapped: onStepTapped,
           steps: _buildSteps(),
+          horizontalController: scrollController,
           controlsBuilder: (BuildContext context,
               {VoidCallback onStepContinue, VoidCallback onStepCancel}) {
             return Row(
@@ -282,14 +286,15 @@ class Lesson1TestsState extends State<SummativeTests> {
                   child: Padding(
                     padding: EdgeInsets.fromLTRB(0, 0, 20, 0),
                     child: FloatingActionButton.extended(
-                      backgroundColor: (currentStep == maxLength - 1)
-                          ? Colors.blueAccent
-                          : Colors.white,
-                      splashColor: (currentStep == maxLength - 1)
-                          ? Colors.white54
-                          : Colors.lightBlueAccent,
+                      backgroundColor:
+                          (currentStep == maxLength - 1) ? Colors.blueAccent : Colors.white,
+                      splashColor:
+                          (currentStep == maxLength - 1) ? Colors.white54 : Colors.lightBlueAccent,
                       heroTag: 'NextStep',
                       onPressed: () {
+//                        scrollController.animateTo(scrollController.offset + 30
+//                            duration: Duration(seconds: 1), curve: Curves.linear);
+                        print(scrollController.offset);
                         if (currentStep < maxLength - 1) {
                           setState(() {
                             currentStep = currentStep + 1;
@@ -301,9 +306,7 @@ class Lesson1TestsState extends State<SummativeTests> {
                       label: Text(
                         (currentStep == maxLength - 1) ? "Finish" : "Next",
                         style: TextStyle(
-                            color: (currentStep == maxLength - 1)
-                                ? Colors.white
-                                : Colors.blue,
+                            color: (currentStep == maxLength - 1) ? Colors.white : Colors.blue,
                             fontSize: 16,
                             fontWeight: FontWeight.bold),
                       ),
@@ -328,6 +331,7 @@ class Lesson1TestsState extends State<SummativeTests> {
                       splashColor: Colors.lightBlueAccent,
                       heroTag: 'PreviousStep',
                       onPressed: () {
+                        scrollController.jumpTo(20.0 * currentStep);
                         if (currentStep > 0) {
                           setState(() {
                             currentStep = currentStep - 1;
@@ -336,8 +340,7 @@ class Lesson1TestsState extends State<SummativeTests> {
                           Navigator.pop(context);
                         }
                       },
-                      shape: CircleBorder(
-                          side: BorderSide(color: Colors.blue, width: 1)),
+                      shape: CircleBorder(side: BorderSide(color: Colors.blue, width: 1)),
                       child: Icon(
                         Icons.arrow_back,
                         color: Colors.blue,
@@ -354,6 +357,7 @@ class Lesson1TestsState extends State<SummativeTests> {
 
 class HardCoded extends StatelessWidget {
   final String text, text2;
+
   const HardCoded(this.text, this.text2, {Key key}) : super(key: key);
 
   @override
@@ -365,8 +369,7 @@ class HardCoded extends StatelessWidget {
         children: <Widget>[
           Padding(
             padding: EdgeInsets.only(top: 20, bottom: 10),
-            child: Text(text,
-                style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
+            child: Text(text, style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
           ),
           Padding(
             padding: const EdgeInsets.only(top: 20, bottom: 10),

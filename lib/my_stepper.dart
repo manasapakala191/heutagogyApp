@@ -59,21 +59,24 @@ class MyStepper extends StatefulWidget {
   /// new one.
   ///
   /// The [steps], [type], and [currentMyStep] arguments must not be null.
-  const MyStepper({
-    Key key,
-    @required this.steps,
-    this.physics,
-    this.type = MyStepperType.vertical,
-    this.currentMyStep = 0,
-    this.onMyStepTapped,
-    this.onMyStepContinue,
-    this.onMyStepCancel,
-    this.controlsBuilder,
-  })  : assert(steps != null),
+  const MyStepper(
+      {Key key,
+      @required this.steps,
+      this.physics,
+      this.type = MyStepperType.vertical,
+      this.currentMyStep = 0,
+      this.onMyStepTapped,
+      this.onMyStepContinue,
+      this.onMyStepCancel,
+      this.controlsBuilder,
+      this.horizontalController})
+      : assert(steps != null),
         assert(type != null),
         assert(currentMyStep != null),
         assert(0 <= currentMyStep && currentMyStep < steps.length),
         super(key: key);
+
+  final ScrollController horizontalController;
 
   /// The steps of the stepper whose titles, subtitles, icons always get shown.
   ///
@@ -161,7 +164,6 @@ class MyStepper extends StatefulWidget {
   /// ```
   /// {@end-tool}
   final ControlsWidgetBuilder controlsBuilder;
-
   @override
   _MyStepperState createState() => _MyStepperState();
 }
@@ -584,6 +586,7 @@ class _MyStepperState extends State<MyStepper> with TickerProviderStateMixin {
         ),
         Expanded(
           child: ListView(
+            controller: widget.horizontalController,
             padding: const EdgeInsets.all(24.0),
             children: <Widget>[
               AnimatedSize(

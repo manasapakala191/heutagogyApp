@@ -35,7 +35,7 @@ class _HomePageState extends State<_HomePage> {
 
   _HomePageState(String lessonData, String assess) {
     this.data = lessonData;
-    assessment = LessonData.fromJSON(json.decode(assess));
+    assessment = LessonData.fromJSON(json.decode(utf8.decode(assess.codeUnits)));
   }
 
   Widget optionsBuilder(BuildContext context, int index) {
