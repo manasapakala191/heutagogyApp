@@ -7,8 +7,6 @@ import 'package:heutagogy/tests/test2.dart';
 import 'package:heutagogy/tests/test3.dart';
 import 'package:heutagogy/tests/test4.dart';
 import 'package:heutagogy/tests/test5.dart';
-import 'dart:math';
-
 import 'package:heutagogy/tests/test7.dart';
 import 'package:heutagogy/well_done_page.dart';
 
@@ -22,48 +20,57 @@ class MyLesson2Tests extends StatefulWidget {
 }
 
 class Lesson1TestsState extends State<MyLesson2Tests> {
-  List<Step> mySteps;
+  int maxLength;
 
   Lesson1TestsState(LessonData lessonData) {
-    this.mySteps = [];
-    int maxLength = [
-      lessonData.test1.length,
-      lessonData.test2.length,
-      lessonData.test3.length,
-      lessonData.test3.length,
-      lessonData.test4.length,
-      lessonData.test6.length,
-    ].reduce(max);
+    this.lessonData = lessonData;
+  }
+
+  _buildSteps() {
+    List<Step> mySteps = [];
+    int i = 0;
     for (int z = 0; z < maxLength; z++) {
       if (lessonData.test1 != null && z < lessonData.test1.length) {
         mySteps.add(Step(
           title: Text(''),
-          content: Test1Page(lessonData.test1[z], key: UniqueKey(),),
-          isActive: true,
+          content: Test1Page(
+            lessonData.test1[z],
+            key: UniqueKey(),
+          ),
+          isActive: (i++) == this.currentStep,
           state: StepState.indexed,
         ));
       }
       if (lessonData.test2 != null && z < lessonData.test2.length) {
         mySteps.add(Step(
           title: Text(''),
-          content: Test2Page(lessonData.test2[z], key: ObjectKey(lessonData.test2[z]),),
-          isActive: true,
+          content: Test2Page(
+            lessonData.test2[z],
+            key: ObjectKey(lessonData.test2[z]),
+          ),
+          isActive: (i++) == this.currentStep,
           state: StepState.indexed,
         ));
       }
       if (lessonData.test3 != null && z < lessonData.test3.length) {
         mySteps.add(Step(
           title: Text(''),
-          content: Test3Page(lessonData.test3[z], key: UniqueKey(),),
-          isActive: true,
+          content: Test3Page(
+            lessonData.test3[z],
+            key: UniqueKey(),
+          ),
+          isActive: (i++) == this.currentStep,
           state: StepState.indexed,
         ));
       }
       if (lessonData.test4 != null && z < lessonData.test4.length) {
         mySteps.add(Step(
           title: Text(''),
-          content: Test4Page(lessonData.test4[z], key: UniqueKey(),),
-          isActive: true,
+          content: Test4Page(
+            lessonData.test4[z],
+            key: UniqueKey(),
+          ),
+          isActive: (i++) == this.currentStep,
           state: StepState.indexed,
         ));
       }
@@ -71,7 +78,7 @@ class Lesson1TestsState extends State<MyLesson2Tests> {
         mySteps.add(Step(
           title: Text(''),
           content: Test5Page(lessonData.test6[z]),
-          isActive: true,
+          isActive: (i++) == this.currentStep,
           state: StepState.indexed,
         ));
       }
@@ -79,12 +86,18 @@ class Lesson1TestsState extends State<MyLesson2Tests> {
 
     mySteps.add(Step(
       title: Text(''),
-      content: Test7Page(9, 9, [11, 34, 66, 23, 12, 54, 53, 43, 41, 49, 80, 52], key: UniqueKey()),
-      isActive: true,
+      content: Test7Page(9, 9, [11, 34, 66, 23, 12, 54, 53, 43, 41, 49, 80, 52],
+          key: UniqueKey()),
+      isActive: (i++) == this.currentStep,
       state: StepState.indexed,
     ));
-    mySteps.add(Step(title: Text(''), content: WellDonePage(), isActive: true, state: StepState.indexed));
-
+    mySteps.add(Step(
+        title: Text(''),
+        content: WellDonePage(),
+        isActive: (i++) == this.currentStep,
+        state: StepState.indexed));
+    this.maxLength = i;
+    return mySteps;
   }
 
   LessonData lessonData;
@@ -125,7 +138,7 @@ class Lesson1TestsState extends State<MyLesson2Tests> {
           type: StepperType.horizontal,
           currentStep: this.currentStep,
           onStepTapped: onStepTapped,
-          steps: mySteps,
+          steps: _buildSteps(),
           controlsBuilder: (BuildContext context,
               {VoidCallback onStepContinue, VoidCallback onStepCancel}) {
             return Row(
@@ -154,7 +167,7 @@ class Lesson1TestsState extends State<MyLesson2Tests> {
                       splashColor: Colors.lightBlueAccent,
                       heroTag: 'NextStep',
                       onPressed: () {
-                        if (currentStep < mySteps.length - 1) {
+                        if (currentStep < maxLength - 1) {
                           setState(() {
                             currentStep = currentStep + 1;
                           });
@@ -165,7 +178,9 @@ class Lesson1TestsState extends State<MyLesson2Tests> {
                       label: Text(
                         "Next",
                         style: TextStyle(
-                            color: Colors.blue, fontSize: 16, fontWeight: FontWeight.bold),
+                            color: Colors.blue,
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold),
                       ),
                       shape: RoundedRectangleBorder(
                           side: BorderSide(color: Colors.blue, width: 1),
@@ -194,7 +209,8 @@ class Lesson1TestsState extends State<MyLesson2Tests> {
                           Navigator.pop(context);
                         }
                       },
-                      shape: CircleBorder(side: BorderSide(color: Colors.blue, width: 1)),
+                      shape: CircleBorder(
+                          side: BorderSide(color: Colors.blue, width: 1)),
                       child: Icon(
                         Icons.arrow_back,
                         color: Colors.blue,

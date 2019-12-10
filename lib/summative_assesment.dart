@@ -26,18 +26,204 @@ class SummativeTests extends StatefulWidget {
 }
 
 class Lesson1TestsState extends State<SummativeTests> {
-  List<Step> mySteps;
+  // List<Step> mySteps;
+  // List<bool> myStepStates;
+  int maxLength;
 
   Lesson1TestsState(LessonData lessonData) {
-    this.mySteps = [];
-    int maxLength = [
+    this.maxLength = [
       lessonData.test1.length,
       lessonData.test2.length,
       lessonData.test3.length,
       lessonData.test4.length,
       lessonData.test6.length,
     ].reduce(max);
+    this.lessonData = lessonData;
+    // this.mySteps = [];
+    // this.myStepStates = [];
+    // int maxLength = [
+    //   lessonData.test1.length,
+    //   lessonData.test2.length,
+    //   lessonData.test3.length,
+    //   lessonData.test4.length,
+    //   lessonData.test6.length,
+    // ].reduce(max);
+    // int i = 0;
+    // List<String> subjects = [
+    //   "english",
+    //   "maths",
+    //   "evs",
+    //   "telugu",
+    // ];
 
+    // for (String sub in subjects) {
+    //   mySteps.add(
+    //     Step(
+    //       content: TransitionPage(subject: sub),
+    //       isActive: (i++) == this.currentStep,
+    //       title: Text(sub.toUpperCase()),
+    //       state: StepState.indexed,
+    //     ),
+    //   );
+
+    //   if (sub == "maths") {
+    //     mySteps.add(Step(
+    //       title: Text(''),
+    //       content: Test7Page(
+    //           10,
+    //           10,
+    //           [
+    //             2,
+    //             7,
+    //             12,
+    //             15,
+    //             19,
+    //             23,
+    //             27,
+    //             40,
+    //             41,
+    //             43,
+    //             45,
+    //             58,
+    //             62,
+    //             64,
+    //             66,
+    //             70,
+    //             73,
+    //             77,
+    //             81,
+    //             85,
+    //             93,
+    //             96,
+    //             99
+    //           ]..shuffle()),
+    //       isActive: (i++) == this.currentStep,
+    //       state: StepState.indexed,
+    //     ));
+    //   }
+    //   if (sub == "evs") {
+    //     mySteps.add(Step(
+    //       title: Text(''),
+    //       content: Test6Page(),
+    //       isActive: (i++) == this.currentStep,
+    //       state: StepState.indexed,
+    //     ));
+    //   }
+    //   if (sub == "telugu") {
+    //     mySteps.add(Step(
+    //         title: Text(''),
+    //         content: HardCoded("వినడం, ఆలోచించి మాట్లాడటం, ప్రశంస:",
+    //             "గువ్వకు జొరమమ్మ గేయం వినండి, మీకు ఆ గేయంలో నచ్చిన పదాలు చెప్పండి."),
+    //         isActive: true));
+    //     mySteps.add(Step(
+    //         title: Text(''),
+    //         content: HardCoded("చదవడం:\n క్రింది పదాలు చదవండి",
+    //             "ముద్ద\nఅమ్మ \nబల్లి \nఅక్క \nమువ్వ \nబొజ్జ \nచద్ది \nబొమ్మ \nకొమ్మ \nమల్లి \nపిల్లి \nఅవ్వ \nగువ్వ\nసజ్జ \nలెక్క"),
+    //         isActive: true));
+    //     mySteps.add(Step(
+    //         title: Text(''),
+    //         content: HardCoded("ఈ వాక్యాలను మీ పుస్తకంలో గుండ్రంగా రాయండి:",
+    //             "అమ్మ అంటే నాకు మక్కువ\nఅక్క మొక్క నాటింది\nఅయ్య కొయ్య తెచ్చాడు"),
+    //         isActive: true));
+    //   }
+    //   for (int z = 0; z < maxLength; z++) {
+    //     if (lessonData.test1 != null && z < lessonData.test1.length) {
+    //       if (lessonData.test1[z].subject == sub) {
+    //         mySteps.add(Step(
+    //           title: Text(''),
+    //           content: Test1Page(
+    //             lessonData.test1[z],
+    //             key: UniqueKey(),
+    //           ),
+    //           isActive: (i++) == this.currentStep,
+    //           state: StepState.indexed,
+    //         ));
+    //       }
+    //     }
+    //     if (lessonData.test2 != null && z < lessonData.test2.length) {
+    //       if (lessonData.test2[z].subject == sub) {
+    //         mySteps.add(Step(
+    //           title: Text(''),
+    //           content: Test2Page(
+    //             lessonData.test2[z],
+    //             key: ObjectKey(lessonData.test2[z]),
+    //           ),
+    //           isActive: (i++) == this.currentStep,
+    //           state: StepState.indexed,
+    //         ));
+    //       }
+    //     }
+    //     if (lessonData.test3 != null && z < lessonData.test3.length) {
+    //       if (lessonData.test3[z].subject == sub) {
+    //         mySteps.add(Step(
+    //           title: Text(''),
+    //           content: Test3Page(
+    //             lessonData.test3[z],
+    //             key: UniqueKey(),
+    //           ),
+    //           isActive: (i++) == this.currentStep,
+    //           state: StepState.indexed,
+    //         ));
+    //       }
+    //     }
+    //     if (lessonData.test4 != null && z < lessonData.test4.length) {
+    //       if (lessonData.test4[z].subject == sub) {
+    //         mySteps.add(Step(
+    //           title: Text(''),
+    //           content: Test4Page(
+    //             lessonData.test4[z],
+    //             key: UniqueKey(),
+    //           ),
+    //           isActive: (i++) == this.currentStep,
+    //           state: StepState.indexed,
+    //         ));
+    //       }
+    //     }
+    //     if (lessonData.test6 != null && z < lessonData.test6.length) {
+    //       if (lessonData.test6[z].subject == sub) {
+    //         mySteps.add(Step(
+    //           title: Text(''),
+    //           content: Test5Page(
+    //             lessonData.test6[z],
+    //             key: UniqueKey(),
+    //           ),
+    //           isActive: (i++) == this.currentStep,
+    //           state: StepState.indexed,
+    //         ));
+    //       }
+    //     }
+    //     if (lessonData.test9 != null && z < lessonData.test9.length) {
+    //       if (lessonData.test9[z].subject == sub) {
+    //         mySteps.add(Step(
+    //           title: Text(''),
+    //           content: Test9Page(
+    //             lessonData.test9[z],
+    //           ),
+    //           isActive: (i++) == this.currentStep,
+    //           state: StepState.indexed,
+    //         ));
+    //       }
+    //     }
+    //   }
+    // }
+
+    // mySteps.add(Step(
+    //     title: Text(''),
+    //     content: WellDonePage(),
+    //     isActive: (i++) == this.currentStep,
+    //     state: StepState.indexed));
+  }
+
+  _buildSteps() {
+    // int maxLength = [
+    //   lessonData.test1.length,
+    //   lessonData.test2.length,
+    //   lessonData.test3.length,
+    //   lessonData.test4.length,
+    //   lessonData.test6.length,
+    // ].reduce(max);
+    List<Step> mySteps = [];
+    int i = 0;
     List<String> subjects = [
       "english",
       "maths",
@@ -49,7 +235,7 @@ class Lesson1TestsState extends State<SummativeTests> {
       mySteps.add(
         Step(
           content: TransitionPage(subject: sub),
-          isActive: true,
+          isActive: (i++) == this.currentStep,
           title: Text(sub.toUpperCase()),
           state: StepState.indexed,
         ),
@@ -86,7 +272,7 @@ class Lesson1TestsState extends State<SummativeTests> {
                 96,
                 99
               ]..shuffle()),
-          isActive: true,
+          isActive: (i++) == this.currentStep,
           state: StepState.indexed,
         ));
       }
@@ -94,7 +280,7 @@ class Lesson1TestsState extends State<SummativeTests> {
         mySteps.add(Step(
           title: Text(''),
           content: Test6Page(),
-          isActive: true,
+          isActive: (i++) == this.currentStep,
           state: StepState.indexed,
         ));
       }
@@ -103,17 +289,17 @@ class Lesson1TestsState extends State<SummativeTests> {
             title: Text(''),
             content: HardCoded("వినడం, ఆలోచించి మాట్లాడటం, ప్రశంస:",
                 "గువ్వకు జొరమమ్మ గేయం వినండి, మీకు ఆ గేయంలో నచ్చిన పదాలు చెప్పండి."),
-            isActive: true));
+            isActive: (i++) == this.currentStep));
         mySteps.add(Step(
             title: Text(''),
             content: HardCoded("చదవడం:\n క్రింది పదాలు చదవండి",
                 "ముద్ద\nఅమ్మ \nబల్లి \nఅక్క \nమువ్వ \nబొజ్జ \nచద్ది \nబొమ్మ \nకొమ్మ \nమల్లి \nపిల్లి \nఅవ్వ \nగువ్వ\nసజ్జ \nలెక్క"),
-            isActive: true));
+            isActive: (i++) == this.currentStep));
         mySteps.add(Step(
             title: Text(''),
             content: HardCoded("ఈ వాక్యాలను మీ పుస్తకంలో గుండ్రంగా రాయండి:",
                 "అమ్మ అంటే నాకు మక్కువ\nఅక్క మొక్క నాటింది\nఅయ్య కొయ్య తెచ్చాడు"),
-            isActive: true));
+            isActive: (i++) == this.currentStep));
       }
       for (int z = 0; z < maxLength; z++) {
         if (lessonData.test1 != null && z < lessonData.test1.length) {
@@ -124,7 +310,7 @@ class Lesson1TestsState extends State<SummativeTests> {
                 lessonData.test1[z],
                 key: UniqueKey(),
               ),
-              isActive: true,
+              isActive: (i++) == this.currentStep,
               state: StepState.indexed,
             ));
           }
@@ -137,7 +323,7 @@ class Lesson1TestsState extends State<SummativeTests> {
                 lessonData.test2[z],
                 key: ObjectKey(lessonData.test2[z]),
               ),
-              isActive: true,
+              isActive: (i++) == this.currentStep,
               state: StepState.indexed,
             ));
           }
@@ -150,7 +336,7 @@ class Lesson1TestsState extends State<SummativeTests> {
                 lessonData.test3[z],
                 key: UniqueKey(),
               ),
-              isActive: true,
+              isActive: (i++) == this.currentStep,
               state: StepState.indexed,
             ));
           }
@@ -163,7 +349,7 @@ class Lesson1TestsState extends State<SummativeTests> {
                 lessonData.test4[z],
                 key: UniqueKey(),
               ),
-              isActive: true,
+              isActive: (i++) == this.currentStep,
               state: StepState.indexed,
             ));
           }
@@ -176,7 +362,7 @@ class Lesson1TestsState extends State<SummativeTests> {
                 lessonData.test6[z],
                 key: UniqueKey(),
               ),
-              isActive: true,
+              isActive: (i++) == this.currentStep,
               state: StepState.indexed,
             ));
           }
@@ -188,7 +374,7 @@ class Lesson1TestsState extends State<SummativeTests> {
               content: Test9Page(
                 lessonData.test9[z],
               ),
-              isActive: true,
+              isActive: (i++) == this.currentStep,
               state: StepState.indexed,
             ));
           }
@@ -196,11 +382,15 @@ class Lesson1TestsState extends State<SummativeTests> {
       }
     }
 
-    mySteps.add(Step(
-        title: Text(''),
-        content: WellDonePage(),
-        isActive: true,
-        state: StepState.indexed));
+    mySteps.add(
+      Step(
+          title: Text(''),
+          content: WellDonePage(),
+          isActive: (i++) == this.currentStep,
+          state: StepState.indexed),
+    );
+    this.maxLength = i;
+    return mySteps;
   }
 
   LessonData lessonData;
@@ -247,7 +437,7 @@ class Lesson1TestsState extends State<SummativeTests> {
           type: MyStepperType.horizontal,
           currentMyStep: this.currentStep,
           onMyStepTapped: onStepTapped,
-          steps: mySteps,
+          steps: _buildSteps(),
           controlsBuilder: (BuildContext context,
               {VoidCallback onStepContinue, VoidCallback onStepCancel}) {
             return Row(
@@ -272,15 +462,15 @@ class Lesson1TestsState extends State<SummativeTests> {
                   child: Padding(
                     padding: EdgeInsets.fromLTRB(0, 0, 20, 0),
                     child: FloatingActionButton.extended(
-                      backgroundColor: (currentStep == mySteps.length - 1)
+                      backgroundColor: (currentStep == maxLength - 1)
                           ? Colors.blueAccent
                           : Colors.white,
-                      splashColor: (currentStep == mySteps.length - 1)
+                      splashColor: (currentStep == maxLength - 1)
                           ? Colors.white54
                           : Colors.lightBlueAccent,
                       heroTag: 'NextStep',
                       onPressed: () {
-                        if (currentStep < mySteps.length - 1) {
+                        if (currentStep < maxLength - 1) {
                           setState(() {
                             currentStep = currentStep + 1;
                           });
@@ -289,9 +479,9 @@ class Lesson1TestsState extends State<SummativeTests> {
                         }
                       },
                       label: Text(
-                        (currentStep == mySteps.length - 1) ? "Finish" : "Next",
+                        (currentStep == maxLength - 1) ? "Finish" : "Next",
                         style: TextStyle(
-                            color: (currentStep == mySteps.length - 1)
+                            color: (currentStep == maxLength - 1)
                                 ? Colors.white
                                 : Colors.blue,
                             fontSize: 16,
@@ -300,7 +490,7 @@ class Lesson1TestsState extends State<SummativeTests> {
                       shape: RoundedRectangleBorder(
                           side: BorderSide(color: Colors.blue, width: 1),
                           borderRadius: BorderRadius.circular(40)),
-                      icon: (currentStep == mySteps.length - 1)
+                      icon: (currentStep == maxLength - 1)
                           ? null
                           : Icon(
                               Icons.navigate_next,

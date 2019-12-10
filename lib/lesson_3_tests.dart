@@ -10,7 +10,6 @@ import 'package:heutagogy/tests/test3.dart';
 import 'package:heutagogy/tests/test4.dart';
 import 'package:heutagogy/tests/test5.dart';
 import 'package:heutagogy/tests/test10.dart';
-import 'dart:math';
 import 'package:heutagogy/tests/test8.dart';
 import 'package:heutagogy/well_done_page.dart';
 import 'package:youtube_player/youtube_player.dart';
@@ -25,25 +24,26 @@ class MyLesson3Tests extends StatefulWidget {
 }
 
 class Lesson1TestsState extends State<MyLesson3Tests> {
-  List<Step> mySteps;
+  // List<Step> mySteps;
+  int maxLength;
 
   Lesson1TestsState(LessonData lessonData) {
-    this.mySteps = [];
-    int maxLength = [
-      lessonData.test1.length,
-      lessonData.test2.length,
-      lessonData.test3.length,
-    ].reduce(max);
+    this.lessonData = lessonData;
+  }
+
+  _buildSteps() {
+    int i = 0;
+    List<Step> mySteps = [];
     mySteps.add(Step(
       title: Text(''),
       content: Test10Page(),
-      isActive: true,
+      isActive: (i++) == this.currentStep,
       state: StepState.indexed,
     ));
     mySteps.add(Step(
       title: Text(''),
       content: Lesson3Videos(),
-      isActive: true,
+      isActive: (i++) == this.currentStep,
       state: StepState.indexed,
     ));
     mySteps.add(Step(
@@ -52,7 +52,7 @@ class Lesson1TestsState extends State<MyLesson3Tests> {
           "Put a bowl of water for birds everyday in your school and give yourself 3 stars.",
           key: ObjectKey(1),
         ),
-        isActive: true));
+        isActive: (i++) == this.currentStep));
     for (int z = 0; z < maxLength; z++) {
       if (lessonData.test1 != null && z < lessonData.test1.length) {
         mySteps.add(Step(
@@ -61,7 +61,7 @@ class Lesson1TestsState extends State<MyLesson3Tests> {
             lessonData.test1[z],
             key: UniqueKey(),
           ),
-          isActive: true,
+          isActive: (i++) == this.currentStep,
           state: StepState.indexed,
         ));
       }
@@ -72,7 +72,7 @@ class Lesson1TestsState extends State<MyLesson3Tests> {
             lessonData.test2[z],
             key: ObjectKey(lessonData.test2[z]),
           ),
-          isActive: true,
+          isActive: (i++) == this.currentStep,
           state: StepState.indexed,
         ));
       }
@@ -83,7 +83,7 @@ class Lesson1TestsState extends State<MyLesson3Tests> {
             lessonData.test3[z],
             key: UniqueKey(),
           ),
-          isActive: true,
+          isActive: (i++) == this.currentStep,
           state: StepState.indexed,
         ));
       }
@@ -94,7 +94,7 @@ class Lesson1TestsState extends State<MyLesson3Tests> {
             lessonData.test4[z],
             key: UniqueKey(),
           ),
-          isActive: true,
+          isActive: (i++) == this.currentStep,
           state: StepState.indexed,
         ));
       }
@@ -106,7 +106,7 @@ class Lesson1TestsState extends State<MyLesson3Tests> {
             lessonData.test6[z],
             key: UniqueKey(),
           ),
-          isActive: true,
+          isActive: (i++) == this.currentStep,
           state: StepState.indexed,
         ));
       }
@@ -118,16 +118,21 @@ class Lesson1TestsState extends State<MyLesson3Tests> {
           "Does the air and water have weight? Prove it and give yourself 3 stars.",
           key: ObjectKey(2),
         ),
-        isActive: true));
+        isActive: (i++) == this.currentStep));
     mySteps.add(Step(
       title: Text(''),
-      content:
-          Test8Page([100, 200, 300, 400, 500, 600, 700, 800, 900, 1000], [200, 300, 600, 800, 900]),
-      isActive: true,
+      content: Test8Page([100, 200, 300, 400, 500, 600, 700, 800, 900, 1000],
+          [200, 300, 600, 800, 900]),
+      isActive: (i++) == this.currentStep,
       state: StepState.indexed,
     ));
-    mySteps.add(
-        Step(title: Text(''), content: WellDonePage(), isActive: true, state: StepState.indexed));
+    mySteps.add(Step(
+        title: Text(''),
+        content: WellDonePage(),
+        isActive: (i++) == this.currentStep,
+        state: StepState.indexed));
+    this.maxLength = i;
+    return mySteps;
   }
 
   LessonData lessonData;
@@ -168,7 +173,7 @@ class Lesson1TestsState extends State<MyLesson3Tests> {
           type: MyStepperType.horizontal,
           currentMyStep: this.currentStep,
           onMyStepTapped: onStepTapped,
-          steps: mySteps,
+          steps: _buildSteps(),
           controlsBuilder: (BuildContext context,
               {VoidCallback onStepContinue, VoidCallback onStepCancel}) {
             return Row(
@@ -197,7 +202,7 @@ class Lesson1TestsState extends State<MyLesson3Tests> {
                       splashColor: Colors.lightBlueAccent,
                       heroTag: 'NextStep',
                       onPressed: () {
-                        if (currentStep < mySteps.length - 1) {
+                        if (currentStep < maxLength - 1) {
                           setState(() {
                             currentStep = currentStep + 1;
                           });
@@ -208,7 +213,9 @@ class Lesson1TestsState extends State<MyLesson3Tests> {
                       label: Text(
                         "Next",
                         style: TextStyle(
-                            color: Colors.blue, fontSize: 16, fontWeight: FontWeight.bold),
+                            color: Colors.blue,
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold),
                       ),
                       shape: RoundedRectangleBorder(
                           side: BorderSide(color: Colors.blue, width: 1),
@@ -237,7 +244,8 @@ class Lesson1TestsState extends State<MyLesson3Tests> {
                           Navigator.pop(context);
                         }
                       },
-                      shape: CircleBorder(side: BorderSide(color: Colors.blue, width: 1)),
+                      shape: CircleBorder(
+                          side: BorderSide(color: Colors.blue, width: 1)),
                       child: Icon(
                         Icons.arrow_back,
                         color: Colors.blue,
