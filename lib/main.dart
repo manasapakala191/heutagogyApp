@@ -41,8 +41,7 @@ class _MyHomePageState extends State<MyHomePage> {
       body: Center(
         child: AnimatedSwitcher(
           duration: const Duration(milliseconds: 800),
-          transitionBuilder: (Widget child, Animation<double> animation) =>
-              ScaleTransition(
+          transitionBuilder: (Widget child, Animation<double> animation) => ScaleTransition(
             child: child,
             scale: animation,
           ),
@@ -67,7 +66,11 @@ class _MyHomePageState extends State<MyHomePage> {
                     "by",
                     style: TextStyle(fontSize: 18),
                   ),
-                  Image.asset("assets/images/HappyAddaLogo.png", width: 200, height: 70,),
+                  Image.asset(
+                    "assets/images/HappyAddaLogo.png",
+                    width: 200,
+                    height: 70,
+                  ),
                 ],
               ),
             ],
@@ -82,8 +85,7 @@ class _MyHomePageState extends State<MyHomePage> {
     String offlineData2 = await readData2();
     if (data == "" || assessment == "") {
       try {
-        final response =
-            await http.get("https://1ashutosh.pythonanywhere.com/api/lessons");
+        final response = await http.get("https://heutagogy.pythonanywhere.com/api/lessons");
         if (response.statusCode == 200) {
           String body = response.body;
           writeData(body);
@@ -115,8 +117,7 @@ class _MyHomePageState extends State<MyHomePage> {
             });
           }
         }
-        final response2 = await http
-            .get("https://1ashutosh.pythonanywhere.com/api/assessment");
+        final response2 = await http.get("https://heutagogy.pythonanywhere.com/api/assessment");
         if (response.statusCode == 200) {
           String body = response2.body;
           writeData2(body);
@@ -173,9 +174,7 @@ class _MyHomePageState extends State<MyHomePage> {
       Timer(Duration(milliseconds: 1100), () {
         print(assessment);
         Navigator.pushReplacement(
-            context,
-            MaterialPageRoute(
-                builder: (context) => HomePage(data, assessment)));
+            context, MaterialPageRoute(builder: (context) => HomePage(data, assessment)));
       });
     }
   }
