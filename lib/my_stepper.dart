@@ -4,6 +4,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:heutagogy/data_models.dart';
 
 //
 //import 'button_theme.dart';
@@ -17,24 +18,9 @@ import 'package:flutter/widgets.dart';
 //import 'text_theme.dart';
 //import 'theme.dart';
 
-// TODO(dragostis): Missing functionality:
-//   * mobile horizontal mode with adding/removing steps
-//   * alternative labeling
-//   * stepper feedback in the case of high-latency interactions
-
-/// The state of a [MyStep] which is used to control the style of the circle and
-/// text.
-///
-/// See also:
-///
-///  * [MyStep]
-
-/// Defines the [MyStepper]'s main axis.
 enum MyStepperType {
-  /// A vertical layout of the steps with their content in-between the titles.
   vertical,
 
-  /// A horizontal layout of the steps with their content below the titles.
   horizontal,
 }
 
@@ -219,6 +205,10 @@ class _MyStepperState extends State<MyStepper> with TickerProviderStateMixin {
     final StepState state = oldState ? _oldStates[index] : widget.steps[index].state;
     final bool isDarkActive = _isDark() && widget.steps[index].isActive;
     assert(state != null);
+    return Text(
+      '${index + 1}',
+      style: isDarkActive ? _kMyStepStyle.copyWith(color: Colors.black87) : _kMyStepStyle,
+    );
     switch (state) {
       case StepState.indexed:
       case StepState.disabled:
@@ -247,7 +237,7 @@ class _MyStepperState extends State<MyStepper> with TickerProviderStateMixin {
   Color _circleColor(int index) {
     final ThemeData themeData = Theme.of(context);
     if (!_isDark()) {
-      return widget.steps[index].isActive ? themeData.primaryColor : Colors.black38;
+      return (index == widget.currentMyStep) ? themeData.primaryColor : Colors.black38;
     } else {
       return widget.steps[index].isActive ? themeData.accentColor : themeData.backgroundColor;
     }

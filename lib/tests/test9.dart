@@ -6,7 +6,7 @@ import 'package:heutagogy/data_models.dart';
 class Test9Page extends StatefulWidget {
   final Test9Data test9data;
 
-  Test9Page(this.test9data);
+  Test9Page(this.test9data, {Key key}) : super(key: key);
 
   @override
   _Test9PageState createState() => _Test9PageState(test9data);
@@ -33,7 +33,9 @@ class _Test9PageState extends State<Test9Page> {
     List<Widget> dragTargets = _buildDragTargets();
     dragTargets..shuffle(Random(2));
     List<Widget> rows = [];
-    rows.add(Text(test9data.heading, style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),);
+    rows.add(
+      Text(test9data.heading, style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+    );
     for (int i = 0; i < drags.length; i++) {
       rows.add(Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -92,8 +94,7 @@ class _Test9PageState extends State<Test9Page> {
           margin: EdgeInsets.only(top: 10, left: 40),
           decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(10),
-            border: Border.all(color: Colors.blueAccent)
-          ),
+              border: Border.all(color: Colors.blueAccent)),
           child: Text(
             x.second,
             style: TextStyle(color: Colors.green, fontSize: 16),
@@ -134,7 +135,7 @@ class _Test9PageState extends State<Test9Page> {
             );
           },
           onWillAccept: (t) => t == x.first,
-          onAccept: (t){
+          onAccept: (t) {
             setState(() {
               data[x.first] = true;
             });

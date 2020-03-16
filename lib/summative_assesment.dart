@@ -26,7 +26,7 @@ class SummativeTests extends StatefulWidget {
 }
 
 class Lesson1TestsState extends State<SummativeTests> {
-  // List<Step> mySteps;
+  List<Step> mySteps;
   // List<bool> myStepStates;
   int maxLength;
 
@@ -40,6 +40,7 @@ class Lesson1TestsState extends State<SummativeTests> {
     ].reduce(max);
     this.lessonData = lessonData;
     this.scrollController = ScrollController();
+    this.mySteps = _buildSteps();
   }
 
   _buildSteps() {
@@ -260,7 +261,7 @@ class Lesson1TestsState extends State<SummativeTests> {
           type: MyStepperType.horizontal,
           currentMyStep: this.currentStep,
           onMyStepTapped: onStepTapped,
-          steps: _buildSteps(),
+          steps: this.mySteps,
           horizontalController: scrollController,
           controlsBuilder: (BuildContext context,
               {VoidCallback onStepContinue, VoidCallback onStepCancel}) {

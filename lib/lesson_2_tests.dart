@@ -20,10 +20,12 @@ class MyLesson2Tests extends StatefulWidget {
 }
 
 class Lesson1TestsState extends State<MyLesson2Tests> {
+  List<Step> mySteps;
   int maxLength;
 
   Lesson1TestsState(LessonData lessonData) {
     this.lessonData = lessonData;
+    this.mySteps = _buildSteps();
   }
 
   _buildSteps() {
@@ -86,8 +88,7 @@ class Lesson1TestsState extends State<MyLesson2Tests> {
 
     mySteps.add(Step(
       title: Text(''),
-      content: Test7Page(9, 9, [11, 34, 66, 23, 12, 54, 53, 43, 41, 49, 80, 52],
-          key: UniqueKey()),
+      content: Test7Page(9, 9, [11, 34, 66, 23, 12, 54, 53, 43, 41, 49, 80, 52], key: UniqueKey()),
       isActive: (i++) == this.currentStep,
       state: StepState.indexed,
     ));
@@ -138,7 +139,7 @@ class Lesson1TestsState extends State<MyLesson2Tests> {
           type: StepperType.horizontal,
           currentStep: this.currentStep,
           onStepTapped: onStepTapped,
-          steps: _buildSteps(),
+          steps: this.mySteps,
           controlsBuilder: (BuildContext context,
               {VoidCallback onStepContinue, VoidCallback onStepCancel}) {
             return Row(
@@ -178,9 +179,7 @@ class Lesson1TestsState extends State<MyLesson2Tests> {
                       label: Text(
                         "Next",
                         style: TextStyle(
-                            color: Colors.blue,
-                            fontSize: 16,
-                            fontWeight: FontWeight.bold),
+                            color: Colors.blue, fontSize: 16, fontWeight: FontWeight.bold),
                       ),
                       shape: RoundedRectangleBorder(
                           side: BorderSide(color: Colors.blue, width: 1),
@@ -209,8 +208,7 @@ class Lesson1TestsState extends State<MyLesson2Tests> {
                           Navigator.pop(context);
                         }
                       },
-                      shape: CircleBorder(
-                          side: BorderSide(color: Colors.blue, width: 1)),
+                      shape: CircleBorder(side: BorderSide(color: Colors.blue, width: 1)),
                       child: Icon(
                         Icons.arrow_back,
                         color: Colors.blue,

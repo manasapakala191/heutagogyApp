@@ -38,7 +38,9 @@ class _Test2PageState extends State<Test2Page> {
                     style: TextStyle(fontSize: 18),
                   ),
                 ),
-          Padding(padding: EdgeInsets.only(top: 20),),
+          Padding(
+            padding: EdgeInsets.only(top: 20),
+          ),
           Column(
             children: _builder(correct),
           ),

@@ -7,6 +7,7 @@ import 'package:heutagogy/data_models.dart';
 import 'package:heutagogy/lesson_1_tests.dart';
 import 'package:heutagogy/lesson_2_tests.dart';
 import 'package:heutagogy/lesson_3_tests.dart';
+import 'package:heutagogy/lesson_tests.dart';
 
 class LessonDetail extends StatefulWidget {
   final LessonData lessonData;
@@ -44,15 +45,7 @@ class LessonDetailState extends State<LessonDetail> {
   initTts() {
     flutterTts = FlutterTts();
 
-    if (Platform.isAndroid) {
-      flutterTts.ttsInitHandler(() {
-        _getLanguages();
-        _getVoices();
-      });
-    } else if (Platform.isIOS) {
-      _getLanguages();
-      _getVoices();
-    }
+    _getLanguages();
 
     flutterTts.setStartHandler(() {
       setState(() {
@@ -225,14 +218,15 @@ class LessonDetailState extends State<LessonDetail> {
           if (id == 1) {
             Navigator.push(
                 context, MaterialPageRoute(builder: (context) => MyLesson1Tests(lessonData)));
-          }
-          if (id == 2) {
+          } else if (id == 2) {
             Navigator.push(
                 context, MaterialPageRoute(builder: (context) => MyLesson2Tests(lessonData)));
-          }
-          if (id == 3) {
+          } else if (id == 3) {
             Navigator.push(
                 context, MaterialPageRoute(builder: (context) => MyLesson3Tests(lessonData)));
+          } else {
+            Navigator.push(
+                context, MaterialPageRoute(builder: (context) => MyLessonTests(lessonData)));
           }
         },
         highlightElevation: 0,

@@ -2,39 +2,48 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:heutagogy/data_models.dart';
+import 'package:heutagogy/my_stepper.dart';
+import 'package:heutagogy/tests/star_rating.dart';
 import 'package:heutagogy/tests/test1.dart';
 import 'package:heutagogy/tests/test2.dart';
 import 'package:heutagogy/tests/test3.dart';
 import 'package:heutagogy/tests/test4.dart';
 import 'package:heutagogy/tests/test5.dart';
+import 'package:heutagogy/tests/test10.dart';
+import 'package:heutagogy/tests/test8.dart';
 import 'package:heutagogy/tests/test9.dart';
 import 'package:heutagogy/well_done_page.dart';
+import 'package:youtube_player/youtube_player.dart';
 
-class MyLesson1Tests extends StatefulWidget {
+class MyLessonTests extends StatefulWidget {
   final LessonData lessonData;
 
-  MyLesson1Tests(this.lessonData);
+  MyLessonTests(this.lessonData);
 
   @override
-  Lesson1TestsState createState() => Lesson1TestsState(lessonData);
+  LessonTestsState createState() => LessonTestsState(lessonData);
 }
 
-class Lesson1TestsState extends State<MyLesson1Tests> {
-  LessonData lessonData;
+class LessonTestsState extends State<MyLessonTests> {
+  List<Step> mySteps;
   int maxLength;
-  Lesson1TestsState(LessonData data) {
-    this.lessonData = data;
+
+  LessonTestsState(LessonData lessonData) {
+    this.lessonData = lessonData;
+    mySteps = _buildSteps();
   }
 
   _buildSteps() {
-    List<Step> mySteps = [];
     int i = 0;
-
+    List<Step> mySteps = [];
     for (int z = 0; z < 10; z++) {
       if (lessonData.test1 != null && z < lessonData.test1.length) {
         mySteps.add(Step(
           title: Text(''),
-          content: Test1Page(lessonData.test1[z]),
+          content: Test1Page(
+            lessonData.test1[z],
+            key: UniqueKey(),
+          ),
           isActive: (i++) == this.currentStep,
           state: StepState.indexed,
         ));
@@ -42,15 +51,10 @@ class Lesson1TestsState extends State<MyLesson1Tests> {
       if (lessonData.test2 != null && z < lessonData.test2.length) {
         mySteps.add(Step(
           title: Text(''),
-          content: Test2Page(lessonData.test2[z]),
-          isActive: (i++) == this.currentStep,
-          state: StepState.indexed,
-        ));
-      }
-      if (lessonData.test6 != null && z < lessonData.test6.length) {
-        mySteps.add(Step(
-          title: Text(''),
-          content: Test5Page(lessonData.test6[z]),
+          content: Test2Page(
+            lessonData.test2[z],
+            key: ObjectKey(lessonData.test2[z]),
+          ),
           isActive: (i++) == this.currentStep,
           state: StepState.indexed,
         ));
@@ -58,8 +62,9 @@ class Lesson1TestsState extends State<MyLesson1Tests> {
       if (lessonData.test3 != null && z < lessonData.test3.length) {
         mySteps.add(Step(
           title: Text(''),
-          content: new Test3Page(
+          content: Test3Page(
             lessonData.test3[z],
+            key: UniqueKey(),
           ),
           isActive: (i++) == this.currentStep,
           state: StepState.indexed,
@@ -68,20 +73,40 @@ class Lesson1TestsState extends State<MyLesson1Tests> {
       if (lessonData.test4 != null && z < lessonData.test4.length) {
         mySteps.add(Step(
           title: Text(''),
-          content: Test4Page(lessonData.test4[z]),
+          content: Test4Page(
+            lessonData.test4[z],
+            key: UniqueKey(),
+          ),
           isActive: (i++) == this.currentStep,
           state: StepState.indexed,
         ));
       }
+
+      if (lessonData.test6 != null && z < lessonData.test6.length) {
+        mySteps.add(Step(
+          title: Text(''),
+          content: Test5Page(
+            lessonData.test6[z],
+            key: UniqueKey(),
+          ),
+          isActive: (i++) == this.currentStep,
+          state: StepState.indexed,
+        ));
+      }
+
       if (lessonData.test9 != null && z < lessonData.test9.length) {
         mySteps.add(Step(
           title: Text(''),
-          content: Test9Page(lessonData.test9[z]),
+          content: Test9Page(
+            lessonData.test9[z],
+            key: UniqueKey(),
+          ),
           isActive: (i++) == this.currentStep,
           state: StepState.indexed,
         ));
       }
     }
+
     mySteps.add(Step(
         title: Text(''),
         content: WellDonePage(),
@@ -91,6 +116,7 @@ class Lesson1TestsState extends State<MyLesson1Tests> {
     return mySteps;
   }
 
+  LessonData lessonData;
   int currentStep = 0;
 
   onStepTapped(step) {
@@ -116,7 +142,7 @@ class Lesson1TestsState extends State<MyLesson1Tests> {
           },
         ),
         title: Text(
-          (lessonData == null) ? "" : lessonData.title,
+          lessonData.title ?? 'Lesson',
           style: TextStyle(color: Colors.black),
         ),
       ),
@@ -124,11 +150,11 @@ class Lesson1TestsState extends State<MyLesson1Tests> {
         data: ThemeData(
           canvasColor: Colors.white,
         ),
-        child: Stepper(
-          type: StepperType.horizontal,
-          currentStep: this.currentStep,
-          onStepTapped: onStepTapped,
-          steps: _buildSteps(),
+        child: MyStepper(
+          type: MyStepperType.horizontal,
+          currentMyStep: this.currentStep,
+          onMyStepTapped: onStepTapped,
+          steps: mySteps,
           controlsBuilder: (BuildContext context,
               {VoidCallback onStepContinue, VoidCallback onStepCancel}) {
             return Row(
@@ -208,6 +234,65 @@ class Lesson1TestsState extends State<MyLesson1Tests> {
               ],
             )
           : null),
+    );
+  }
+}
+
+class Lesson3Videos extends StatefulWidget {
+  @override
+  _Lesson3VideosState createState() => _Lesson3VideosState();
+}
+
+class _Lesson3VideosState extends State<Lesson3Videos> {
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      child: Column(
+        children: <Widget>[
+          Padding(
+            child: Text("chitti chitti miriyalu"),
+            padding: EdgeInsets.only(top: 20),
+          ),
+          Padding(padding: EdgeInsets.only(bottom: 10)),
+          YoutubePlayer(
+            width: 360,
+            context: context,
+            source: "https://www.youtube.com/watch?v=1KwAhTF8cXg",
+            quality: YoutubeQuality.HIGH,
+            autoPlay: false,
+            showVideoProgressbar: true,
+            hideShareButton: true,
+          ),
+          Padding(
+            child: Text("pottelu kanna talli gorre"),
+            padding: EdgeInsets.only(top: 20),
+          ),
+          Padding(padding: EdgeInsets.only(bottom: 10)),
+          YoutubePlayer(
+            width: 360,
+            context: context,
+            source: "https://www.youtube.com/watch?v=6_PiAF4wEFQ",
+            quality: YoutubeQuality.HIGH,
+            autoPlay: false,
+            showVideoProgressbar: true,
+            hideShareButton: true,
+          ),
+          Padding(
+            child: Text("my day songs and rhyme"),
+            padding: EdgeInsets.only(top: 20),
+          ),
+          Padding(padding: EdgeInsets.only(bottom: 10)),
+          YoutubePlayer(
+            width: 360,
+            context: context,
+            source: "https://www.youtube.com/watch?v=H8atgJjtJUI",
+            quality: YoutubeQuality.HIGH,
+            autoPlay: false,
+            showVideoProgressbar: true,
+            hideShareButton: true,
+          )
+        ],
+      ),
     );
   }
 }
