@@ -110,7 +110,7 @@ flutter:
   fonts:
     - family: Montserrat
       fonts:
-        - asset: assets/fonts/Montserrat/Montserrat-Regular.ttf
+        - asset: assets/fonts/montserrat/Montserrat-Regular.ttf
     - family: GloriaHallelujah
       fonts:
         - asset: assets/fonts/Gloria_Hallelujah/GloriaHallelujah-Regular.ttf
