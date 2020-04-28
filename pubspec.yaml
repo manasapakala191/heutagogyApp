@@ -123,7 +123,7 @@ flutter:
           weight: 400
         - asset: assets/fonts/Quicksand/Quicksand-Light.ttf
           weight: 100
-        - asset: assets/fonts/Quicksand/QUicksand-SemiBold.ttf
+        - asset: assets/fonts/Quicksand/Quicksand-SemiBold.ttf
           weight: 700
 
     - family: Nunito
