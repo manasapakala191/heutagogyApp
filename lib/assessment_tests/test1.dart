@@ -3,7 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:heutagogy/data_models.dart';
-import 'package:youtube_player/youtube_player.dart';
+//import 'package:youtube_player/youtube_player.dart';
 
 import 'animated_button.dart';
 
@@ -86,16 +86,17 @@ class QuestionWidgetState extends State<StatefulWidget> {
               textAlign: TextAlign.center,
             ),
             Padding(padding: EdgeInsets.only(top: 10)),
-            (question.youtubeVideo != "" && question.youtubeVideo != null)
-                ? YoutubePlayer(
-                    width: 360,
-                    context: context,
-                    source: question.youtubeVideo,
-                    quality: YoutubeQuality.HIGH,
-                    autoPlay: false,
-                    showVideoProgressbar: true,
-                  )
-                : (question.image != "")
+//            (question.youtubeVideo != "" && question.youtubeVideo != null)
+//                ? YoutubePlayer(
+//                    width: 360,
+//                    context: context,
+//                    source: question.youtubeVideo,
+//                    quality: YoutubeQuality.HIGH,
+//                    autoPlay: false,
+//                    showVideoProgressbar: true,
+//                  )
+//                :
+            (question.image != "")
                     ? CachedNetworkImage(
                         imageUrl: question.image,
                         width: 256,

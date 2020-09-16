@@ -1,0 +1,77 @@
+{
+  "project_info": {
+    "project_number": "772643974559",
+    "firebase_url": "https://heutagogy-2020.firebaseio.com",
+    "project_id": "heutagogy-2020",
+    "storage_bucket": "heutagogy-2020.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:772643974559:android:1368e7369f76ee2adea1aa",
+        "android_client_info": {
+          "package_name": "com.atl.heutagogy"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "772643974559-632e6paegtp4j09am1qqu3o3au8gdmnf.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAWu1bvLlUfME0wUpC8QGf6g7WbLY1N3Q8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "772643974559-632e6paegtp4j09am1qqu3o3au8gdmnf.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:772643974559:android:c9e24a83a13fa062dea1aa",
+        "android_client_info": {
+          "package_name": "com.example.heutagogy"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "772643974559-5pkju4rp757keqn4jlc24vgm8bm4sosa.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.heutagogy",
+            "certificate_hash": "6d7aaaf2a79ffe1d3e7466793f3bf3817319533a"
+          }
+        },
+        {
+          "client_id": "772643974559-632e6paegtp4j09am1qqu3o3au8gdmnf.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAWu1bvLlUfME0wUpC8QGf6g7WbLY1N3Q8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "772643974559-632e6paegtp4j09am1qqu3o3au8gdmnf.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

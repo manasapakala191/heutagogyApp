@@ -39,7 +39,7 @@ class _StarTestState extends State<StarTest> {
           ),
           SmoothStarRating(
               allowHalfRating: false,
-              onRatingChanged: (v) {
+              onRated: (v) {
                 rating = v;
                 setState(() {});
               },

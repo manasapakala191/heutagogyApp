@@ -1,4 +1,4 @@
-package com.happyadda.heutagogy
+package com.atl.heutagogy
 
 import androidx.annotation.NonNull;
 import io.flutter.embedding.android.FlutterActivity

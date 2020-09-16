@@ -4,7 +4,7 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:heutagogy/data_models.dart';
-import 'lesson_detail.dart';
+import '../lesson_detail.dart';
 
 class LessonsPage extends StatelessWidget {
   final String data;

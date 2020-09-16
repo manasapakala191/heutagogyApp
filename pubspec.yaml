@@ -29,9 +29,11 @@ dependencies:
   http:
   path_provider:
   cached_network_image:
-  youtube_player:
+#  youtube_player:
   smooth_star_rating:
-
+  firebase_core:
+  cloud_firestore:
+  google_fonts:
 
 
 dev_dependencies:

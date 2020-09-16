@@ -13,7 +13,7 @@ import 'package:heutagogy/tests/test10.dart';
 import 'package:heutagogy/tests/test8.dart';
 import 'package:heutagogy/tests/test9.dart';
 import 'package:heutagogy/well_done_page.dart';
-import 'package:youtube_player/youtube_player.dart';
+//import 'package:youtube_player/youtube_player.dart';
 
 class MyLessonTests extends StatefulWidget {
   final LessonData lessonData;
@@ -254,43 +254,44 @@ class _Lesson3VideosState extends State<Lesson3Videos> {
             padding: EdgeInsets.only(top: 20),
           ),
           Padding(padding: EdgeInsets.only(bottom: 10)),
-          YoutubePlayer(
-            width: 360,
-            context: context,
-            source: "https://www.youtube.com/watch?v=1KwAhTF8cXg",
-            quality: YoutubeQuality.HIGH,
-            autoPlay: false,
-            showVideoProgressbar: true,
-            hideShareButton: true,
-          ),
+//          YoutubePlayer(
+//            width: 360,
+//            context: context,
+//            source: "https://www.youtube.com/watch?v=1KwAhTF8cXg",
+//            quality: YoutubeQuality.HIGH,
+//            autoPlay: false,
+//            showVideoProgressbar: true,
+//            hideShareButton: true,
+//          ),
           Padding(
             child: Text("pottelu kanna talli gorre"),
             padding: EdgeInsets.only(top: 20),
           ),
           Padding(padding: EdgeInsets.only(bottom: 10)),
-          YoutubePlayer(
-            width: 360,
-            context: context,
-            source: "https://www.youtube.com/watch?v=6_PiAF4wEFQ",
-            quality: YoutubeQuality.HIGH,
-            autoPlay: false,
-            showVideoProgressbar: true,
-            hideShareButton: true,
-          ),
+//          YoutubePlayer(
+//            width: 360,
+//            context: context,
+//            source: "https://www.youtube.com/watch?v=6_PiAF4wEFQ",
+//            quality: YoutubeQuality.HIGH,
+//            autoPlay: false,
+//            showVideoProgressbar: true,
+//            hideShareButton: true,
+//          ),
           Padding(
             child: Text("my day songs and rhyme"),
             padding: EdgeInsets.only(top: 20),
           ),
-          Padding(padding: EdgeInsets.only(bottom: 10)),
-          YoutubePlayer(
-            width: 360,
-            context: context,
-            source: "https://www.youtube.com/watch?v=H8atgJjtJUI",
-            quality: YoutubeQuality.HIGH,
-            autoPlay: false,
-            showVideoProgressbar: true,
-            hideShareButton: true,
-          )
+          Padding(padding: EdgeInsets.only(bottom: 10))
+//          ,
+//          YoutubePlayer(
+//            width: 360,
+//            context: context,
+//            source: "https://www.youtube.com/watch?v=H8atgJjtJUI",
+//            quality: YoutubeQuality.HIGH,
+//            autoPlay: false,
+//            showVideoProgressbar: true,
+//            hideShareButton: true,
+//          )
         ],
       ),
     );
