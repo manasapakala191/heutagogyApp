@@ -23,18 +23,9 @@ dependencies:
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons:
-  flutter_tts:
-  percent_indicator:
-  audioplayers:
-  http:
-  path_provider:
-  cached_network_image:
-#  youtube_player:
-  smooth_star_rating:
   firebase_core:
   cloud_firestore:
-  google_fonts:
-
+  provider:
 
 dev_dependencies:
   flutter_test:
@@ -86,65 +77,3 @@ flutter:
   #
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/custom-fonts/#from-packages
-
-
-
-  #  Assets (Images)
-  assets:
-    - assets/images/HappyAddaLogo.png
-    - assets/images/books.jpg
-    - assets/images/pb6/gaurd.png
-    - assets/images/pb6/spinach.png
-    - assets/images/pb6/eggplant.png
-    - assets/images/pb6/jackfruit.png
-    - assets/images/well_done.png
-
-  # Assets (Sounds)
-    - assets/audio/parrot.mp3
-    - assets/audio/monkey.mp3
-    - assets/audio/horse.mp3
-    - assets/audio/dog.mp3
-    - assets/audio/cat.mp3
-    - assets/audio/pig.mp3
-    - assets/audio/cuckoo.mp3
-    
-  # Fonts
-  fonts:
-    - family: Montserrat
-      fonts:
-        - asset: assets/fonts/montserrat/Montserrat-Regular.ttf
-    - family: GloriaHallelujah
-      fonts:
-        - asset: assets/fonts/Gloria_Hallelujah/GloriaHallelujah-Regular.ttf
-    - family: Quicksand
-      fonts:
-        - asset: assets/fonts/Quicksand/Quicksand-Regular.ttf
-        - asset: assets/fonts/Quicksand/Quicksand-Bold.ttf
-          weight: 800
-        - asset: assets/fonts/Quicksand/Quicksand-Medium.ttf
-          weight: 400
-        - asset: assets/fonts/Quicksand/Quicksand-Light.ttf
-          weight: 100
-        - asset: assets/fonts/Quicksand/Quicksand-SemiBold.ttf
-          weight: 700
-
-    - family: Nunito
-      fonts:
-        - asset: assets/fonts/Nunito/Nunito-Regular.ttf
-        - asset: assets/fonts/Nunito/Nunito-Light.ttf  
-          weight: 100
-        - asset: assets/fonts/Nunito/Nunito-SemiBold.ttf
-          weight: 200
-        - asset: assets/fonts/Nunito/Nunito-Bold.ttf         
-          weight: 400
-        - asset: assets/fonts/Nunito/Nunito-ExtraBold.ttf         
-          weight: 800
-        # - asset: assets/fonts/Nunito/Nunito-Italic.ttf
-        # - asset: assets/fonts/Nunito/Nunito-BlackItalic.ttf
-        # - asset: assets/fonts/Nunito/Nunito-Black.tt
-        # - asset: assets/fonts/Nunito/Nunito-ExtraBoldItalic.ttf
-        # - asset: assets/fonts/Nunito/Nunito-SemiBoldItalic.tt
-        # - asset: assets/fonts/Nunito/Nunito-ExtraLight.ttf
-        # - asset: assets/fonts/Nunito/Nunito-LightItalic.ttf
-        # - asset: assets/fonts/Nunito/Nunito-BoldItalic.ttf
-        # - asset: assets/fonts/Nunito/Nunito-ExtraLightItalic.ttf
