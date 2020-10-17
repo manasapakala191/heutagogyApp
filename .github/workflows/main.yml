@@ -29,7 +29,6 @@ jobs:
         channel: 'stable'
     - run: flutter pub get
     - run: flutter pub run flutter_launcher_icons:main
-    - run: flutter analyze 
     - run: flutter test
     - run: flutter build apk
     
