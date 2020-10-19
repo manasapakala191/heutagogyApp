@@ -2,6 +2,10 @@ import 'dart:convert';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:heutagogy/hex_color.dart';
+import 'package:heutagogy/screens/lessons_screen.dart';
+import 'package:heutagogy/screens/test_screens/multiple_choice_image_question_screen.dart';
+import 'package:heutagogy/screens/test_screens/multiple_choice_question_screen.dart';
 
 
 void main() {
@@ -33,9 +37,11 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       title: 'Heutagogy',
       theme: ThemeData(),
-      home: MyHomePage(),
+      home: MyHomePage()
     );
   }
 }
+
