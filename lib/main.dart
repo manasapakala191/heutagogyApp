@@ -4,6 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:heutagogy/hex_color.dart';
 import 'package:heutagogy/screens/lessons_screen.dart';
+import 'package:heutagogy/screens/login-resources/login.dart';
 import 'package:heutagogy/screens/test_screens/multiple_choice_image_question_screen.dart';
 import 'package:heutagogy/screens/test_screens/multiple_choice_question_screen.dart';
 
@@ -40,7 +41,7 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'Heutagogy',
       theme: ThemeData(),
-      home: MyHomePage()
+      home: LoginPage()
     );
   }
 }
