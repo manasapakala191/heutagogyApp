@@ -29,7 +29,6 @@ jobs:
         channel: 'stable'
     - run: flutter pub get
     - run: flutter pub run flutter_launcher_icons:main
-    - run: flutter test
     - run: flutter build apk
     
     - uses: actions/upload-artifact@v1
