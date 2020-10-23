@@ -1,6 +1,8 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:heutagogy/screens/course_screen.dart';
+import 'package:heutagogy/screens/login-resources/register.dart';
 
 class LoginPage extends StatefulWidget {
   @override
@@ -180,9 +182,14 @@ class _LoginPageState extends State<LoginPage>
                                   ),
                                   color: Colors.red,
                                   onPressed: () {
-                                    if (_formKey.currentState.validate()) {
-                                      //TODO: Register function here
-                                    }
+                                    Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) => CourseScreen()));
+                                    //TODO: Uncomment and integrate
+                                    // if (_formKey.currentState.validate()) {
+                                    //   //TODO: Register function here
+                                    // }
                                   },
                                 ),
                               ),
@@ -202,7 +209,11 @@ class _LoginPageState extends State<LoginPage>
                                   elevation: 0.0,
                                   color: Colors.white,
                                   onPressed: () {
-                                    //TODO: Go to the login page
+                                    //TODO: Go to the Register page
+                                    Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) => RegisterPage()));
                                   },
                                 ),
                               ),

@@ -1,6 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:heutagogy/screens/course_screen.dart';
+import 'package:heutagogy/screens/login-resources/login.dart';
 
 class RegisterPage extends StatefulWidget {
   @override
@@ -233,9 +235,14 @@ class _RegisterPageState extends State<RegisterPage> {
                                 ),
                                 color: Colors.red,
                                 onPressed: () {
-                                  if (_formKey.currentState.validate()) {
-                                    //TODO: Register function here
-                                  }
+                                  Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) => CourseScreen()));
+                                  //TODO: Uncomment and Integrate
+                                  // if (_formKey.currentState.validate()) {
+                                  //   //TODO: Register function here
+                                  // }
                                 },
                               ),
                             ),
@@ -256,6 +263,10 @@ class _RegisterPageState extends State<RegisterPage> {
                                 color: Colors.white,
                                 onPressed: () {
                                   //TODO: Go to the login page
+                                  Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) => LoginPage()));
                                 },
                               ),
                             ),

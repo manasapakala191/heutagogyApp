@@ -9,9 +9,11 @@ class DatabaseService{
     return elementCollection.snapshots();
  }
 
-  getUserDoc(String cid) async {
+  static getUserDoc(String cid) async {
     // Firebase.initializeApp().then((val) async {
-      DocumentSnapshot doc= await FirebaseFirestore.instance.collection('elements').doc("kZx]sxpgvj").get();
+    //   DocumentSnapshot doc= await 
+    //   FirebaseFirestore.instance.collection('Schools').doc('School 1').get().then((value) => print(value['name']));
+    //TODO: Get user data, then populate user model and student performance model
     // });
   }
 }

@@ -17,7 +17,7 @@ class _MatchTextState extends State<MatchText> {
   @override
   void initState() {
     // Uncomment the following to test this out
-    /*
+
     _matchPicWithText = new MatchPicWithText(
       testName: "Lorem ipsum",
       testDescription: "Type the name of the picture in the given box:",
@@ -35,7 +35,8 @@ class _MatchTextState extends State<MatchText> {
         ),
       ],
     );
-     */
+
+
     data = Map<String, bool>();
     for (var choice in _matchPicWithText.choices) {
       data[choice.correctText] = false;
@@ -77,7 +78,7 @@ class _MatchTextState extends State<MatchText> {
                 ? Container(
                     margin: EdgeInsets.only(
                         top: 10, bottom: 20, left: 50, right: 50),
-                    key: UniqueKey(),
+                    // key: UniqueKey(),
                     decoration: BoxDecoration(
                         border:
                             Border.all(color: HexColor("#ed2a26"), width: 2),
@@ -101,7 +102,7 @@ class _MatchTextState extends State<MatchText> {
                     ),
                   )
                 : Container(
-                    key: UniqueKey(),
+                    // key: UniqueKey(),
                     height: 45.00,
                     margin: EdgeInsets.only(
                         top: 10, bottom: 20, left: 50, right: 50),
@@ -125,13 +126,11 @@ class _MatchTextState extends State<MatchText> {
         ),
       );
     }
-
     items.add(
       Padding(
         padding: EdgeInsets.only(bottom: 40),
       ),
     );
-
     return items;
   }
 
@@ -139,9 +138,16 @@ class _MatchTextState extends State<MatchText> {
   Widget build(BuildContext context) {
     //_buildImageInput();
     return Scaffold(
+
       appBar: AppBar(
         title: Text(_matchPicWithText.testName),
-        backgroundColor: Colors.white
+        backgroundColor: Colors.white,
+        actionsIconTheme: IconThemeData(
+          color: HexColor("#ed2a26"),
+        ),
+        iconTheme: IconThemeData(
+          color: HexColor("#ed2a26"),
+        ),
       ),
       body: Center(
         child: ListView(

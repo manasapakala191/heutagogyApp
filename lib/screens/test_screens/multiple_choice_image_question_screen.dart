@@ -44,8 +44,18 @@ class MultipleChoiceImageQuestionScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: Text(imageQuestionTest.subject),
-        backgroundColor: HexColor('#ed2a26'),
+        backgroundColor: Colors.white,
+        actionsIconTheme: IconThemeData(
+          color: HexColor("#ed2a26"),
+        ),
+        iconTheme: IconThemeData(
+          color: HexColor("#ed2a26"),
+        ),
       ),
+      // appBar: AppBar(
+      //   title: Text(imageQuestionTest.subject),
+      //   backgroundColor: HexColor('#ed2a26'),
+      // ),
       backgroundColor: HexColor('#f7f7f7'),
       body: SizedBox(
           height: MediaQuery.of(context).size.height,
