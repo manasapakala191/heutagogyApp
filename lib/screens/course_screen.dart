@@ -100,7 +100,7 @@ class _CourseScreenState extends State<CourseScreen> {
   };
   @override
   Widget build(BuildContext context) {
-    print(dragdropJSON["questions"]);
+
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.white,
@@ -174,7 +174,6 @@ class _CourseScreenState extends State<CourseScreen> {
         return DragDropAudioScreen(DragDropAudioTest.fromJSON(data));
       }break;
        case 'q5': {
-         print(data["questions"]);
         return MathMatchScreen(MathMatchTest.fromJSON(data));
       }break;
       default: {
