@@ -58,7 +58,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
       // Gambol Themes:  https://coolors.co/fdcc0d-ab4e68-ed2a26-e5e0e5-fba346-ffecec
       ),
-      home: RegisterPage(),
+      home: CourseScreen(),
     );
   }
 }

@@ -2,10 +2,16 @@ import 'package:flutter/material.dart';
 import 'package:heutagogy/hex_color.dart';
 import 'package:heutagogy/models/studentPerformance.dart';
 import 'package:heutagogy/models/test_type_models/drag_drop_test.dart';
+import 'package:heutagogy/models/test_type_models/math_match.dart';
 import 'package:heutagogy/screens/lessons_screen.dart';
+import 'package:heutagogy/screens/login-resources/login.dart';
+import 'package:heutagogy/screens/login-resources/register.dart';
 import 'package:heutagogy/screens/test_screens/drag_drop_image_question_screen.dart';
+import 'package:heutagogy/screens/test_screens/match_audio.dart';
+import 'package:heutagogy/models/test_type_models/match_audio.dart';
 import 'package:heutagogy/screens/test_screens/match_text_screen.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:heutagogy/screens/test_screens/math_match_screen.dart';
 import 'package:heutagogy/screens/test_screens/multiple_choice_image_question_screen.dart';
 import 'package:heutagogy/screens/test_screens/multiple_choice_question_screen.dart';
 import 'package:heutagogy/services/database.dart';
@@ -50,10 +56,51 @@ class _CourseScreenState extends State<CourseScreen> {
         "description": "A boy cooking food along with his father"
       },
     ],
-    "subject": ""
+    "audios":[
+        {
+          "audio": "https://may123.pythonanywhere.com/media/audio_description_pair/cat.mp3",
+          "description": "Cat"
+        },
+        {
+          "audio": "https://may123.pythonanywhere.com/media/audio_description_pair/cuckoo.mp3",
+          "description": "Cuckoo"
+        },
+        {
+          "audio": "https://may123.pythonanywhere.com/media/audio_description_pair/dog.mp3",
+          "description": "Dog"
+        },
+        {
+          "audio": "https://may123.pythonanywhere.com/media/audio_description_pair/horse.mp3",
+          "description": "Horse"
+        }
+      ],
+     "questions":[
+        {
+          "first": "953",
+          "second": "900 + 50 + 3"
+        },
+        {
+          "first": "215",
+          "second": "200 + 10 + 5"
+        },
+        {
+          "first": "674",
+          "second": "600 + 70 + 4"
+        },
+        {
+          "first": "598",
+          "second": "500 + 90 + 8"
+        },
+        {
+          "first": "751",
+          "second": "700 + 50 + 1"
+        }
+      ],
+     "subject": "",
   };
   @override
   Widget build(BuildContext context) {
+
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.white,
@@ -65,7 +112,31 @@ class _CourseScreenState extends State<CourseScreen> {
         ),
       ),
       drawer: Drawer(
-        child: Container(),
+        child: Container(
+          child: Column(
+            children: [
+              SizedBox(height:50),
+              RaisedButton(
+                color: Colors.redAccent,
+            onPressed:(){
+              Navigator.push(
+                           context,
+                           MaterialPageRoute(
+                               builder: (context) => RegisterPage()));
+            },
+            child: Text("Register",style: TextStyle(color: Colors.white),)),
+            RaisedButton(
+              color: Colors.redAccent,
+            onPressed:(){
+              Navigator.push(
+                           context,
+                           MaterialPageRoute(
+                               builder: (context) => LoginPage()));
+            },
+            child: Text("Login",style: TextStyle(color: Colors.white),)),
+            ]
+          )
+        ),
       ),
       floatingActionButton: FloatingActionButton(
         child: Icon(Icons.add,),
@@ -99,6 +170,12 @@ class _CourseScreenState extends State<CourseScreen> {
       case 'q3': {
         return DragDropImageScreen(DragDropImageTest.fromJSON(data));
       } break;
+      case 'q4': {
+        return DragDropAudioScreen(DragDropAudioTest.fromJSON(data));
+      }break;
+       case 'q5': {
+        return MathMatchScreen(MathMatchTest.fromJSON(data));
+      }break;
       default: {
         return Container(
           child: Text("No Such Type"),
@@ -107,9 +184,9 @@ class _CourseScreenState extends State<CourseScreen> {
     }
   }
   _buildSlides(Map data){
-    List types=['l0','q0','q1','q2','q3'];
+    List types=['l0','q0','q1','q2','q3','q4','q5'];
     return ListView.builder(
-        itemCount: 5,
+        itemCount: 7,
         physics: ClampingScrollPhysics(),
         itemBuilder: (BuildContext context,int idx ){
          return Padding(
