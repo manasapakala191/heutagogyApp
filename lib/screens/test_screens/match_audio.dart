@@ -142,7 +142,7 @@ class _DragDropAudioScreenState extends State<DragDropAudioScreen> {
         ),
       );
     }
-    targets.shuffle(Random(seed));
+    targets..shuffle(Random(seed));
     for (int i = 0; i < audiodata.audios.length; i++) {
       body.add(Padding(
           padding: EdgeInsets.only(top: 3, left: 40, right: 40),
