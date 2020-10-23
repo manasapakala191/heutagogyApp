@@ -4,6 +4,8 @@ import 'package:heutagogy/models/studentPerformance.dart';
 import 'package:heutagogy/models/test_type_models/drag_drop_test.dart';
 import 'package:heutagogy/screens/lessons_screen.dart';
 import 'package:heutagogy/screens/test_screens/drag_drop_image_question_screen.dart';
+import 'package:heutagogy/screens/test_screens/match_audio.dart';
+import 'package:heutagogy/models/test_type_models/match_audio.dart';
 import 'package:heutagogy/screens/test_screens/match_text_screen.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:heutagogy/screens/test_screens/multiple_choice_image_question_screen.dart';
@@ -50,6 +52,24 @@ class _CourseScreenState extends State<CourseScreen> {
         "description": "A boy cooking food along with his father"
       },
     ],
+    "audios":[
+        {
+          "audio": "https://may123.pythonanywhere.com/media/audio_description_pair/cat.mp3",
+          "description": "A boy folding hands in front of his teacher"
+        },
+        {
+          "audio": "https://may123.pythonanywhere.com/media/audio_description_pair/cuckoo.mp3",
+          "description": "A girl giving water to her grand father"
+        },
+        {
+          "audio": "https://may123.pythonanywhere.com/media/audio_description_pair/dog.mp3",
+          "description": "A girl clearing litter on the road"
+        },
+        {
+          "audio": "https://may123.pythonanywhere.com/media/audio_description_pair/horse.mp3",
+          "description": "A boy cooking food along with his father"
+        }
+      ],
     "subject": ""
   };
   @override
@@ -99,6 +119,9 @@ class _CourseScreenState extends State<CourseScreen> {
       case 'q3': {
         return DragDropImageScreen(DragDropImageTest.fromJSON(data));
       } break;
+      case 'q4': {
+        return DragDropAudioScreen(DragDropAudioTest.fromJSON(data));
+      }break;
       default: {
         return Container(
           child: Text("No Such Type"),
@@ -107,9 +130,9 @@ class _CourseScreenState extends State<CourseScreen> {
     }
   }
   _buildSlides(Map data){
-    List types=['l0','q0','q1','q2','q3'];
+    List types=['l0','q0','q1','q2','q3','q4'];
     return ListView.builder(
-        itemCount: 5,
+        itemCount: 6,
         physics: ClampingScrollPhysics(),
         itemBuilder: (BuildContext context,int idx ){
          return Padding(
