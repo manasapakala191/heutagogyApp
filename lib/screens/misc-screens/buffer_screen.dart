@@ -1,52 +1,21 @@
-//import 'dart:html';
-import 'dart:ui';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
-import 'package:heutagogy/screens/login-resources/register.dart';
-import 'package:provider/provider.dart';
+import 'package:flutter_svg/svg.dart';
 import '../../models/userModel.dart';
-import '../../services/database.dart';
+import 'package:provider/provider.dart';
 import '../course_screen.dart';
 
-class LoginPage extends StatefulWidget {
+class BufferPage extends StatefulWidget {
   @override
-  _LoginPageState createState() => _LoginPageState();
+  _BufferPageState createState() => _BufferPageState();
 }
 
-class _LoginPageState extends State<LoginPage>
-    with SingleTickerProviderStateMixin {
+class _BufferPageState extends State<BufferPage> {
   final _formKey = GlobalKey<FormState>();
-  final TextEditingController _rollNumberController = TextEditingController();
-  final TextEditingController _passwordController = TextEditingController();
-  bool _obscure = true;
-  AnimationController _animationController;
-  bool isTransitioning = false;
-
-  @override
-  void initState() {
-    _animationController =
-        AnimationController(vsync: this, duration: Duration(milliseconds: 300));
-    super.initState();
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
-    _animationController.dispose();
-  }
-
-  void changeTransition() {
-    setState(() {
-      isTransitioning = !isTransitioning;
-      isTransitioning
-          ? _animationController.forward()
-          : _animationController.reverse();
-    });
-  }
-
+  final TextEditingController _fullName = TextEditingController();
+  final TextEditingController _photoUrl = TextEditingController();
   @override
   Widget build(BuildContext context) {
-    UserModel userModel = Provider.of<UserModel>(context);
+    UserModel _userModel = Provider.of<UserModel>(context);
     return Scaffold(
       body: SafeArea(
         child: Stack(
@@ -100,7 +69,7 @@ class _LoginPageState extends State<LoginPage>
                                 child: Container(
                                   padding: EdgeInsets.all(10.0),
                                   child: Text(
-                                    "Login",
+                                    "Fill in these extra details:",
                                     style: TextStyle(
                                       color: Colors.black54,
                                       fontSize: 20.0,
@@ -110,7 +79,8 @@ class _LoginPageState extends State<LoginPage>
                                 ),
                               ),
                               Container(
-                                margin: EdgeInsets.fromLTRB(0.0, 10.0, 0.0, 10.0),
+                                margin:
+                                    EdgeInsets.fromLTRB(0.0, 10.0, 0.0, 10.0),
                                 decoration: BoxDecoration(
                                   color: Colors.grey[200],
                                   borderRadius: BorderRadius.circular(10.0),
@@ -118,50 +88,42 @@ class _LoginPageState extends State<LoginPage>
                                 padding:
                                     EdgeInsets.fromLTRB(10.0, 0.0, 10.0, 0.0),
                                 child: TextFormField(
-                                  controller: _rollNumberController,
+                                  controller: _fullName,
                                   decoration: InputDecoration(
                                     border: InputBorder.none,
-                                    labelText: "Roll-Number",
+                                    labelText: "Full Name",
+                                    prefixIcon: Icon(Icons.account_circle),
                                   ),
                                   validator: (val) {
                                     String ans;
                                     if (val.isEmpty) {
-                                      ans = "Please type in your Roll-Number";
+                                      ans = "Please type in your Full Name";
                                     }
                                     return ans;
                                   },
                                 ),
                               ),
                               Container(
-                                margin: EdgeInsets.fromLTRB(0.0, 10.0, 0.0, 10.0),
+                                margin:
+                                    EdgeInsets.fromLTRB(0.0, 10.0, 0.0, 10.0),
                                 decoration: BoxDecoration(
                                   color: Colors.grey[200],
                                   borderRadius: BorderRadius.circular(10.0),
                                 ),
-                                padding: EdgeInsets.fromLTRB(5.0, 0.0, 5.0, 0.0),
+                                padding:
+                                    EdgeInsets.fromLTRB(5.0, 0.0, 5.0, 0.0),
                                 child: TextFormField(
-                                  controller: _passwordController,
-                                  obscureText: _obscure,
+                                  controller: _photoUrl,
                                   decoration: InputDecoration(
                                     border: InputBorder.none,
-                                    labelText: "Password",
-                                    prefixIcon: Icon(Icons.lock),
-                                    suffixIcon: IconButton(
-                                      icon: !isTransitioning
-                                          ? Icon(Icons.visibility)
-                                          : Icon(Icons.visibility_off),
-                                      onPressed: () {
-                                        changeTransition();
-                                        setState(() {
-                                          _obscure = !_obscure;
-                                        });
-                                      },
-                                    ), //Icon(Icons.remove_red_eye_outlined),
+                                    labelText: "Your Photo",
+                                    //Icon(Icons.remove_red_eye_outlined),
+                                    prefixIcon: Icon(Icons.add_a_photo),
                                   ),
                                   validator: (val) {
                                     String ans;
                                     if (val.isEmpty) {
-                                      ans = "Please type in the password";
+                                      ans = "Please type in the photoUrl";
                                     }
                                     return ans;
                                   },
@@ -174,7 +136,7 @@ class _LoginPageState extends State<LoginPage>
                                 height: 50.0,
                                 child: RaisedButton(
                                   child: Text(
-                                    "Sign In",
+                                    "Continue to the app",
                                     style: TextStyle(
                                       fontSize: 20.0,
                                       fontWeight: FontWeight.bold,
@@ -186,15 +148,11 @@ class _LoginPageState extends State<LoginPage>
                                     borderRadius: BorderRadius.circular(25.0),
                                   ),
                                   color: Colors.red,
-                                  onPressed: () async {
-                                    if (_formKey.currentState.validate()) {
-                                      var result = await DatabaseService().signInStudent(userModel, _rollNumberController.text, _passwordController.text);
-                                      if(result == true){
-                                        Navigator.of(context).push(MaterialPageRoute(builder: (context)=>CourseScreen()));
-                                      }else{
-                                        print("Somthing went wrong");
-                                      }
-                                    }
+                                  onPressed: () {
+                                    //TODO: Uncomment and integrate
+                                    // if (_formKey.currentState.validate()) {
+                                    //   //TODO: Take name and photoUrl and integrate it
+                                    // }
                                   },
                                 ),
                               ),
@@ -204,7 +162,7 @@ class _LoginPageState extends State<LoginPage>
                               Container(
                                 child: RaisedButton(
                                   child: Text(
-                                    "Create an account?",
+                                    "Skip ahead ->",
                                     style: TextStyle(
                                       fontSize: 16.0,
                                       fontWeight: FontWeight.bold,
@@ -214,10 +172,13 @@ class _LoginPageState extends State<LoginPage>
                                   elevation: 0.0,
                                   color: Colors.white,
                                   onPressed: () {
+                                    //TODO: Go to the Register page
                                     Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                            builder: (context) => RegisterPage()));
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) => CourseScreen(),
+                                      ),
+                                    );
                                   },
                                 ),
                               ),

@@ -3,6 +3,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:heutagogy/screens/course_screen.dart';
 import 'package:heutagogy/screens/login-resources/login.dart';
+import 'package:heutagogy/screens/misc-screens/buffer_screen.dart';
+import 'package:heutagogy/screens/misc-screens/profile.dart';
+import 'package:provider/provider.dart';
+import '../../models/userModel.dart';
+import '../../services/database.dart';
 
 class RegisterPage extends StatefulWidget {
   @override
@@ -22,6 +27,7 @@ class _RegisterPageState extends State<RegisterPage> {
 
   @override
   Widget build(BuildContext context) {
+    UserModel userModel = Provider.of<UserModel>(context);
     return Scaffold(
       body: SafeArea(
         child: Stack(
@@ -234,15 +240,18 @@ class _RegisterPageState extends State<RegisterPage> {
                                   borderRadius: BorderRadius.circular(18.0),
                                 ),
                                 color: Colors.red,
-                                onPressed: () {
-                                  Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (context) => CourseScreen()));
+                                onPressed: () async {
                                   //TODO: Uncomment and Integrate
-                                  // if (_formKey.currentState.validate()) {
+                                  if (_formKey.currentState.validate()) {
                                   //   //TODO: Register function here
-                                  // }
+                                  var result = await DatabaseService().signUpStudent(userModel,_rollNumberController.text, _password.text, _newPassword2.text);
+                                  print(result);
+                                  if(result == true){
+                                    Navigator.of(context).push(MaterialPageRoute(builder: (context)=> BufferPage()));
+                                  }else{
+                                    print("Error in performing action");
+                                  }
+                                  }
                                 },
                               ),
                             ),
@@ -262,11 +271,7 @@ class _RegisterPageState extends State<RegisterPage> {
                                 elevation: 0.0,
                                 color: Colors.white,
                                 onPressed: () {
-                                  //TODO: Go to the login page
-                                  Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (context) => LoginPage()));
+                                  Navigator.of(context).pop();
                                 },
                               ),
                             ),
