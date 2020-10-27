@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'dart:math';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/rendering.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:heutagogy/hex_color.dart';
 import 'package:heutagogy/models/test_type_models/drag_drop_test.dart';
 import 'package:heutagogy/models/test_type_models/option_class.dart';
@@ -82,8 +83,8 @@ class _DragDropImageScreenState extends State<DragDropImageScreen> {
                 border: Border.all(width: 2),
                 borderRadius: BorderRadius.circular(100)),
             child: Icon(
-              Icons.assignment_turned_in,
-              color: HexColor("#ed2a26"),
+              Icons.check_circle_rounded,
+              color: Color(0xFFAB4E68),
               size: 32,
             )));
       } else {
@@ -101,15 +102,20 @@ class _DragDropImageScreenState extends State<DragDropImageScreen> {
                 child: Container(
                   decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(20),
-                      border: Border.all(color: HexColor("#ed2a26"), width: 2),
-                      color: HexColor("#ed2a26")),
+                      border: Border.all(color: Color(0xFFFDCC0D), width: 2),
+                      color: Color(0xFFFDCC0D),
+                      // color: HexColor("#ed2a26")
+                  ),
                   padding: EdgeInsets.all(10),
                   height: 128,
                   child: Center(
                       child: Text(
                         image.description,
                         style:
-                        TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold),
+                          GoogleFonts.getFont('Spartan'),
+                        // TextStyle(
+                        //     // color: Colors.white,
+                        //     fontSize: 18, fontWeight: FontWeight.bold, fontFamily: 'Monsterrat'),
                       )),
                 ),
               );
@@ -122,7 +128,7 @@ class _DragDropImageScreenState extends State<DragDropImageScreen> {
                     decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(20),
                         border: Border.all(color: Colors.black54, width: 2),
-                        color: HexColor("#ed2a26")),
+                        color: Color(0xFFAB4E68)),
                     padding: EdgeInsets.all(10),
                     height: 128,
                     child: Center(
@@ -137,7 +143,6 @@ class _DragDropImageScreenState extends State<DragDropImageScreen> {
           },
           onAccept: (data) {
             setState(() {
-
               correct[data] = true;
               correct2[image.description] = true;
             });
