@@ -17,7 +17,7 @@ class MatchPicWithText extends Test {
     return MatchPicWithText(
         testName: jsonData["name"],
         subject: jsonData['subject'],
-        testDescription: jsonData["heading"],
+        testDescription: jsonData["description"],
         choices: pictures);
   }
 }

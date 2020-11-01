@@ -22,7 +22,7 @@ class DragDropImageTest extends Test {
     return DragDropImageTest(
         testName: jsonData['name'],
         pictures: pics,
-        testDescription: jsonData['heading'],
+        testDescription: jsonData['description'],
         subject: jsonData['subject']);
   }
 }

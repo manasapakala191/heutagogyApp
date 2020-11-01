@@ -4,10 +4,10 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:heutagogy/hex_color.dart';
-import 'package:heutagogy/models/studentPerformance.dart';
+import 'package:heutagogy/models/studentProgress.dart';
 import 'package:heutagogy/models/userModel.dart';
-import 'package:heutagogy/screens/course_screen.dart';
-import 'package:heutagogy/screens/lessons_screen.dart';
+import 'package:heutagogy/screens/lesson_screen.dart';
+import 'package:heutagogy/screens/tutorial_screen.dart';
 import 'package:heutagogy/screens/login-resources/login.dart';
 import 'package:heutagogy/screens/login-resources/register.dart';
 import 'package:heutagogy/screens/test_screens/match_text_screen.dart';
@@ -21,7 +21,7 @@ void main() {
       //add after signup
       ChangeNotifierProvider(create: (_) => UserModel()),
       // add after signup
-      ChangeNotifierProvider(create: (_) => StudentPerfomance())
+      ChangeNotifierProvider(create: (_) => StudentProgress()),
     ], child: MyApp()),
   );
 }
@@ -113,6 +113,18 @@ class MyApp extends StatelessWidget {
         backgroundColor: Colors.white,
         primaryColor: Color(0xFFED2A26),
         fontFamily: 'Monsterrat',
+        appBarTheme: AppBarTheme(
+          color: Colors.white,
+          textTheme: TextTheme(
+            headline6: TextStyle(color: HexColor("#ed2a26"),fontSize: 20),
+          ),
+          actionsIconTheme: IconThemeData(
+            color: HexColor("#ed2a26"),
+          ),
+          iconTheme: IconThemeData(
+            color: HexColor("#ed2a26"),
+          ),
+        )
       ),
       home: MyHomePage(),
     );

@@ -6,15 +6,17 @@ class Lesson{
   final String description;
   final String videoUrl;
   final String lessonContent;
-  Lesson({this.description, this.lessonContent, this.lessonName, this.videoUrl, this.subject});
+  final String type;
+  Lesson({this.description, this.lessonContent, this.lessonName, this.videoUrl, this.subject,this.type});
 
   factory Lesson.fromJson(Map<String, dynamic> json){
     return Lesson(
       subject: json['subject'],
-      lessonName: json['lessonName'],
-      lessonContent: json['description'],
+      lessonName: json['name'],
+      lessonContent: json['content'],
       videoUrl: json['videoUrl'],
-      description: json['description']
+      description: json['description'],
+      type: json['type'],
     );
   }
 

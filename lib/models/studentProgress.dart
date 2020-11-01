@@ -1,10 +1,11 @@
 import 'package:flutter/cupertino.dart';
 
-class StudentPerfomance extends ChangeNotifier{
-  Map<String, Map> coursePercentage=
+class StudentProgress extends ChangeNotifier{
+  Map coursePercentage=
   // dummy before integration
   {
     'courseID': {
+      'name': 'courseName',
       'percent': 0,
       'lessonNumber': 0,
       'slidenumber': 0,
@@ -12,6 +13,20 @@ class StudentPerfomance extends ChangeNotifier{
     },
   };
 
+  StudentProgress({ this.coursePercentage});
+
+  // factory StudentProgress.fromJSON(Map<String, dynamic> json){
+  //   return StudentProgress(
+  //     coursePercentage: {
+  //       json
+  //     }
+  //   );
+  // }
+
+  void populate(Map json){
+    coursePercentage=json;
+    notifyListeners();
+  }
   void addCourse(String courseID){
     // dummy add for now
     coursePercentage.addAll(

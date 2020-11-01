@@ -13,7 +13,7 @@ class MathMatchTest {
       for (var x in jsonData['questions']) {
         ques.add(TextPair.fromJson(x));
       }
-      return MathMatchTest(heading: jsonData['heading'], questions: ques, subject: jsonData['subject']);
+      return MathMatchTest(heading: jsonData['name'], questions: ques, subject: jsonData['subject']);
     }
     else{
       return MathMatchTest(heading:"",questions:ques,subject:"");

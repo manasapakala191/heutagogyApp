@@ -14,7 +14,7 @@ class QuestionData{
         text: json['text'],
         image: json['image'],
         youtubeVideo: json['youtubeVideo'],
-        options: _optionMaps.map((e) => Option.fromJson(e))
+        options: _optionMaps.map((e) => Option.fromJson(e)).toList(),
     );
   }
 
@@ -38,7 +38,7 @@ class ImageQuestionData{
     List _optionMaps = json['options'];
     return ImageQuestionData(
         question: json['question'],
-        options: _optionMaps.map((e) => ImageChoice.fromJson(e))
+        options: _optionMaps.map((e) => ImageChoice.fromJson(e)).toList(),
     );
   }
 

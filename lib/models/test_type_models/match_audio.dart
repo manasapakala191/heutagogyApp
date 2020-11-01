@@ -22,7 +22,7 @@ class DragDropAudioTest extends Test {
     return DragDropAudioTest(
         testName: jsonData['name'],
         audios: sounds,
-        testDescription: jsonData['heading'],
+        testDescription: jsonData['description'],
         subject: jsonData['subject']);
   }
 }

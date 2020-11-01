@@ -13,16 +13,16 @@ class SingleCorrectTest extends Test {
   factory SingleCorrectTest.fromJson(Map<String, dynamic> json) {
     List questionMaps = json['questions'];
     return SingleCorrectTest(
-        testName: json['testName'],
-        testDescription: json['testDescription'],
+        testName: json['name'],
+        testDescription: json['description'],
         subject: json['subject'],
-        questions: questionMaps.map((e) => QuestionData.fromJson(e)));
+        questions: questionMaps.map((e) => QuestionData.fromJson(e)).toList());
   }
 
   Map<String, dynamic> toMap() {
     return {
-      'testName': testName,
-      'testDescription': testDescription,
+      'name': testName,
+      'description': testDescription,
       'subject': subject,
       'questions': questions.map((e) => e.toMap()).toList()
     };
@@ -41,16 +41,16 @@ class ImageQuestionTest extends Test {
   factory ImageQuestionTest.fromJson(Map<String, dynamic> json) {
     List imageQuestionMaps = json['questions'];
     return ImageQuestionTest(
-        testName: json['testName'],
-        testDescription: json['testDescription'],
+        testName: json['name'],
+        testDescription: json['description'],
         subject: json['subject'],
-        questions: imageQuestionMaps.map((e) => ImageQuestionData.fromJson(e)));
+        questions: imageQuestionMaps.map((e) => ImageQuestionData.fromJson(e)).toList());
   }
 
   Map<String, dynamic> toMap() {
     return {
-      'testName': testName,
-      'testDescription': testDescription,
+      'name': testName,
+      'description': testDescription,
       'subject': subject,
       'questions': questions.map((e) => e.toMap()).toList()
     };

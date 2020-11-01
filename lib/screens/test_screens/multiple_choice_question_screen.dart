@@ -7,32 +7,34 @@ import 'package:heutagogy/models/test_type_models/option_class.dart';
 import 'package:heutagogy/models/test_type_models/question_class.dart';
 
 class MultipleChoiceQuestionScreen extends StatelessWidget {
-  final SingleCorrectTest singleCorrectTest = SingleCorrectTest(
-    testName: "Test",
-    subject: "Lorem Ipsum",
-    testDescription: "Simple test description",
-    questions: List.generate(10, (index) => QuestionData(
-        text: faker.lorem.sentence(),
-        options: [
-          Option(
-              text: faker.lorem.sentence().substring(0, 10),
-              choice: faker.randomGenerator.boolean()
-          ),
-          Option(
-              text: faker.lorem.sentence().substring(0, 10),
-              choice: faker.randomGenerator.boolean()
-          ),
-          Option(
-              text: faker.lorem.sentence().substring(0, 10),
-              choice: faker.randomGenerator.boolean()
-          ),
-          Option(
-              text: faker.lorem.sentence().substring(0, 10),
-              choice: faker.randomGenerator.boolean()
-          ),
-        ]
-    ))
-  );
+  final singleCorrectTest;
+  MultipleChoiceQuestionScreen({this.singleCorrectTest});
+  // final SingleCorrectTest singleCorrectTest = SingleCorrectTest(
+  //   testName: "Test",
+  //   subject: "Lorem Ipsum",
+  //   testDescription: "Simple test description",
+  //   questions: List.generate(10, (index) => QuestionData(
+  //       text: faker.lorem.sentence(),
+  //       options: [
+  //         Option(
+  //             text: faker.lorem.sentence().substring(0, 10),
+  //             choice: faker.randomGenerator.boolean()
+  //         ),
+  //         Option(
+  //             text: faker.lorem.sentence().substring(0, 10),
+  //             choice: faker.randomGenerator.boolean()
+  //         ),
+  //         Option(
+  //             text: faker.lorem.sentence().substring(0, 10),
+  //             choice: faker.randomGenerator.boolean()
+  //         ),
+  //         Option(
+  //             text: faker.lorem.sentence().substring(0, 10),
+  //             choice: faker.randomGenerator.boolean()
+  //         ),
+  //       ]
+  //   ))
+  // );
 
 
   @override
@@ -74,7 +76,7 @@ class MultipleChoiceQuestionScreen extends StatelessWidget {
               ),
             ),
             Column(
-              children: singleCorrectTest.questions.map((e) => QuestionWidget(question: e,)).toList(),
+              children: singleCorrectTest.questions.map<Widget>((e) => QuestionWidget(question: e,)).toList(),
             )
           ],
         )
@@ -129,7 +131,7 @@ class _OptionBuilderState extends State<OptionBuilder> {
   @override
   Widget build(BuildContext context) {
     return Column(
-      children: widget.options.map((e) {
+      children: widget.options.map<Widget>((e) {
         return RadioListTile(
           groupValue: groupValue,
           value: i++ % 4,

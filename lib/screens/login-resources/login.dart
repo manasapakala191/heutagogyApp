@@ -1,7 +1,8 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:heutagogy/screens/course_screen.dart';
+import 'package:heutagogy/screens/courses_screen.dart';
+import 'package:heutagogy/screens/lesson_screen.dart';
 import 'package:heutagogy/screens/login-resources/register.dart';
 
 class LoginPage extends StatefulWidget {
@@ -185,7 +186,7 @@ class _LoginPageState extends State<LoginPage>
                                     Navigator.push(
                                         context,
                                         MaterialPageRoute(
-                                            builder: (context) => CourseScreen()));
+                                            builder: (context) => CoursesHomeScreen()));
                                     //TODO: Uncomment and integrate
                                     // if (_formKey.currentState.validate()) {
                                     //   //TODO: Register function here

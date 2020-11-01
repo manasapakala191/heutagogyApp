@@ -1,33 +1,27 @@
 import 'package:flutter/material.dart';
 import 'package:heutagogy/hex_color.dart';
 import 'package:heutagogy/models/lessons_models.dart';
-import 'package:faker/faker.dart';
 import 'package:video_player/video_player.dart';
 
+
 class LessonViewer extends StatefulWidget {
+  final Lesson lesson;
+  LessonViewer({this.lesson});
   @override
   _LessonViewerState createState() => _LessonViewerState();
 }
 
 class _LessonViewerState extends State<LessonViewer> {
-  final Lesson lesson = Lesson(
-    subject: faker.lorem.word(),
-    lessonName: faker.lorem.word(),
-    description: faker.lorem.sentence(),
-    lessonContent: faker.lorem.sentence(),
-    videoUrl: 'https://flutter.github.io/assets-for-api-docs/assets/videos/butterfly.mp4'
-  );
-
+  Lesson lesson;
   VideoPlayerController _controller;
-
   Future<void> _initializeVideoPlayerFuture;
-
   bool showControllerButtons = true;
 
   @override
   void initState(){
+    lesson=widget.lesson;
     _controller = VideoPlayerController.network(
-      'https://flutter.github.io/assets-for-api-docs/assets/videos/butterfly.mp4',
+      lesson.videoUrl,
     );
 
     _initializeVideoPlayerFuture = _controller.initialize();

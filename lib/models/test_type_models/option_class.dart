@@ -49,7 +49,7 @@ class ImageChoice{
     return ImageChoice(
         text: json['text'],
         picture: json['picture'],
-        correct: json['correct']
+        correct: json['correct'],
     );
   }
   Map<String, dynamic> toMap(){

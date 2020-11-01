@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:heutagogy/screens/course_screen.dart';
+import 'package:heutagogy/screens/courses_screen.dart';
 import 'package:heutagogy/screens/login-resources/login.dart';
 
 class RegisterPage extends StatefulWidget {
@@ -238,7 +238,7 @@ class _RegisterPageState extends State<RegisterPage> {
                                   Navigator.push(
                                       context,
                                       MaterialPageRoute(
-                                          builder: (context) => CourseScreen()));
+                                          builder: (context) => CoursesHomeScreen()));
                                   //TODO: Uncomment and Integrate
                                   // if (_formKey.currentState.validate()) {
                                   //   //TODO: Register function here

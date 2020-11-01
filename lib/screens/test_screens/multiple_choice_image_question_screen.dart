@@ -7,37 +7,38 @@ import 'package:faker/faker.dart';
 
 
 class MultipleChoiceImageQuestionScreen extends StatelessWidget {
-
-  final ImageQuestionTest imageQuestionTest = ImageQuestionTest(
-    testName: faker.lorem.word(),
-    subject: faker.lorem.word(),
-    testDescription: faker.lorem.sentence(),
-    questions: List.generate(10, (index) => ImageQuestionData(
-      question: faker.lorem.sentence(),
-      options: [
-        ImageChoice(
-          text: faker.lorem.word(),
-          correct: faker.randomGenerator.boolean(),
-          picture: 'https://picsum.photos/200'
-        ),
-        ImageChoice(
-            text: faker.lorem.word(),
-            correct: faker.randomGenerator.boolean(),
-            picture: 'https://picsum.photos/200'
-        ),
-        ImageChoice(
-            text: faker.lorem.word(),
-            correct: faker.randomGenerator.boolean(),
-            picture: 'https://picsum.photos/200'
-        ),
-        ImageChoice(
-            text: faker.lorem.word(),
-            correct: faker.randomGenerator.boolean(),
-            picture: 'https://picsum.photos/200'
-        )
-      ]
-    ))
-  );
+  final ImageQuestionTest imageQuestionTest;
+  MultipleChoiceImageQuestionScreen({this.imageQuestionTest});
+  // = ImageQuestionTest(
+  //   testName: faker.lorem.word(),
+  //   subject: faker.lorem.word(),
+  //   testDescription: faker.lorem.sentence(),
+  //   questions: List.generate(10, (index) => ImageQuestionData(
+  //     question: faker.lorem.sentence(),
+  //     options: [
+  //       ImageChoice(
+  //         text: faker.lorem.word(),
+  //         correct: faker.randomGenerator.boolean(),
+  //         picture: 'https://picsum.photos/200'
+  //       ),
+  //       ImageChoice(
+  //           text: faker.lorem.word(),
+  //           correct: faker.randomGenerator.boolean(),
+  //           picture: 'https://picsum.photos/200'
+  //       ),
+  //       ImageChoice(
+  //           text: faker.lorem.word(),
+  //           correct: faker.randomGenerator.boolean(),
+  //           picture: 'https://picsum.photos/200'
+  //       ),
+  //       ImageChoice(
+  //           text: faker.lorem.word(),
+  //           correct: faker.randomGenerator.boolean(),
+  //           picture: 'https://picsum.photos/200'
+  //       )
+  //     ]
+  //   ))
+  // );
 
   @override
   Widget build(BuildContext context) {

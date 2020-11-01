@@ -1,0 +1,190 @@
+import 'package:flutter/material.dart';
+import 'package:heutagogy/hex_color.dart';
+import 'package:heutagogy/models/course_model.dart';
+import 'package:heutagogy/models/studentProgress.dart';
+import 'package:heutagogy/models/userModel.dart';
+import 'package:heutagogy/screens/course_screen.dart';
+import 'package:heutagogy/screens/login-resources/login.dart';
+import 'package:heutagogy/screens/login-resources/register.dart';
+import 'package:heutagogy/services/database.dart';
+import 'package:provider/provider.dart';
+
+// courses with (+) for adding a new course
+
+class CoursesHomeScreen extends StatefulWidget {
+  @override
+  _CoursesHomeScreenState createState() => _CoursesHomeScreenState();
+}
+
+class _CoursesHomeScreenState extends State<CoursesHomeScreen> {
+  List<CourseData> courses = [];
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final progressModel = Provider.of<StudentProgress>(context);
+    final _screenSize = MediaQuery.of(context).size;
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(
+          'Heutagogy',
+          style: TextStyle(color: HexColor("#ed2a26")),
+        ),
+      ),
+      drawer: Drawer(
+        child: Container(
+            child: Column(children: [
+          SizedBox(height: 50),
+          RaisedButton(
+              color: Colors.redAccent,
+              onPressed: () {
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => RegisterPage()));
+              },
+              child: Text(
+                "Register",
+                style: TextStyle(color: Colors.white),
+              )),
+          RaisedButton(
+              color: Colors.redAccent,
+              onPressed: () {
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => LoginPage()));
+              },
+              child: Text(
+                "Login",
+                style: TextStyle(color: Colors.white),
+              )),
+        ])),
+      ),
+      floatingActionButton: FloatingActionButton(
+        child: Icon(
+          Icons.add,
+        ),
+        backgroundColor: HexColor("#ed2a26"),
+        onPressed: () {
+          String courseCode;
+          showDialog(
+              context: context,
+              builder: (_) => AlertDialog(
+                    actions: [
+                      FlatButton(onPressed: () {
+                        print(courseCode);
+                      }, child: Text("Add")),
+                      FlatButton(
+                          onPressed: () {
+                            Navigator.pop(context);
+                          },
+                          child: Text("Cancel"))
+                    ],
+                    title: Text('Add New Course'),
+                    content: Container(
+                      width: _screenSize.width * 0.7,
+                      child: TextField(
+                        onChanged: (val) {
+                          courseCode=val;
+                        },
+                      ),
+                    ),
+                  ));
+          // _showNewCourseDialogue();
+        },
+      ),
+      body: Center(
+        child: Container(
+          // height: _screenSize.height * 0.1,
+          // child: Text(courses.length.toString()),
+          child: StreamBuilder<List<CourseData>>(
+              stream: DatabaseService.populateCourse({
+                'C3': {},
+                'C1': {},
+              }),
+              builder: (context, snapshot) {
+                if (snapshot.hasError) {
+                  return Container(
+                    child: Center(
+                        child: Text("Error!" + snapshot.error.toString())),
+                  );
+                } else {
+                  if (snapshot.connectionState == ConnectionState.done) {
+                    if (snapshot.hasData) {
+                      List<CourseData> course = snapshot.data;
+                      return ListView.builder(
+                          itemCount: course.length,
+                          physics: ClampingScrollPhysics(),
+                          itemBuilder: (BuildContext context, int idx) {
+                            return Padding(
+                                padding: EdgeInsets.all(20),
+                                child: Card(
+                                    clipBehavior: Clip.antiAlias,
+                                    elevation: 3,
+                                    shape: RoundedRectangleBorder(
+                                      side: BorderSide(
+                                          color: HexColor("#ed2a26"),
+                                          style: BorderStyle.solid,
+                                          width: 1.0),
+                                      borderRadius: BorderRadius.circular(16.0),
+                                    ),
+                                    child: InkWell(
+                                        splashColor:
+                                            Color.fromARGB(40, 0, 0, 200),
+                                        onTap: () {
+                                          Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      CourseScreen(
+                                                          course[idx])));
+                                        },
+                                        child: Column(
+                                            mainAxisSize: MainAxisSize.max,
+                                            children: <Widget>[
+                                              Padding(
+                                                padding:
+                                                    EdgeInsets.only(top: 16),
+                                                child: Hero(
+                                                  tag: course[idx].courseID,
+                                                  child: Material(
+                                                    color: Colors.transparent,
+                                                    child: Text(
+                                                      course[idx].courseName,
+                                                      style: TextStyle(
+                                                        fontSize: 20,
+                                                        fontFamily: 'Nunito',
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ),
+                                              ),
+                                              Divider(
+                                                color: Colors.black87,
+                                              ),
+                                              Padding(
+                                                  padding: EdgeInsets.only(
+                                                      top: 10,
+                                                      left: 20,
+                                                      right: 20,
+                                                      bottom: 20),
+                                                  child: Text(
+                                                    course[idx].description,
+                                                    style: TextStyle(
+                                                      fontSize: 16,
+                                                      fontFamily: 'Nunito',
+                                                    ),
+                                                  ))
+                                            ]))));
+                          });
+                    }
+                  }
+                  return CircularProgressIndicator();
+                }
+              }),
+        ),
+      ),
+    );
+  }
+}

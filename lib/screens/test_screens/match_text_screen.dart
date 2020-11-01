@@ -5,6 +5,8 @@ import 'package:heutagogy/hex_color.dart';
 import 'package:heutagogy/models/test_type_models/match_text_test.dart';
 
 class MatchText extends StatefulWidget {
+  final MatchPicWithText matchPicWithText;
+  MatchText({this.matchPicWithText});
   @override
   _MatchTextState createState() => _MatchTextState();
 }
@@ -16,27 +18,7 @@ class _MatchTextState extends State<MatchText> {
 
   @override
   void initState() {
-    // Uncomment the following to test this out
-
-    _matchPicWithText = new MatchPicWithText(
-      testName: "Lorem ipsum",
-      testDescription: "Type the name of the picture in the given box:",
-      subject: "Something",
-      choices: [
-        PictureData(
-          picture:
-              "http://may123.pythonanywhere.com/media/picture_text_input/baby.png",
-          correctText: "baby",
-        ),
-        PictureData(
-          picture:
-              "http://may123.pythonanywhere.com/media/picture_text_input/cat_XTqprK4.png",
-          correctText: "cat",
-        ),
-      ],
-    );
-
-
+    _matchPicWithText = widget.matchPicWithText;
     data = Map<String, bool>();
     for (var choice in _matchPicWithText.choices) {
       data[choice.correctText] = false;
