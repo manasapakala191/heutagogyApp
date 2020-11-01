@@ -6,6 +6,7 @@ import 'package:heutagogy/models/test_type_models/math_match.dart';
 import 'package:heutagogy/screens/lessons_screen.dart';
 import 'package:heutagogy/screens/login-resources/login.dart';
 import 'package:heutagogy/screens/login-resources/register.dart';
+import 'package:heutagogy/screens/profile_screen.dart';
 import 'package:heutagogy/screens/test_screens/drag_drop_image_question_screen.dart';
 import 'package:heutagogy/screens/test_screens/match_audio.dart';
 import 'package:heutagogy/models/test_type_models/match_audio.dart';
@@ -134,6 +135,14 @@ class _CourseScreenState extends State<CourseScreen> {
                                builder: (context) => LoginPage()));
             },
             child: Text("Login",style: TextStyle(color: Colors.white),)),
+            ListTile(
+              title: Center(child: Text('Profile')),
+              onTap: (){
+                Navigator.of(context).push(MaterialPageRoute(
+                  builder: (context) => ProfileScreen()
+                ));
+              },
+            )
             ]
           )
         ),

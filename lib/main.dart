@@ -1,31 +1,24 @@
-import 'dart:convert';
+// import 'dart:convert';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:heutagogy/hex_color.dart';
+// import 'package:heutagogy/hex_color.dart';
 import 'package:heutagogy/models/studentPerformance.dart';
 import 'package:heutagogy/models/userModel.dart';
 import 'package:heutagogy/screens/course_screen.dart';
-import 'package:heutagogy/screens/lessons_screen.dart';
-import 'package:heutagogy/screens/login-resources/login.dart';
-import 'package:heutagogy/screens/login-resources/register.dart';
+// import 'package:heutagogy/screens/course_screen.dart';
 import 'package:heutagogy/screens/test_screens/match_text_screen.dart';
-import 'package:heutagogy/screens/test_screens/multiple_choice_image_question_screen.dart';
-import 'package:heutagogy/screens/test_screens/multiple_choice_question_screen.dart';
+// import 'package:heutagogy/screens/lessons_screen.dart';
+// import 'package:heutagogy/screens/login-resources/login.dart';
+// import 'package:heutagogy/screens/login-resources/register.dart';
+// import 'package:heutagogy/screens/test_screens/match_text_screen.dart';
+// import 'package:heutagogy/screens/test_screens/multiple_choice_image_question_screen.dart';
+// import 'package:heutagogy/screens/test_screens/multiple_choice_question_screen.dart';
 import 'package:provider/provider.dart';
 
 
 void main() {
-  runApp(
-      MultiProvider(
-        providers: [
-          //add after signup
-          ChangeNotifierProvider(create: (_) => UserModel()),
-          // add after signup
-          ChangeNotifierProvider(create: (_) => StudentPerfomance())
-        ],
-          child: MyApp()),
-  );
+  runApp(MyApp());
 }
 
 class MyHomePage extends StatefulWidget {
@@ -52,14 +45,36 @@ class _MyHomePageState extends State<MyHomePage> {
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      title: 'Heutagogy',
-      theme: ThemeData(
-      // Gambol Themes:  https://coolors.co/fdcc0d-ab4e68-ed2a26-e5e0e5-fba346-ffecec
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (context) => UserModel(),),
+        ChangeNotifierProvider(create: (context) => StudentPerfomance(),)
+      ],
+      child: MaterialApp(
+        debugShowCheckedModeBanner: false,
+        title: 'Heutagogy',
+        theme: ThemeData(
+        // Gambol Themes:  https://coolors.co/fdcc0d-ab4e68-ed2a26-e5e0e5-fba346-ffecec
+        ),
+        home: CourseScreen()
       ),
-      home: CourseScreen(),
     );
   }
 }
+
+class Temp extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      child: FloatingActionButton(
+        onPressed: (){
+          Navigator.of(context).push(MaterialPageRoute(
+              builder: (context) => MatchText()
+          ));
+        },
+      ),
+    );
+  }
+}
+
 

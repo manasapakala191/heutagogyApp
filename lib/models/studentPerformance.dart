@@ -1,4 +1,5 @@
 import 'package:flutter/cupertino.dart';
+import 'package:heutagogy/models/time_object_model.dart';
 
 class StudentPerfomance extends ChangeNotifier{
   Map<String, Map> coursePercentage=
@@ -11,6 +12,8 @@ class StudentPerfomance extends ChangeNotifier{
       'totalSlides': 0,
     },
   };
+
+  final List<TimeObject> performanceTimes = [];
 
   void addCourse(String courseID){
     // dummy add for now

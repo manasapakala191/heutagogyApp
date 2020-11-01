@@ -5,8 +5,21 @@ import 'package:heutagogy/models/test_type_models/multiple_choice_question_test.
 import 'package:faker/faker.dart';
 import 'package:heutagogy/models/test_type_models/option_class.dart';
 import 'package:heutagogy/models/test_type_models/question_class.dart';
+import 'package:heutagogy/models/time_object_model.dart';
 
-class MultipleChoiceQuestionScreen extends StatelessWidget {
+class MultipleChoiceQuestionScreen extends StatefulWidget {
+  @override
+  _MultipleChoiceQuestionScreenState createState() => _MultipleChoiceQuestionScreenState();
+}
+
+class _MultipleChoiceQuestionScreenState extends State<MultipleChoiceQuestionScreen> {
+
+  final TimeObject timeObject = TimeObject(
+    screen: 'Multiple Choice Questions Screen',
+    courseId: 'Default Course ID',
+    testId: 'Default Test ID'
+  );
+
   final SingleCorrectTest singleCorrectTest = SingleCorrectTest(
     testName: "Test",
     subject: "Lorem Ipsum",
@@ -34,9 +47,22 @@ class MultipleChoiceQuestionScreen extends StatelessWidget {
     ))
   );
 
+  @override
+  void initState(){
+    timeObject.setStartTime(DateTime.now());
+    super.initState();
+  }
+
+  @override
+  void dispose(){
+    timeObject.setEndTime(DateTime.now());
+    timeObject.addTimeObjectToStudentPerformance();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
+    timeObject.getStudent(context);
     return Scaffold(
       appBar: AppBar(
         title: Text('${singleCorrectTest.subject}'),
@@ -74,7 +100,10 @@ class MultipleChoiceQuestionScreen extends StatelessWidget {
               ),
             ),
             Column(
-              children: singleCorrectTest.questions.map((e) => QuestionWidget(question: e,)).toList(),
+              children: List.generate(
+                singleCorrectTest.questions.length, 
+                (index) => QuestionWidget(question: singleCorrectTest.questions[index])
+              ),
             )
           ],
         )
@@ -125,24 +154,20 @@ class OptionBuilder extends StatefulWidget {
 
 class _OptionBuilderState extends State<OptionBuilder> {
   int groupValue = -1;
-  int i = 0;
   @override
   Widget build(BuildContext context) {
     return Column(
-      children: widget.options.map((e) {
-        return RadioListTile(
+      children: List.generate(widget.options.length, (index) => RadioListTile(
           groupValue: groupValue,
-          value: i++ % 4,
-          title: Text('${e.text}'),
+          value: index,
+          title: Text('${widget.options[index].text}'),
           onChanged: (int val) {
             setState(() {
               groupValue = val;
             });
-            print(i);
           },
           activeColor: HexColor('#ed2a26'),
-        );
-      }).toList(),
+        ))
     );
   }
 }

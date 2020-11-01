@@ -4,9 +4,21 @@ import 'package:heutagogy/models/test_type_models/multiple_choice_question_test.
 import 'package:heutagogy/models/test_type_models/option_class.dart';
 import 'package:heutagogy/models/test_type_models/question_class.dart';
 import 'package:faker/faker.dart';
+import 'package:heutagogy/models/time_object_model.dart';
 
 
-class MultipleChoiceImageQuestionScreen extends StatelessWidget {
+class MultipleChoiceImageQuestionScreen extends StatefulWidget {
+
+  @override
+  _MultipleChoiceImageQuestionScreenState createState() => _MultipleChoiceImageQuestionScreenState();
+}
+
+class _MultipleChoiceImageQuestionScreenState extends State<MultipleChoiceImageQuestionScreen> {
+  final timeObject = TimeObject(
+    screen: 'Multiple Choice Questions Screen(Image)',
+    courseId: 'Default Course ID',
+    testId: 'Default Test ID'
+  );
 
   final ImageQuestionTest imageQuestionTest = ImageQuestionTest(
     testName: faker.lorem.word(),
@@ -40,17 +52,31 @@ class MultipleChoiceImageQuestionScreen extends StatelessWidget {
   );
 
   @override
+  void initState(){
+    timeObject.setStartTime(DateTime.now());
+    super.initState();
+  }
+
+  @override
+  void dispose(){
+    timeObject.setEndTime(DateTime.now());
+    timeObject.addTimeObjectToStudentPerformance();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
+    timeObject.getStudent(context);
     return Scaffold(
       appBar: AppBar(
         title: Text(imageQuestionTest.subject),
-        backgroundColor: Colors.white,
-        actionsIconTheme: IconThemeData(
-          color: HexColor("#ed2a26"),
-        ),
-        iconTheme: IconThemeData(
-          color: HexColor("#ed2a26"),
-        ),
+        backgroundColor: HexColor('#ed2a26'),
+        // actionsIconTheme: IconThemeData(
+        //   color: HexColor("#ed2a26"),
+        // ),
+        // iconTheme: IconThemeData(
+        //   color: HexColor("#ed2a26"),
+        // ),
       ),
       // appBar: AppBar(
       //   title: Text(imageQuestionTest.subject),
@@ -140,11 +166,7 @@ class ImageOptionBuilder extends StatefulWidget {
 }
 
 class _ImageOptionBuilderState extends State<ImageOptionBuilder> {
-
   int groupValue = -1;
-
-  int i=0;
-
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -159,7 +181,8 @@ class _ImageOptionBuilderState extends State<ImageOptionBuilder> {
                 groupValue = val;
               });
             },
-            value: i++%4,
+            value: index,
+            activeColor: HexColor('#ed2a26'),
             groupValue: groupValue,
             title: Image.network(
               widget.options[index].picture,

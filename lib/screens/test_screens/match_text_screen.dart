@@ -3,6 +3,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:heutagogy/hex_color.dart';
 import 'package:heutagogy/models/test_type_models/match_text_test.dart';
+import 'package:heutagogy/models/time_object_model.dart';
 
 class MatchText extends StatefulWidget {
   @override
@@ -14,10 +15,16 @@ class _MatchTextState extends State<MatchText> {
 
   Map<String, bool> data;
 
+  final timeObject  = TimeObject(
+    screen: 'Match Text Test Screen',
+    courseId: 'Default Course ID',
+    testId: 'Default Test ID'
+  );
+
   @override
   void initState() {
     // Uncomment the following to test this out
-
+    timeObject.setStartTime(DateTime.now());
     _matchPicWithText = new MatchPicWithText(
       testName: "Lorem ipsum",
       testDescription: "Type the name of the picture in the given box:",
@@ -42,6 +49,13 @@ class _MatchTextState extends State<MatchText> {
       data[choice.correctText] = false;
     }
     super.initState();
+  }
+
+  @override
+  void dispose(){
+    timeObject.setEndTime(DateTime.now());
+    timeObject.addTimeObjectToStudentPerformance();
+    super.dispose();
   }
 
   List<Widget> _buildImageInput() {
@@ -136,11 +150,11 @@ class _MatchTextState extends State<MatchText> {
 
   @override
   Widget build(BuildContext context) {
+    timeObject.getStudent(context);
     //_buildImageInput();
     return Scaffold(
-
       appBar: AppBar(
-        title: Text(_matchPicWithText.testName),
+        title: Text('testName'),
         backgroundColor: Colors.white,
         actionsIconTheme: IconThemeData(
           color: HexColor("#ed2a26"),
