@@ -12,4 +12,16 @@ class DatabaseService{
   static getUserDoc(String cid) async {
     //TODO: Get user data, then populate user model and student performance model
   }
+
+  void writeProgress(Map<String, dynamic> data,String lessonID) async {
+    print(data);
+    DocumentReference progressReference = db.doc("Schools/School 1/Students/Student 1/Progress/C1");
+    await progressReference.set({lessonID: data[lessonID]},SetOptions(merge:true)).then(
+      (_){
+        print(data["C1"][lessonID]);
+        print("updated");
+      }
+    );
+  }
+
 }

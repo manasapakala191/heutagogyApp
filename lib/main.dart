@@ -21,7 +21,7 @@ void main() {
       //add after signup
       ChangeNotifierProvider(create: (_) => UserModel()),
       // add after signup
-      ChangeNotifierProvider(create: (_) => StudentPerfomance())
+      ChangeNotifierProvider(create: (_) => StudentPerformance())
     ], child: MyApp()),
   );
 }

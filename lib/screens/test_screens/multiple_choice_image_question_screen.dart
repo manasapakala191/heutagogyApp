@@ -1,12 +1,50 @@
 import 'package:flutter/material.dart';
 import 'package:heutagogy/hex_color.dart';
+import 'package:heutagogy/models/studentPerformance.dart';
 import 'package:heutagogy/models/test_type_models/multiple_choice_question_test.dart';
 import 'package:heutagogy/models/test_type_models/option_class.dart';
 import 'package:heutagogy/models/test_type_models/question_class.dart';
 import 'package:faker/faker.dart';
+import 'package:heutagogy/services/database.dart';
+import 'package:provider/provider.dart';
 
 
-class MultipleChoiceImageQuestionScreen extends StatelessWidget {
+class MultipleChoiceImageQuestionScreen extends StatefulWidget {
+
+  @override
+  _MultipleChoiceImageQuestionScreenState createState() => _MultipleChoiceImageQuestionScreenState();
+}
+
+class _MultipleChoiceImageQuestionScreenState extends State<MultipleChoiceImageQuestionScreen> {
+  
+  var choices=Map(),answers = Map();
+
+  void initState(){
+    for(var _ in imageQuestionTest.questions){
+      choices[_.question] = null;
+      answers[_.question] = false;
+    }
+    print(choices);
+    print(answers);
+  }
+
+  void _updateProgress(){
+    var progress = Provider.of<StudentPerformance>(context,listen: false);
+    List<String> responses = List<String>();
+    for(var _ in choices.values){
+      responses.add(_);
+    }
+    progress.addResponses("5",responses);
+    int count = 0, total = 0;
+    for(var _ in answers.values){
+      if(_){
+        count++;
+      }
+      total++;
+    }
+    progress.setPerformance("5", count, total);
+    DatabaseService().writeProgress(progress.getPerformance(), "5");
+  }
 
   final ImageQuestionTest imageQuestionTest = ImageQuestionTest(
     testName: faker.lorem.word(),
@@ -88,8 +126,24 @@ class MultipleChoiceImageQuestionScreen extends StatelessWidget {
                 ),
               ),
               Column(
-                children: imageQuestionTest.questions.map((e) => QuestionWidget(question: e,)).toList(),
-              )
+                children: imageQuestionTest.questions.map((e) => QuestionWidget(e,this.choices,this.answers)).toList(),
+              ),
+              SizedBox(
+              height: 10,
+            ),
+            SizedBox(
+              width: 50,
+              height: 50,
+              child: RaisedButton(
+                onPressed: (){
+                  _updateProgress();
+                  Navigator.pop(context);
+                },
+                elevation: 8,
+                child: Text("Submit"),
+                color: HexColor("#ed2a26"),
+              ),
+            )
             ],
           )
       ),
@@ -100,7 +154,8 @@ class MultipleChoiceImageQuestionScreen extends StatelessWidget {
 
 class QuestionWidget extends StatelessWidget {
   final ImageQuestionData question;
-  QuestionWidget({this.question});
+  final Map choices,answers;
+  QuestionWidget(this.question,this.choices,this.answers);
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -124,7 +179,7 @@ class QuestionWidget extends StatelessWidget {
             padding: EdgeInsets.all(7),
             child: Text(question.question),
           ),
-          ImageOptionBuilder(options: question.options,)
+          ImageOptionBuilder(question.options,this.choices,this.answers,question.question),
         ],
       ),
     );
@@ -134,9 +189,11 @@ class QuestionWidget extends StatelessWidget {
 
 class ImageOptionBuilder extends StatefulWidget {
   final List<ImageChoice> options;
-  ImageOptionBuilder({this.options});
+  final Map choices,answers;
+  final String question;
+  ImageOptionBuilder(this.options,this.choices,this.answers,this.question);
   @override
-  _ImageOptionBuilderState createState() => _ImageOptionBuilderState();
+  _ImageOptionBuilderState createState() => _ImageOptionBuilderState(this.choices,this.answers,this.question);
 }
 
 class _ImageOptionBuilderState extends State<ImageOptionBuilder> {
@@ -144,6 +201,10 @@ class _ImageOptionBuilderState extends State<ImageOptionBuilder> {
   int groupValue = -1;
 
   int i=0;
+  Map choices,answers;
+  String question;
+
+  _ImageOptionBuilderState(this.choices,this.answers,this.question);
 
   @override
   Widget build(BuildContext context) {
@@ -157,6 +218,13 @@ class _ImageOptionBuilderState extends State<ImageOptionBuilder> {
             onChanged: (int val){
               setState(() {
                 groupValue = val;
+                if(widget.options[index].correct){
+                  choices[this.question] = widget.options[index].text;
+                  answers[this.question] = true;
+                }
+                else{
+                  choices[this.question] = widget.options[index].text;
+                }
               });
             },
             value: i++%4,

@@ -143,7 +143,7 @@ class _CourseScreenState extends State<CourseScreen> {
         backgroundColor: HexColor("#ed2a26"),
         onPressed: (){},
       ),
-      body: Consumer<StudentPerfomance>(
+      body: Consumer<StudentPerformance>(
         builder: (context, progress,child) {
           return Container(
             child: _buildSlides(dragdropJSON),
