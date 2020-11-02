@@ -69,28 +69,32 @@ class _CoursesHomeScreenState extends State<CoursesHomeScreen> {
         onPressed: () {
           String courseCode;
           showDialog(
-              context: context,
-              builder: (_) => AlertDialog(
-                    actions: [
-                      FlatButton(onPressed: () {
-                        print(courseCode);
-                      }, child: Text("Add")),
-                      FlatButton(
-                          onPressed: () {
-                            Navigator.pop(context);
-                          },
-                          child: Text("Cancel"))
-                    ],
-                    title: Text('Add New Course'),
-                    content: Container(
-                      width: _screenSize.width * 0.7,
-                      child: TextField(
-                        onChanged: (val) {
-                          courseCode=val;
-                        },
-                      ),
-                    ),
-                  ));
+            context: context,
+            builder: (_) => AlertDialog(
+              actions: [
+                FlatButton(
+                    onPressed: () {
+                      print(courseCode);
+                    },
+                    child: Text("Add")),
+                FlatButton(
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                  child: Text("Cancel"),
+                ),
+              ],
+              title: Text('Add New Course'),
+              content: Container(
+                width: _screenSize.width * 0.7,
+                child: TextField(
+                  onChanged: (val) {
+                    courseCode = val;
+                  },
+                ),
+              ),
+            ),
+          );
           // _showNewCourseDialogue();
         },
       ),
@@ -114,70 +118,72 @@ class _CoursesHomeScreenState extends State<CoursesHomeScreen> {
                     if (snapshot.hasData) {
                       List<CourseData> course = snapshot.data;
                       return ListView.builder(
-                          itemCount: course.length,
-                          physics: ClampingScrollPhysics(),
-                          itemBuilder: (BuildContext context, int idx) {
-                            return Padding(
-                                padding: EdgeInsets.all(20),
-                                child: Card(
-                                    clipBehavior: Clip.antiAlias,
-                                    elevation: 3,
-                                    shape: RoundedRectangleBorder(
-                                      side: BorderSide(
-                                          color: HexColor("#ed2a26"),
-                                          style: BorderStyle.solid,
-                                          width: 1.0),
-                                      borderRadius: BorderRadius.circular(16.0),
+                        itemCount: course.length,
+                        physics: ClampingScrollPhysics(),
+                        itemBuilder: (BuildContext context, int idx) {
+                          return Padding(
+                            padding: EdgeInsets.all(20),
+                            child: Card(
+                              clipBehavior: Clip.antiAlias,
+                              elevation: 3,
+                              shape: RoundedRectangleBorder(
+                                side: BorderSide(
+                                    color: HexColor("#ed2a26"),
+                                    style: BorderStyle.solid,
+                                    width: 1.0),
+                                borderRadius: BorderRadius.circular(16.0),
+                              ),
+                              child: InkWell(
+                                splashColor: Color.fromARGB(40, 0, 0, 200),
+                                onTap: () {
+                                  Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) =>
+                                              CourseScreen(course[idx])));
+                                },
+                                child: Column(
+                                  mainAxisSize: MainAxisSize.max,
+                                  children: <Widget>[
+                                    Padding(
+                                      padding: EdgeInsets.only(top: 16),
+                                      child: Hero(
+                                        tag: course[idx].courseID,
+                                        child: Material(
+                                          color: Colors.transparent,
+                                          child: Text(
+                                            course[idx].courseName,
+                                            style: TextStyle(
+                                              fontSize: 20,
+                                              fontFamily: 'Nunito',
+                                            ),
+                                          ),
+                                        ),
+                                      ),
                                     ),
-                                    child: InkWell(
-                                        splashColor:
-                                            Color.fromARGB(40, 0, 0, 200),
-                                        onTap: () {
-                                          Navigator.push(
-                                              context,
-                                              MaterialPageRoute(
-                                                  builder: (context) =>
-                                                      CourseScreen(
-                                                          course[idx])));
-                                        },
-                                        child: Column(
-                                            mainAxisSize: MainAxisSize.max,
-                                            children: <Widget>[
-                                              Padding(
-                                                padding:
-                                                    EdgeInsets.only(top: 16),
-                                                child: Hero(
-                                                  tag: course[idx].courseID,
-                                                  child: Material(
-                                                    color: Colors.transparent,
-                                                    child: Text(
-                                                      course[idx].courseName,
-                                                      style: TextStyle(
-                                                        fontSize: 20,
-                                                        fontFamily: 'Nunito',
-                                                      ),
-                                                    ),
-                                                  ),
-                                                ),
-                                              ),
-                                              Divider(
-                                                color: Colors.black87,
-                                              ),
-                                              Padding(
-                                                  padding: EdgeInsets.only(
-                                                      top: 10,
-                                                      left: 20,
-                                                      right: 20,
-                                                      bottom: 20),
-                                                  child: Text(
-                                                    course[idx].description,
-                                                    style: TextStyle(
-                                                      fontSize: 16,
-                                                      fontFamily: 'Nunito',
-                                                    ),
-                                                  ))
-                                            ]))));
-                          });
+                                    Divider(
+                                      color: Colors.black87,
+                                    ),
+                                    Padding(
+                                        padding: EdgeInsets.only(
+                                            top: 10,
+                                            left: 20,
+                                            right: 20,
+                                            bottom: 20),
+                                        child: Text(
+                                          course[idx].description,
+                                          style: TextStyle(
+                                            fontSize: 16,
+                                            fontFamily: 'Nunito',
+                                          ),
+                                        ))
+                                  ],
+                                ),
+                              ),
+                            ),
+                          );
+                        },
+                      );
                     }
                   }
                   return CircularProgressIndicator();
