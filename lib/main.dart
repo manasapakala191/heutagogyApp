@@ -1,22 +1,11 @@
 import 'dart:async';
-import 'dart:convert';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:heutagogy/hex_color.dart';
 import 'package:heutagogy/models/studentProgress.dart';
 import 'package:heutagogy/models/userModel.dart';
-import 'package:heutagogy/screens/lesson_screen.dart';
-import 'package:heutagogy/screens/tutorial_screen.dart';
 import 'package:heutagogy/screens/login-resources/login.dart';
-import 'package:heutagogy/screens/login-resources/register.dart';
-import 'package:heutagogy/screens/test_screens/match_text_screen.dart';
-// import 'package:heutagogy/screens/lessons_screen.dart';
-// import 'package:heutagogy/screens/login-resources/login.dart';
-// import 'package:heutagogy/screens/login-resources/register.dart';
-// import 'package:heutagogy/screens/test_screens/match_text_screen.dart';
-// import 'package:heutagogy/screens/test_screens/multiple_choice_image_question_screen.dart';
-// import 'package:heutagogy/screens/test_screens/multiple_choice_question_screen.dart';
 import 'package:provider/provider.dart';
 
 void main() {
