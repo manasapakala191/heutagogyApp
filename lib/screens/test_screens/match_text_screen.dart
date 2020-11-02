@@ -7,6 +7,7 @@ import 'package:heutagogy/models/studentProgress.dart';
 import 'package:heutagogy/models/test_type_models/match_text_test.dart';
 import 'package:heutagogy/services/database.dart';
 import 'package:provider/provider.dart';
+import 'package:heutagogy/models/time_object_model.dart';
 
 class MatchText extends StatefulWidget {
   final MatchPicWithText matchPicWithText;
@@ -38,15 +39,49 @@ class _MatchTextState extends State<MatchText> {
     DatabaseService().writeProgress(progress.getPerformance(),"0");
   }
 
+  final timeObject  = TimeObject(
+    screen: 'Match Text Test Screen',
+    courseId: 'Default Course ID',
+    testId: 'Default Test ID'
+  );
+
   @override
   void initState() {
     _matchPicWithText = widget.matchPicWithText;
+    // Uncomment the following to test this out
+    timeObject.setStartTime(DateTime.now());
+    _matchPicWithText = new MatchPicWithText(
+      testName: "Lorem ipsum",
+      testDescription: "Type the name of the picture in the given box:",
+      subject: "Something",
+      choices: [
+        PictureData(
+          picture:
+              "http://may123.pythonanywhere.com/media/picture_text_input/baby.png",
+          correctText: "baby",
+        ),
+        PictureData(
+          picture:
+              "http://may123.pythonanywhere.com/media/picture_text_input/cat_XTqprK4.png",
+          correctText: "cat",
+        ),
+      ],
+    );
+
+
     data = Map<String, bool>();
     for (var choice in _matchPicWithText.choices) {
       data[choice.correctText] = false;
       choices[choice.correctText] = null;
     }
     super.initState();
+  }
+
+  @override
+  void dispose(){
+    timeObject.setEndTime(DateTime.now());
+    timeObject.addTimeObjectToStudentPerformance();
+    super.dispose();
   }
 
   List<Widget> _buildImageInput() {
@@ -159,11 +194,11 @@ class _MatchTextState extends State<MatchText> {
 
   @override
   Widget build(BuildContext context) {
+    timeObject.getStudent(context);
     //_buildImageInput();
     return Scaffold(
-
       appBar: AppBar(
-        title: Text(_matchPicWithText.testName),
+        title: Text('testName'),
         backgroundColor: Colors.white,
         actionsIconTheme: IconThemeData(
           color: HexColor("#ed2a26"),

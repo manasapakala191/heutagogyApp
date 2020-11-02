@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:heutagogy/hex_color.dart';
 import 'package:heutagogy/models/lessons_models.dart';
+import 'package:heutagogy/models/time_object_model.dart';
 import 'package:video_player/video_player.dart';
 
 
@@ -13,6 +14,13 @@ class LessonViewer extends StatefulWidget {
 
 class _LessonViewerState extends State<LessonViewer> {
   Lesson lesson;
+
+  final timeObject = TimeObject(
+    screen: 'Lessons Screen',
+    courseId: 'Default Course ID',
+    testId: 'Default Test ID'
+  );
+
   VideoPlayerController _controller;
   Future<void> _initializeVideoPlayerFuture;
   bool showControllerButtons = true;
@@ -20,6 +28,7 @@ class _LessonViewerState extends State<LessonViewer> {
   @override
   void initState(){
     lesson=widget.lesson;
+    timeObject.setStartTime(DateTime.now());
     _controller = VideoPlayerController.network(
       lesson.videoUrl,
     );
@@ -31,12 +40,15 @@ class _LessonViewerState extends State<LessonViewer> {
 
   @override
   void dispose(){
+    timeObject.setEndTime(DateTime.now());
+    timeObject.addTimeObjectToStudentPerformance();
     _controller.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
+    timeObject.getStudent(context);
     return Scaffold(
       appBar: AppBar(
         title: Text(lesson.subject),

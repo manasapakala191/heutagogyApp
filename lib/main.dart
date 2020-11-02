@@ -11,8 +11,12 @@ import 'package:heutagogy/screens/tutorial_screen.dart';
 import 'package:heutagogy/screens/login-resources/login.dart';
 import 'package:heutagogy/screens/login-resources/register.dart';
 import 'package:heutagogy/screens/test_screens/match_text_screen.dart';
-import 'package:heutagogy/screens/test_screens/multiple_choice_image_question_screen.dart';
-import 'package:heutagogy/screens/test_screens/multiple_choice_question_screen.dart';
+// import 'package:heutagogy/screens/lessons_screen.dart';
+// import 'package:heutagogy/screens/login-resources/login.dart';
+// import 'package:heutagogy/screens/login-resources/register.dart';
+// import 'package:heutagogy/screens/test_screens/match_text_screen.dart';
+// import 'package:heutagogy/screens/test_screens/multiple_choice_image_question_screen.dart';
+// import 'package:heutagogy/screens/test_screens/multiple_choice_question_screen.dart';
 import 'package:provider/provider.dart';
 
 void main() {
