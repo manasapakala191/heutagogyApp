@@ -4,7 +4,7 @@ import 'package:heutagogy/models/studentProgress.dart';
 import 'package:heutagogy/models/test_type_models/multiple_choice_question_test.dart';
 import 'package:heutagogy/models/test_type_models/option_class.dart';
 import 'package:heutagogy/models/test_type_models/question_class.dart';
-import 'package:faker/faker.dart';
+import 'package:heutagogy/models/time_object_model.dart';
 import 'package:heutagogy/services/database.dart';
 import 'package:provider/provider.dart';
 
@@ -17,19 +17,15 @@ class MultipleChoiceImageQuestionScreen extends StatefulWidget {
 }
 
 class _MultipleChoiceImageQuestionScreenState extends State<MultipleChoiceImageQuestionScreen> {
-  
+  final timeObject = TimeObject(
+    screen: 'Multiple Choice Questions Screen(Image)',
+    courseId: 'Default Course ID',
+    testId: 'Default Test ID'
+  );
+
   var choices=Map(),answers = Map();
   final ImageQuestionTest imageQuestionTest;
   _MultipleChoiceImageQuestionScreenState(this.imageQuestionTest);
-
-  void initState(){
-    for(var _ in imageQuestionTest.questions){
-      choices[_.question] = null;
-      answers[_.question] = false;
-    }
-    print(choices);
-    print(answers);
-  }
 
   void _updateProgress(){
     var progress = Provider.of<StudentProgress>(context,listen: false);
@@ -50,54 +46,32 @@ class _MultipleChoiceImageQuestionScreenState extends State<MultipleChoiceImageQ
     DatabaseService().writeProgress(progress.getPerformance(), "5");
   }
 
-  // final ImageQuestionTest imageQuestionTest = ImageQuestionTest(
-  //   testName: faker.lorem.word(),
-  //   subject: faker.lorem.word(),
-  //   testDescription: faker.lorem.sentence(),
-  //   questions: List.generate(10, (index) => ImageQuestionData(
-  //     question: faker.lorem.sentence(),
-  //     options: [
-  //       ImageChoice(
-  //         text: faker.lorem.word(),
-  //         correct: faker.randomGenerator.boolean(),
-  //         picture: 'https://picsum.photos/200'
-  //       ),
-  //       ImageChoice(
-  //           text: faker.lorem.word(),
-  //           correct: faker.randomGenerator.boolean(),
-  //           picture: 'https://picsum.photos/200'
-  //       ),
-  //       ImageChoice(
-  //           text: faker.lorem.word(),
-  //           correct: faker.randomGenerator.boolean(),
-  //           picture: 'https://picsum.photos/200'
-  //       ),
-  //       ImageChoice(
-  //           text: faker.lorem.word(),
-  //           correct: faker.randomGenerator.boolean(),
-  //           picture: 'https://picsum.photos/200'
-  //       )
-  //     ]
-  //   ))
-  // );
+  @override
+  void initState(){
+    for(var _ in imageQuestionTest.questions){
+      choices[_.question] = null;
+      answers[_.question] = false;
+    }
+    print(choices);
+    print(answers);
+    timeObject.setStartTime(DateTime.now());
+    super.initState();
+  }
+
+  @override
+  void dispose(){
+    timeObject.setEndTime(DateTime.now());
+    timeObject.addTimeObjectToStudentPerformance();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
+    timeObject.getStudent(context);
     return Scaffold(
       appBar: AppBar(
         title: Text(imageQuestionTest.subject),
-        backgroundColor: Colors.white,
-        actionsIconTheme: IconThemeData(
-          color: HexColor("#ed2a26"),
-        ),
-        iconTheme: IconThemeData(
-          color: HexColor("#ed2a26"),
-        ),
       ),
-      // appBar: AppBar(
-      //   title: Text(imageQuestionTest.subject),
-      //   backgroundColor: HexColor('#ed2a26'),
-      // ),
       backgroundColor: HexColor('#f7f7f7'),
       body: SizedBox(
           height: MediaQuery.of(context).size.height,
@@ -201,7 +175,6 @@ class ImageOptionBuilder extends StatefulWidget {
 }
 
 class _ImageOptionBuilderState extends State<ImageOptionBuilder> {
-
   int groupValue = -1;
 
   int i=0;
@@ -231,7 +204,8 @@ class _ImageOptionBuilderState extends State<ImageOptionBuilder> {
                 }
               });
             },
-            value: i++%4,
+            value: index,
+            activeColor: HexColor('#ed2a26'),
             groupValue: groupValue,
             title: Image.network(
               widget.options[index].picture,
