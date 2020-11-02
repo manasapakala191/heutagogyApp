@@ -1,8 +1,12 @@
 import 'dart:ui';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:heutagogy/hex_color.dart';
+import 'package:heutagogy/models/studentProgress.dart';
 import 'package:heutagogy/models/test_type_models/match_text_test.dart';
+import 'package:heutagogy/services/database.dart';
+import 'package:provider/provider.dart';
 
 class MatchText extends StatefulWidget {
   final MatchPicWithText matchPicWithText;
@@ -13,8 +17,26 @@ class MatchText extends StatefulWidget {
 
 class _MatchTextState extends State<MatchText> {
   MatchPicWithText _matchPicWithText;
-
   Map<String, bool> data;
+  var choices = Map();
+
+  void _updateProgress(){
+    var progress = Provider.of<StudentProgress>(context,listen: false);
+    List<String> responses = [];
+    for (var response in choices.values) {
+        responses.add(response);
+    }
+    progress.addResponses("0",responses);
+    int count = 0, total = 0;
+    for(var val in data.values){
+      if(val == true){
+        count++;
+      }
+      total++;
+    }
+    progress.setPerformance("0",count,total);
+    DatabaseService().writeProgress(progress.getPerformance(),"0");
+  }
 
   @override
   void initState() {
@@ -22,6 +44,7 @@ class _MatchTextState extends State<MatchText> {
     data = Map<String, bool>();
     for (var choice in _matchPicWithText.choices) {
       data[choice.correctText] = false;
+      choices[choice.correctText] = null;
     }
     super.initState();
   }
@@ -76,7 +99,11 @@ class _MatchTextState extends State<MatchText> {
                             txt.toLowerCase()) {
                           setState(() {
                             data[txt] = true;
+                            choices[txt] = txt;
                           });
+                        }
+                        else{
+                          choices[x.correctText] = txt;
                         }
                       },
                       readOnly: (data[x.correctText]),
@@ -111,6 +138,20 @@ class _MatchTextState extends State<MatchText> {
     items.add(
       Padding(
         padding: EdgeInsets.only(bottom: 40),
+      ),
+    );
+    items.add(
+      MaterialButton(
+        minWidth: 25,
+        height: 75,
+        elevation: 8,
+        child: Text("Submit"),
+        color: HexColor("#ed2a26"),
+        padding: const EdgeInsets.all(5),
+        onPressed: (){
+          _updateProgress();
+          Navigator.pop(context);
+        },
       ),
     );
     return items;

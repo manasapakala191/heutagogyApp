@@ -2,8 +2,10 @@ import 'dart:math';
 import 'package:audioplayers/audio_cache.dart';
 import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
+import 'package:heutagogy/models/studentProgress.dart';
 import 'package:heutagogy/models/test_type_models/match_audio.dart';
-
+import 'package:provider/provider.dart';
+import 'package:heutagogy/services/database.dart';
 import '../../hex_color.dart';
 
 class DragDropAudioScreen extends StatefulWidget {
@@ -17,15 +19,39 @@ class _DragDropAudioScreenState extends State<DragDropAudioScreen> {
   DragDropAudioTest audiodata;
   var correct;
   var seed;
+  var choices;
+  StudentProgress progress;
 
   _DragDropAudioScreenState(DragDropAudioTest data) {
     seed = Random().nextInt(100);
     this.audiodata = data;
     this.correct = Map();
+    this.choices = Map();
     for (var audio in this.audiodata.audios) {
       correct[audio.description] = false;
+      choices[audio.description] = null;
     }
   }
+
+  void _updateProgress(){
+    var progress = Provider.of<StudentProgress>(context,listen: false);
+    List<String> responses = [];
+    // print(choices.values);
+    for (var response in choices.values) {
+        responses.add(response);
+    }
+    progress.addResponses("2",responses);
+    int count = 0, total = 0;
+    for(var val in correct.values){
+      if(val == true){
+        count++;
+      }
+      total++;
+    }
+    progress.setPerformance("2",count,total);
+    DatabaseService().writeProgress(progress.getPerformance(),"2");
+  }
+
    @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -67,10 +93,10 @@ class _DragDropAudioScreenState extends State<DragDropAudioScreen> {
     List<Widget> body = [];
     List<Widget> drops = [];
     List<Widget> targets = [];
-
     for (var sound in audiodata.audios) {
       if (correct[sound.description]) {
-        drops.add(Container(
+        drops.add(
+          Container(
             width: 64,
             height: 64,
             decoration: BoxDecoration(
@@ -135,12 +161,18 @@ class _DragDropAudioScreenState extends State<DragDropAudioScreen> {
           onAccept: (data) {
             setState(() {
               correct[sound.description] = true;
+              choices[sound.description] = sound.description;
             });
           },
-          onLeave: (data) {},
+          onLeave: (data) {
+            print(sound.description);
+            print(data);
+            choices[data] = sound.description;
+          },
           onWillAccept: (data) => data == sound.description,
         ),
       );
+
     }
     targets..shuffle(Random(seed));
     for (int i = 0; i < audiodata.audios.length; i++) {
@@ -151,6 +183,24 @@ class _DragDropAudioScreenState extends State<DragDropAudioScreen> {
             children: <Widget>[drops[i], targets[i]],
           )));
     }
+    body.add(
+      SizedBox(height:20)
+    );
+    body.add(
+      MaterialButton(
+        minWidth: 75,
+        height: 75,
+        elevation: 8,
+        child: Text("Submit"),
+        color: HexColor("#ed2a26"),
+        padding: const EdgeInsets.all(5),
+        onPressed: (){
+          _updateProgress();
+          Navigator.pop(context);
+          // Update progress and write to database
+        },
+      ),
+    );
     return body;
   }
 }

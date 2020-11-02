@@ -3,6 +3,9 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:heutagogy/hex_color.dart';
 import 'package:heutagogy/models/test_type_models/math_match.dart';
+import 'package:provider/provider.dart';
+import 'package:heutagogy/services/database.dart';
+import 'package:heutagogy/models/studentProgress.dart';
 
 class MathMatchScreen extends StatefulWidget {
   final MathMatchTest data;
@@ -16,6 +19,7 @@ class MathMatchScreen extends StatefulWidget {
 class _MathMatchScreenState extends State<MathMatchScreen> {
   MathMatchTest testdata;
   Map<String, bool> data;
+  var choices = Map();
 
   _MathMatchScreenState(this.testdata);
 
@@ -25,7 +29,26 @@ class _MathMatchScreenState extends State<MathMatchScreen> {
     data = Map<String, bool>();
     for (var x in testdata.questions) {
       data[x.second] = false;
+      choices[x.second] = null;
     }
+  }
+
+  void _updateProgress(){
+    var progress = Provider.of<StudentProgress>(context,listen: false);
+    List<String> responses = [];
+    for (var response in choices.values) {
+        responses.add(response);
+    }
+    progress.addResponses("3",responses);
+    int count = 0, total = 0;
+    for(var val in data.values){
+      if(val == true){
+        count++;
+      }
+      total++;
+    }
+    progress.setPerformance("3",count,total);
+    DatabaseService().writeProgress(progress.getPerformance(),"3");
   }
 
   @override
@@ -46,9 +69,27 @@ class _MathMatchScreenState extends State<MathMatchScreen> {
         ),
       ));
     }
+    rows.add(
+      SizedBox(height:20),
+    );
+    rows.add(
+      MaterialButton(
+        minWidth: 75,
+        height: 75,
+        elevation: 8,
+        child: Text("Submit"),
+        color: HexColor("#ed2a26"),
+        padding: const EdgeInsets.all(5),
+        onPressed: (){
+          _updateProgress();
+          Navigator.pop(context);
+          // Update progress and write to database
+        },
+      ),
+    );
     return Scaffold(
       appBar: AppBar(
-        title: Text(testdata.heading,style: TextStyle(color: HexColor("ed2a26")),),
+        title: Text(testdata.heading,style: TextStyle(color: HexColor("#ed2a26")),),
         backgroundColor: Colors.white,
         leading: IconButton(
           icon: Icon(Icons.keyboard_backspace_rounded,color: HexColor("#ed2a26")),
@@ -79,7 +120,7 @@ class _MathMatchScreenState extends State<MathMatchScreen> {
             padding: EdgeInsets.all(10),
             margin: EdgeInsets.only(top: 10, left: 40),
             decoration:
-                BoxDecoration(color: HexColor("ed2a26"), borderRadius: BorderRadius.circular(10)),
+                BoxDecoration(color: HexColor("#ed2a26"), borderRadius: BorderRadius.circular(10)),
             child: data[x.second] == true? Icon(
               Icons.assignment_turned_in,
               color: Colors.white,
@@ -96,7 +137,7 @@ class _MathMatchScreenState extends State<MathMatchScreen> {
             padding: EdgeInsets.all(10),
             margin: EdgeInsets.only(top: 10, left: 40),
             decoration:
-                BoxDecoration(color: HexColor("ed2a26"), borderRadius: BorderRadius.circular(10)),
+                BoxDecoration(color: HexColor("#ed2a26"), borderRadius: BorderRadius.circular(10)),
             child: Text(
               x.second,
               style: TextStyle(color: Colors.white, fontSize: 16),
@@ -110,7 +151,7 @@ class _MathMatchScreenState extends State<MathMatchScreen> {
                 padding: EdgeInsets.all(10),
                 margin: EdgeInsets.only(top: 10, left: 40),
                 decoration: BoxDecoration(
-                    color: HexColor("ed2a26"), borderRadius: BorderRadius.circular(10)),
+                    color: HexColor("#ed2a26"), borderRadius: BorderRadius.circular(10)),
                 child: Text(
                   x.second,
                   style: TextStyle(color: Colors.white, fontSize: 16),
@@ -148,18 +189,26 @@ class _MathMatchScreenState extends State<MathMatchScreen> {
               padding: EdgeInsets.all(10),
               margin: EdgeInsets.only(top: 10, right: 40),
               decoration:
-                  BoxDecoration(color: HexColor("ed2a26"), borderRadius: BorderRadius.circular(10)),
+                  BoxDecoration(color: HexColor("#ed2a26"), borderRadius: BorderRadius.circular(10)),
               child: Text(
                 x.first,
                 style: TextStyle(color: Colors.white, fontSize: 16),
               ),
             );
           },
-          onWillAccept: (t) => true,
+          onWillAccept: (t) => t == x.second,
           onAccept: (t) {
             setState(() {
               data[x.second] = true;
+              print(x.second);
+              print(x.second);
+              choices[x.second] = x.second;
             });
+          },
+          onLeave: (t){
+            print(t);
+            print(x.second);
+            choices[t] = x.second;
           },
         ));
       }
