@@ -23,40 +23,41 @@ import 'package:provider/provider.dart';
 class LessonScreen extends StatelessWidget {
   final LessonData lessonData;
   final CourseData courseData;
-  LessonScreen({this.courseData,this.lessonData});
+  LessonScreen({this.courseData, this.lessonData});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text(lessonData.lname,),
-      ),
-      body: FutureBuilder<List<QueryDocumentSnapshot>>(
-        future: DatabaseService.getSlidesForLessons(courseData.courseID, lessonData.lID),
-        builder: (context,snapshot){
-          print(snapshot.data);
-          // return Container(
-          //     child: Text(snapshot.hasData.toString()));
-          if(snapshot.hasError){
-            return Container(
-              child: Text("Error!"),
-            );
-          }
-          else {
-            if(snapshot.connectionState==ConnectionState.done){
-              if(snapshot.hasData){
-                return _buildSlides(snapshot.data);
+        appBar: AppBar(
+          title: Text(
+            lessonData.lname,
+          ),
+        ),
+        body: FutureBuilder<List<QueryDocumentSnapshot>>(
+          future: DatabaseService.getSlidesForLessons(
+              courseData.courseID, lessonData.lID),
+          builder: (context, snapshot) {
+            print(snapshot.data);
+            // return Container(
+            //     child: Text(snapshot.hasData.toString()));
+            if (snapshot.hasError) {
+              return Container(
+                child: Text("Error!"),
+              );
+            } else {
+              if (snapshot.connectionState == ConnectionState.done) {
+                if (snapshot.hasData) {
+                  return _buildSlides(snapshot.data);
+                }
               }
+              return Center(child: CircularProgressIndicator());
             }
-            return Center(child: CircularProgressIndicator());
-          }
-        },
-      )
-    );
+          },
+        ));
   }
 
   _returnSlideScreen(String type, var data) {
-    print("type"+type);
+    print("type" + type);
     switch (type) {
       case 'l0':
         {
@@ -73,13 +74,15 @@ class LessonScreen extends StatelessWidget {
       case 'q1':
         {
           //done
-          return MultipleChoiceImageQuestionScreen(imageQuestionTest: ImageQuestionTest.fromJson(data));
+          return MultipleChoiceImageQuestionScreen(
+              imageQuestionTest: ImageQuestionTest.fromJson(data));
         }
         break;
       case 'q2':
         {
           //done
-          return MultipleChoiceQuestionScreen(singleCorrectTest: SingleCorrectTest.fromJson(data));
+          return MultipleChoiceQuestionScreen(
+              singleCorrectTest: SingleCorrectTest.fromJson(data));
         }
         break;
       case 'q3':
@@ -114,65 +117,74 @@ class LessonScreen extends StatelessWidget {
     List types = ['l0', 'q0', 'q1', 'q2', 'q3', 'q4', 'q5'];
     print(data);
     return ListView.builder(
-        itemCount: data.length,
-        physics: ClampingScrollPhysics(),
-        itemBuilder: (BuildContext context, int idx) {
-          Map slideData=data[idx].data();
-          print(slideData);
-          return Padding(
-              padding: EdgeInsets.all(20),
-              child: Card(
-                  clipBehavior: Clip.antiAlias,
-                  elevation: 3,
-                  shape: RoundedRectangleBorder(
-                    side: BorderSide(
-                        color: HexColor("#ed2a26"),
-                        style: BorderStyle.solid,
-                        width: 1.0),
-                    borderRadius: BorderRadius.circular(16.0),
+      itemCount: data.length,
+      physics: ClampingScrollPhysics(),
+      itemBuilder: (BuildContext context, int idx) {
+        Map slideData = data[idx].data();
+        print(slideData);
+        return Padding(
+          padding: EdgeInsets.all(20),
+          child: Card(
+            clipBehavior: Clip.antiAlias,
+            elevation: 3,
+            shape: RoundedRectangleBorder(
+              side: BorderSide(
+                  color: HexColor("#ed2a26"),
+                  style: BorderStyle.solid,
+                  width: 1.0),
+              borderRadius: BorderRadius.circular(16.0),
+            ),
+            child: InkWell(
+              splashColor: Color.fromARGB(40, 0, 0, 200),
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => _returnSlideScreen(
+                      slideData["type"],
+                      slideData,
+                    ),
                   ),
-                  child: InkWell(
-                      splashColor: Color.fromARGB(40, 0, 0, 200),
-                      onTap: () {
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) =>
-                                    _returnSlideScreen(slideData["type"], slideData)));
-                      },
-                      child: Column(
-                          mainAxisSize: MainAxisSize.max,
-                          children: <Widget>[
-                            Padding(
-                              padding: EdgeInsets.only(top: 16),
-                              child: Hero(
-                                tag: types[idx],
-                                child: Material(
-                                  color: Colors.transparent,
-                                  child: Text(
-                                    slideData["name"],
-                                    style: TextStyle(
-                                      fontSize: 20,
-                                      fontFamily: 'Nunito',
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ),
-                            Divider(
-                              color: Colors.black87,
-                            ),
-                            Padding(
-                                padding: EdgeInsets.only(
-                                    top: 10, left: 20, right: 20, bottom: 20),
-                                child: Text(
-                                  slideData["description"],
-                                  style: TextStyle(
-                                    fontSize: 16,
-                                    fontFamily: 'Nunito',
-                                  ),
-                                ))
-                          ]))));
-        });
+                );
+              },
+              child: Column(
+                mainAxisSize: MainAxisSize.max,
+                children: <Widget>[
+                  Padding(
+                    padding: EdgeInsets.only(top: 16),
+                    child: Hero(
+                      tag: types[idx],
+                      child: Material(
+                        color: Colors.transparent,
+                        child: Text(
+                          slideData["name"],
+                          style: TextStyle(
+                            fontSize: 20,
+                            fontFamily: 'Nunito',
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                  Divider(
+                    color: Colors.black87,
+                  ),
+                  Padding(
+                      padding: EdgeInsets.only(
+                          top: 10, left: 20, right: 20, bottom: 20),
+                      child: Text(
+                        slideData["description"],
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontFamily: 'Nunito',
+                        ),
+                      ))
+                ],
+              ),
+            ),
+          ),
+        );
+      },
+    );
   }
 }

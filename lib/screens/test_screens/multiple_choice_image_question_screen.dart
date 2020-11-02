@@ -8,36 +8,36 @@ import 'package:heutagogy/models/time_object_model.dart';
 import 'package:heutagogy/services/database.dart';
 import 'package:provider/provider.dart';
 
-
 class MultipleChoiceImageQuestionScreen extends StatefulWidget {
   final ImageQuestionTest imageQuestionTest;
   MultipleChoiceImageQuestionScreen({this.imageQuestionTest});
   @override
-  _MultipleChoiceImageQuestionScreenState createState() => _MultipleChoiceImageQuestionScreenState(this.imageQuestionTest);
+  _MultipleChoiceImageQuestionScreenState createState() =>
+      _MultipleChoiceImageQuestionScreenState(this.imageQuestionTest);
 }
 
-class _MultipleChoiceImageQuestionScreenState extends State<MultipleChoiceImageQuestionScreen> {
+class _MultipleChoiceImageQuestionScreenState
+    extends State<MultipleChoiceImageQuestionScreen> {
   final timeObject = TimeObject(
-    screen: 'Multiple Choice Questions Screen(Image)',
-    courseId: 'Default Course ID',
-    testId: 'Default Test ID'
-  );
+      screen: 'Multiple Choice Questions Screen(Image)',
+      courseId: 'Default Course ID',
+      testId: 'Default Test ID');
 
-  var choices=Map(),answers = Map();
+  var choices = Map(), answers = Map();
   final ImageQuestionTest imageQuestionTest;
   _MultipleChoiceImageQuestionScreenState(this.imageQuestionTest);
 
-  void _updateProgress(){
-    var progress = Provider.of<StudentProgress>(context,listen: false);
+  void _updateProgress() {
+    var progress = Provider.of<StudentProgress>(context, listen: false);
     List<String> responses = List<String>();
-    for(var _ in choices.values){
+    for (var _ in choices.values) {
       responses.add(_);
     }
     print(responses);
-    progress.addResponses("5",responses);
+    progress.addResponses("5", responses);
     int count = 0, total = 0;
-    for(var _ in answers.values){
-      if(_){
+    for (var _ in answers.values) {
+      if (_) {
         count++;
       }
       total++;
@@ -47,8 +47,8 @@ class _MultipleChoiceImageQuestionScreenState extends State<MultipleChoiceImageQ
   }
 
   @override
-  void initState(){
-    for(var _ in imageQuestionTest.questions){
+  void initState() {
+    for (var _ in imageQuestionTest.questions) {
       choices[_.question] = null;
       answers[_.question] = false;
     }
@@ -59,7 +59,7 @@ class _MultipleChoiceImageQuestionScreenState extends State<MultipleChoiceImageQ
   }
 
   @override
-  void dispose(){
+  void dispose() {
     timeObject.setEndTime(DateTime.now());
     timeObject.addTimeObjectToStudentPerformance();
     super.dispose();
@@ -74,46 +74,52 @@ class _MultipleChoiceImageQuestionScreenState extends State<MultipleChoiceImageQ
       ),
       backgroundColor: HexColor('#f7f7f7'),
       body: SizedBox(
-          height: MediaQuery.of(context).size.height,
-          width: MediaQuery.of(context).size.width,
-          child: ListView(
-            children: [
-              Container(
-                margin: EdgeInsets.symmetric(horizontal: 7, vertical: 10),
-                decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.only(topLeft: Radius.circular(7), topRight: Radius.circular(7))
-                ),
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Container(
-                      height: 5,
-                      decoration: BoxDecoration(
-                          color: HexColor("#ed2a26"),
-                          borderRadius: BorderRadius.only(topRight: Radius.circular(7), topLeft: Radius.circular(7))
-                      ),
-                    ),
-                    ListTile(
-                      title: Text('${imageQuestionTest.testName}'),
-                      subtitle: Text('${imageQuestionTest.testDescription}'),
-                      isThreeLine: true,
-                    ),
-                  ],
+        height: MediaQuery.of(context).size.height,
+        width: MediaQuery.of(context).size.width,
+        child: ListView(
+          children: [
+            Container(
+              margin: EdgeInsets.symmetric(horizontal: 7, vertical: 10),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.only(
+                  topLeft: Radius.circular(7),
+                  topRight: Radius.circular(7),
                 ),
               ),
-              Column(
-                children: imageQuestionTest.questions.map((e) => QuestionWidget(e,this.choices,this.answers)).toList(),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Container(
+                    height: 5,
+                    decoration: BoxDecoration(
+                        color: HexColor("#ed2a26"),
+                        borderRadius: BorderRadius.only(
+                            topRight: Radius.circular(7),
+                            topLeft: Radius.circular(7))),
+                  ),
+                  ListTile(
+                    title: Text('${imageQuestionTest.testName}'),
+                    subtitle: Text('${imageQuestionTest.testDescription}'),
+                    isThreeLine: true,
+                  ),
+                ],
               ),
-              SizedBox(
+            ),
+            Column(
+              children: imageQuestionTest.questions
+                  .map((e) => QuestionWidget(e, this.choices, this.answers))
+                  .toList(),
+            ),
+            SizedBox(
               height: 10,
             ),
             SizedBox(
               width: 50,
               height: 50,
               child: RaisedButton(
-                onPressed: (){
+                onPressed: () {
                   _updateProgress();
                   Navigator.pop(context);
                 },
@@ -122,18 +128,17 @@ class _MultipleChoiceImageQuestionScreenState extends State<MultipleChoiceImageQ
                 color: HexColor("#ed2a26"),
               ),
             )
-            ],
-          )
+          ],
+        ),
       ),
     );
   }
 }
 
-
 class QuestionWidget extends StatelessWidget {
   final ImageQuestionData question;
-  final Map choices,answers;
-  QuestionWidget(this.question,this.choices,this.answers);
+  final Map choices, answers;
+  QuestionWidget(this.question, this.choices, this.answers);
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -142,13 +147,7 @@ class QuestionWidget extends StatelessWidget {
       decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.circular(10),
-          boxShadow: [
-            BoxShadow(
-                color: Colors.grey[200],
-                blurRadius: 3
-            )
-          ]
-      ),
+          boxShadow: [BoxShadow(color: Colors.grey[200], blurRadius: 3)]),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.spaceAround,
         mainAxisSize: MainAxisSize.max,
@@ -157,64 +156,67 @@ class QuestionWidget extends StatelessWidget {
             padding: EdgeInsets.all(7),
             child: Text(question.question),
           ),
-          ImageOptionBuilder(question.options,this.choices,this.answers,question.question),
+          ImageOptionBuilder(
+              question.options, this.choices, this.answers, question.question),
         ],
       ),
     );
   }
 }
 
-
 class ImageOptionBuilder extends StatefulWidget {
   final List<ImageChoice> options;
-  final Map choices,answers;
+  final Map choices, answers;
   final String question;
-  ImageOptionBuilder(this.options,this.choices,this.answers,this.question);
+  ImageOptionBuilder(this.options, this.choices, this.answers, this.question);
   @override
-  _ImageOptionBuilderState createState() => _ImageOptionBuilderState(this.choices,this.answers,this.question);
+  _ImageOptionBuilderState createState() =>
+      _ImageOptionBuilderState(this.choices, this.answers, this.question);
 }
 
 class _ImageOptionBuilderState extends State<ImageOptionBuilder> {
   int groupValue = -1;
 
-  int i=0;
-  Map choices,answers;
+  int i = 0;
+  Map choices, answers;
   String question;
 
-  _ImageOptionBuilderState(this.choices,this.answers,this.question);
+  _ImageOptionBuilderState(this.choices, this.answers, this.question);
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: MediaQuery.of(context).size.height*3/5,
+      height: MediaQuery.of(context).size.height * 3 / 5,
       width: MediaQuery.of(context).size.width,
       child: GridView.builder(
-          itemCount: widget.options.length,
-          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2),
-          itemBuilder: (context, index) => RadioListTile(
-            onChanged: (int val){
-              setState(() {
+        itemCount: widget.options.length,
+        gridDelegate:
+            SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2),
+        itemBuilder: (context, index) => RadioListTile(
+          onChanged: (int val) {
+            setState(
+              () {
                 groupValue = val;
-                if(widget.options[index].correct){
+                if (widget.options[index].correct) {
                   choices[this.question] = widget.options[index].text;
                   answers[this.question] = true;
-                }
-                else{
+                } else {
                   choices[this.question] = widget.options[index].text;
                 }
-              });
-            },
-            value: index,
-            activeColor: HexColor('#ed2a26'),
-            groupValue: groupValue,
-            title: Image.network(
-              widget.options[index].picture,
-              // scale: 1.5,
-              fit: BoxFit.fill,
-              height: MediaQuery.of(context).size.height/5,
-              width: MediaQuery.of(context).size.width/3,
-            ),
-          )
+              },
+            );
+          },
+          value: index,
+          activeColor: HexColor('#ed2a26'),
+          groupValue: groupValue,
+          title: Image.network(
+            widget.options[index].picture,
+            // scale: 1.5,
+            fit: BoxFit.fill,
+            height: MediaQuery.of(context).size.height / 5,
+            width: MediaQuery.of(context).size.width / 3,
+          ),
+        ),
       ),
     );
   }

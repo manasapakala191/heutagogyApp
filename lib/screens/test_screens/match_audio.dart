@@ -33,54 +33,62 @@ class _DragDropAudioScreenState extends State<DragDropAudioScreen> {
     }
   }
 
-  void _updateProgress(){
-    var progress = Provider.of<StudentProgress>(context,listen: false);
+  void _updateProgress() {
+    var progress = Provider.of<StudentProgress>(context, listen: false);
     List<String> responses = [];
     // print(choices.values);
     for (var response in choices.values) {
-        responses.add(response);
+      responses.add(response);
     }
-    progress.addResponses("2",responses);
+    progress.addResponses("2", responses);
     int count = 0, total = 0;
-    for(var val in correct.values){
-      if(val == true){
+    for (var val in correct.values) {
+      if (val == true) {
         count++;
       }
       total++;
     }
-    progress.setPerformance("2",count,total);
-    DatabaseService().writeProgress(progress.getPerformance(),"2");
+    progress.setPerformance("2", count, total);
+    DatabaseService().writeProgress(progress.getPerformance(), "2");
   }
 
-   @override
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-          title: Text(audiodata.testName,style: TextStyle(color: HexColor("#ed2a26")),),
-          backgroundColor: Colors.white,
+        title: Text(
+          audiodata.testName,
+          style: TextStyle(color: HexColor("#ed2a26")),
+        ),
+        backgroundColor: Colors.white,
         leading: IconButton(
-          icon: Icon(Icons.keyboard_backspace_rounded,color: HexColor("#ed2a26")),
-          onPressed: (){
+          icon: Icon(Icons.keyboard_backspace_rounded,
+              color: HexColor("#ed2a26")),
+          onPressed: () {
             Navigator.pop(context);
           },
         ),
-        ),
+      ),
       body: Padding(
         padding: const EdgeInsets.all(20.0),
         child: SingleChildScrollView(
           child: Column(
             children: <Widget>[
-              (audiodata.testDescription == "" || audiodata.testDescription == null)
+              (audiodata.testDescription == "" ||
+                      audiodata.testDescription == null)
                   ? Container()
                   : Center(
-                child: Text(
-                  audiodata.testDescription,
-                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                ),
+                      child: Text(
+                        audiodata.testDescription,
+                        style: TextStyle(
+                            fontSize: 18, fontWeight: FontWeight.bold),
+                      ),
+                    ),
+              Padding(
+                padding: EdgeInsets.only(top: 20),
               ),
-              Padding(padding: EdgeInsets.only(top: 20),),
               Column(
-                children: _builder(audiodata,correct,seed),
+                children: _builder(audiodata, correct, seed),
               ),
             ],
           ),
@@ -95,8 +103,7 @@ class _DragDropAudioScreenState extends State<DragDropAudioScreen> {
     List<Widget> targets = [];
     for (var sound in audiodata.audios) {
       if (correct[sound.description]) {
-        drops.add(
-          Container(
+        drops.add(Container(
             width: 64,
             height: 64,
             decoration: BoxDecoration(
@@ -109,12 +116,13 @@ class _DragDropAudioScreenState extends State<DragDropAudioScreen> {
               size: 32,
             )));
       } else {
-        drops.add(
-            DraggableAudioButton(audioPath: sound.description, active: correct[sound.description]));
+        drops.add(DraggableAudioButton(
+            audioPath: sound.description, active: correct[sound.description]));
       }
       targets.add(
         DragTarget(
-          builder: (BuildContext context, List<String> incoming, List rejected) {
+          builder:
+              (BuildContext context, List<String> incoming, List rejected) {
             if (!correct[sound.description]) {
               return Container(
                 padding: EdgeInsets.only(bottom: 4),
@@ -131,8 +139,10 @@ class _DragDropAudioScreenState extends State<DragDropAudioScreen> {
                   child: Center(
                       child: Text(
                     sound.description,
-                    style:
-                        TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold),
+                    style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold),
                   )),
                 ),
               );
@@ -152,7 +162,9 @@ class _DragDropAudioScreenState extends State<DragDropAudioScreen> {
                       child: Text(
                         "Matched",
                         style: TextStyle(
-                            fontSize: 18, color: Colors.white, fontWeight: FontWeight.bold),
+                            fontSize: 18,
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold),
                       ),
                     )),
               );
@@ -172,7 +184,6 @@ class _DragDropAudioScreenState extends State<DragDropAudioScreen> {
           onWillAccept: (data) => data == sound.description,
         ),
       );
-
     }
     targets..shuffle(Random(seed));
     for (int i = 0; i < audiodata.audios.length; i++) {
@@ -183,9 +194,7 @@ class _DragDropAudioScreenState extends State<DragDropAudioScreen> {
             children: <Widget>[drops[i], targets[i]],
           )));
     }
-    body.add(
-      SizedBox(height:20)
-    );
+    body.add(SizedBox(height: 20));
     body.add(
       MaterialButton(
         minWidth: 75,
@@ -194,7 +203,7 @@ class _DragDropAudioScreenState extends State<DragDropAudioScreen> {
         child: Text("Submit"),
         color: HexColor("#ed2a26"),
         padding: const EdgeInsets.all(5),
-        onPressed: (){
+        onPressed: () {
           _updateProgress();
           Navigator.pop(context);
           // Update progress and write to database
@@ -209,10 +218,12 @@ class DraggableAudioButton extends StatefulWidget {
   final String audioPath;
   final bool active;
 
-  DraggableAudioButton({Key key, this.audioPath, this.active}) : super(key: key);
+  DraggableAudioButton({Key key, this.audioPath, this.active})
+      : super(key: key);
 
   @override
-  _DraggableAudioButtonState createState() => _DraggableAudioButtonState(audioPath, active);
+  _DraggableAudioButtonState createState() =>
+      _DraggableAudioButtonState(audioPath, active);
 }
 
 class _DraggableAudioButtonState extends State<DraggableAudioButton>
@@ -231,7 +242,8 @@ class _DraggableAudioButtonState extends State<DraggableAudioButton>
     audioCache = AudioCache(prefix: 'audio/');
     audioCache.load("$audioPath.mp3");
     playing = false;
-    _controller = AnimationController(duration: Duration(milliseconds: 200), vsync: this);
+    _controller =
+        AnimationController(duration: Duration(milliseconds: 200), vsync: this);
   }
 
   @override
@@ -245,8 +257,9 @@ class _DraggableAudioButtonState extends State<DraggableAudioButton>
     var aud = Container(
       width: 64,
       height: 64,
-      decoration:
-          BoxDecoration(border: Border.all(width: 2), borderRadius: BorderRadius.circular(100)),
+      decoration: BoxDecoration(
+          border: Border.all(width: 2),
+          borderRadius: BorderRadius.circular(100)),
       child: IconButton(
         disabledColor: Colors.black,
         splashColor: Color.fromARGB(29, 42, 242, 121),
@@ -258,38 +271,46 @@ class _DraggableAudioButtonState extends State<DraggableAudioButton>
             ? null
             : (() async {
                 if (!playing) {
-                  setState(() {
-                    playing = true;
-                  });
+                  setState(
+                    () {
+                      playing = true;
+                    },
+                  );
                   _controller.forward();
-                  AudioPlayer audioPlayer = await audioCache.play("$audioPath.mp3");
-                  audioPlayer.onPlayerCompletion.listen((event) {
-                    setState(() {
-                      playing = false;
-                    });
-                    _controller.reverse();
-                  });
+                  AudioPlayer audioPlayer =
+                      await audioCache.play("$audioPath.mp3");
+                  audioPlayer.onPlayerCompletion.listen(
+                    (event) {
+                      setState(
+                        () {
+                          playing = false;
+                        },
+                      );
+                      _controller.reverse();
+                    },
+                  );
                 }
               }),
       ),
     );
     return Draggable<String>(
-        data: audioPath,
-        feedback: Container(
-            width: 72,
-            height: 72,
-            decoration: BoxDecoration(
-                color: Color.fromARGB(20, 90, 200, 30),
-                border: Border.all(width: 2, color: Colors.black45),
-                borderRadius: BorderRadius.circular(100)),
-            child: Icon(Icons.music_note)),
-        childWhenDragging: Container(
-          width: 64,
-          height: 64,
+      data: audioPath,
+      feedback: Container(
+          width: 72,
+          height: 72,
           decoration: BoxDecoration(
-              border: Border.all(width: 1, color: Colors.black12),
-              borderRadius: BorderRadius.circular(40)),
-        ),
-        child: aud);
+              color: Color.fromARGB(20, 90, 200, 30),
+              border: Border.all(width: 2, color: Colors.black45),
+              borderRadius: BorderRadius.circular(100)),
+          child: Icon(Icons.music_note)),
+      childWhenDragging: Container(
+        width: 64,
+        height: 64,
+        decoration: BoxDecoration(
+            border: Border.all(width: 1, color: Colors.black12),
+            borderRadius: BorderRadius.circular(40)),
+      ),
+      child: aud,
+    );
   }
 }

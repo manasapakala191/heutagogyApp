@@ -33,22 +33,22 @@ class _MathMatchScreenState extends State<MathMatchScreen> {
     }
   }
 
-  void _updateProgress(){
-    var progress = Provider.of<StudentProgress>(context,listen: false);
+  void _updateProgress() {
+    var progress = Provider.of<StudentProgress>(context, listen: false);
     List<String> responses = [];
     for (var response in choices.values) {
-        responses.add(response);
+      responses.add(response);
     }
-    progress.addResponses("3",responses);
+    progress.addResponses("3", responses);
     int count = 0, total = 0;
-    for(var val in data.values){
-      if(val == true){
+    for (var val in data.values) {
+      if (val == true) {
         count++;
       }
       total++;
     }
-    progress.setPerformance("3",count,total);
-    DatabaseService().writeProgress(progress.getPerformance(),"3");
+    progress.setPerformance("3", count, total);
+    DatabaseService().writeProgress(progress.getPerformance(), "3");
   }
 
   @override
@@ -70,7 +70,7 @@ class _MathMatchScreenState extends State<MathMatchScreen> {
       ));
     }
     rows.add(
-      SizedBox(height:20),
+      SizedBox(height: 20),
     );
     rows.add(
       MaterialButton(
@@ -80,7 +80,7 @@ class _MathMatchScreenState extends State<MathMatchScreen> {
         child: Text("Submit"),
         color: HexColor("#ed2a26"),
         padding: const EdgeInsets.all(5),
-        onPressed: (){
+        onPressed: () {
           _updateProgress();
           Navigator.pop(context);
           // Update progress and write to database
@@ -88,25 +88,27 @@ class _MathMatchScreenState extends State<MathMatchScreen> {
       ),
     );
     return Scaffold(
-      appBar: AppBar(
-        title: Text(testdata.heading,style: TextStyle(color: HexColor("#ed2a26")),),
-        backgroundColor: Colors.white,
-        leading: IconButton(
-          icon: Icon(Icons.keyboard_backspace_rounded,color: HexColor("#ed2a26")),
-          onPressed: (){
-            Navigator.pop(context);
-          },
-        )
-      ),
-      body: Padding(
-        padding: const EdgeInsets.all(20.0),
-        child: SingleChildScrollView(
-        child: Column(
-          children: rows,
-        ),
-    ),
-      )
-    );
+        appBar: AppBar(
+            title: Text(
+              testdata.heading,
+              style: TextStyle(color: HexColor("#ed2a26")),
+            ),
+            backgroundColor: Colors.white,
+            leading: IconButton(
+              icon: Icon(Icons.keyboard_backspace_rounded,
+                  color: HexColor("#ed2a26")),
+              onPressed: () {
+                Navigator.pop(context);
+              },
+            )),
+        body: Padding(
+          padding: const EdgeInsets.all(20.0),
+          child: SingleChildScrollView(
+            child: Column(
+              children: rows,
+            ),
+          ),
+        ));
   }
 
   _buildDraggables() {
@@ -119,25 +121,29 @@ class _MathMatchScreenState extends State<MathMatchScreen> {
             height: 80,
             padding: EdgeInsets.all(10),
             margin: EdgeInsets.only(top: 10, left: 40),
-            decoration:
-                BoxDecoration(color: HexColor("#ed2a26"), borderRadius: BorderRadius.circular(10)),
-            child: data[x.second] == true? Icon(
-              Icons.assignment_turned_in,
-              color: Colors.white,
-              size: 32,
-            ) : Text(
-              x.second,
-              style: TextStyle(color: Colors.white, fontSize: 16),
-            ),
+            decoration: BoxDecoration(
+                color: HexColor("#ed2a26"),
+                borderRadius: BorderRadius.circular(10)),
+            child: data[x.second] == true
+                ? Icon(
+                    Icons.assignment_turned_in,
+                    color: Colors.white,
+                    size: 32,
+                  )
+                : Text(
+                    x.second,
+                    style: TextStyle(color: Colors.white, fontSize: 16),
+                  ),
           ),
           childWhenDragging: Material(
               child: Container(
-                width: 135,
-                height: 80,
+            width: 135,
+            height: 80,
             padding: EdgeInsets.all(10),
             margin: EdgeInsets.only(top: 10, left: 40),
-            decoration:
-                BoxDecoration(color: HexColor("#ed2a26"), borderRadius: BorderRadius.circular(10)),
+            decoration: BoxDecoration(
+                color: HexColor("#ed2a26"),
+                borderRadius: BorderRadius.circular(10)),
             child: Text(
               x.second,
               style: TextStyle(color: Colors.white, fontSize: 16),
@@ -151,7 +157,8 @@ class _MathMatchScreenState extends State<MathMatchScreen> {
                 padding: EdgeInsets.all(10),
                 margin: EdgeInsets.only(top: 10, left: 40),
                 decoration: BoxDecoration(
-                    color: HexColor("#ed2a26"), borderRadius: BorderRadius.circular(10)),
+                    color: HexColor("#ed2a26"),
+                    borderRadius: BorderRadius.circular(10)),
                 child: Text(
                   x.second,
                   style: TextStyle(color: Colors.white, fontSize: 16),
@@ -166,51 +173,62 @@ class _MathMatchScreenState extends State<MathMatchScreen> {
     List<Widget> items = [];
     for (var x in testdata.questions) {
       if (data[x.second]) {
-        items.add(Container(
-          width: 135,
-          height: 80,
-          padding: EdgeInsets.all(10),
-          margin: EdgeInsets.only(top: 10, right: 40),
-          decoration: BoxDecoration(
-              color: HexColor("ed2a26"),
-              border: Border.all(color: HexColor("ed2a26")),
-              borderRadius: BorderRadius.circular(10)),
-          child: Text(
-            "Matched",
-            style: TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.bold),
+        items.add(
+          Container(
+            width: 135,
+            height: 80,
+            padding: EdgeInsets.all(10),
+            margin: EdgeInsets.only(top: 10, right: 40),
+            decoration: BoxDecoration(
+                color: HexColor("ed2a26"),
+                border: Border.all(color: HexColor("ed2a26")),
+                borderRadius: BorderRadius.circular(10)),
+            child: Text(
+              "Matched",
+              style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold),
+            ),
           ),
-        ));
+        );
       } else {
-        items.add(DragTarget<String>(
-          builder: (BuildContext context, List<String> incoming, List rejected) {
-            return Container(
-              width: 135,
-              height: 80,
-              padding: EdgeInsets.all(10),
-              margin: EdgeInsets.only(top: 10, right: 40),
-              decoration:
-                  BoxDecoration(color: HexColor("#ed2a26"), borderRadius: BorderRadius.circular(10)),
-              child: Text(
-                x.first,
-                style: TextStyle(color: Colors.white, fontSize: 16),
-              ),
-            );
-          },
-          onWillAccept: (t) => t == x.second,
-          onAccept: (t) {
-            setState(() {
-              data[x.second] = true;
+        items.add(
+          DragTarget<String>(
+            builder:
+                (BuildContext context, List<String> incoming, List rejected) {
+              return Container(
+                width: 135,
+                height: 80,
+                padding: EdgeInsets.all(10),
+                margin: EdgeInsets.only(top: 10, right: 40),
+                decoration: BoxDecoration(
+                    color: HexColor("#ed2a26"),
+                    borderRadius: BorderRadius.circular(10)),
+                child: Text(
+                  x.first,
+                  style: TextStyle(color: Colors.white, fontSize: 16),
+                ),
+              );
+            },
+            onWillAccept: (t) => t == x.second,
+            onAccept: (t) {
+              setState(
+                () {
+                  data[x.second] = true;
+                  print(x.second);
+                  print(x.second);
+                  choices[x.second] = x.second;
+                },
+              );
+            },
+            onLeave: (t) {
+              print(t);
               print(x.second);
-              print(x.second);
-              choices[x.second] = x.second;
-            });
-          },
-          onLeave: (t){
-            print(t);
-            print(x.second);
-            choices[t] = x.second;
-          },
-        ));
+              choices[t] = x.second;
+            },
+          ),
+        );
       }
     }
     return items;

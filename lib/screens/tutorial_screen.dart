@@ -4,7 +4,6 @@ import 'package:heutagogy/models/lessons_models.dart';
 import 'package:heutagogy/models/time_object_model.dart';
 import 'package:video_player/video_player.dart';
 
-
 class LessonViewer extends StatefulWidget {
   final Lesson lesson;
   LessonViewer({this.lesson});
@@ -16,18 +15,17 @@ class _LessonViewerState extends State<LessonViewer> {
   Lesson lesson;
 
   final timeObject = TimeObject(
-    screen: 'Lessons Screen',
-    courseId: 'Default Course ID',
-    testId: 'Default Test ID'
-  );
+      screen: 'Lessons Screen',
+      courseId: 'Default Course ID',
+      testId: 'Default Test ID');
 
   VideoPlayerController _controller;
   Future<void> _initializeVideoPlayerFuture;
   bool showControllerButtons = true;
 
   @override
-  void initState(){
-    lesson=widget.lesson;
+  void initState() {
+    lesson = widget.lesson;
     timeObject.setStartTime(DateTime.now());
     _controller = VideoPlayerController.network(
       lesson.videoUrl,
@@ -39,7 +37,7 @@ class _LessonViewerState extends State<LessonViewer> {
   }
 
   @override
-  void dispose(){
+  void dispose() {
     timeObject.setEndTime(DateTime.now());
     timeObject.addTimeObjectToStudentPerformance();
     _controller.dispose();
@@ -60,56 +58,69 @@ class _LessonViewerState extends State<LessonViewer> {
         child: ListView(
           children: [
             InkWell(
-              onTap: (){
-                setState(() {
-                  showControllerButtons = !showControllerButtons;
-                });
+              onTap: () {
+                setState(
+                  () {
+                    showControllerButtons = !showControllerButtons;
+                  },
+                );
               },
               child: Stack(
                 alignment: Alignment.center,
                 children: [
                   Container(
                     margin: EdgeInsets.all(7),
-                    height: MediaQuery.of(context).size.height/3,
+                    height: MediaQuery.of(context).size.height / 3,
                     child: FutureBuilder(
                       future: _initializeVideoPlayerFuture,
-                      builder: (context, snapshot){
-                        if(snapshot.connectionState == ConnectionState.done){
+                      builder: (context, snapshot) {
+                        if (snapshot.connectionState == ConnectionState.done) {
                           return AspectRatio(
                             aspectRatio: _controller.value.aspectRatio,
                             child: VideoPlayer(_controller),
                           );
-                        }return Center(child: CircularProgressIndicator(),);
+                        }
+                        return Center(
+                          child: CircularProgressIndicator(),
+                        );
                       },
                     ),
                   ),
-                  showControllerButtons ? Positioned(
-                    height: 100,
-                    top: MediaQuery.of(context).size.height/10,
-                    child: ButtonBar(
-                      children: [
-                        FloatingActionButton(
-                          child: Icon(
-                            _controller.value.isPlaying ? Icons.pause : Icons.play_arrow
+                  showControllerButtons
+                      ? Positioned(
+                          height: 100,
+                          top: MediaQuery.of(context).size.height / 10,
+                          child: ButtonBar(
+                            children: [
+                              FloatingActionButton(
+                                child: Icon(_controller.value.isPlaying
+                                    ? Icons.pause
+                                    : Icons.play_arrow),
+                                onPressed: () {
+                                  setState(
+                                    () {
+                                      if (_controller.value.isPlaying) {
+                                        setState(
+                                          () {
+                                            _controller.pause();
+                                          },
+                                        );
+                                      } else {
+                                        setState(
+                                          () {
+                                            _controller.play();
+                                          },
+                                        );
+                                      }
+                                    },
+                                  );
+                                },
+                                mini: true,
+                              )
+                            ],
                           ),
-                          onPressed: (){
-                            setState(() {
-                              if(_controller.value.isPlaying){
-                                setState(() {
-                                  _controller.pause();
-                                });
-                              }else{
-                                setState(() {
-                                  _controller.play();
-                                });
-                              }
-                            });
-                          },
-                          mini: true,
                         )
-                      ],
-                    ),
-                  ) : SizedBox()
+                      : SizedBox(),
                 ],
               ),
             ),
