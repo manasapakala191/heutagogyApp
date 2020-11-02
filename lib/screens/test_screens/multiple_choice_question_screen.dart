@@ -1,14 +1,58 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:heutagogy/hex_color.dart';
+import 'package:heutagogy/models/studentProgress.dart';
 import 'package:heutagogy/models/test_type_models/multiple_choice_question_test.dart';
 import 'package:faker/faker.dart';
 import 'package:heutagogy/models/test_type_models/option_class.dart';
 import 'package:heutagogy/models/test_type_models/question_class.dart';
+import 'package:heutagogy/services/database.dart';
+import 'package:provider/provider.dart';
 
-class MultipleChoiceQuestionScreen extends StatelessWidget {
+class MultipleChoiceQuestionScreen extends StatefulWidget {
   final singleCorrectTest;
   MultipleChoiceQuestionScreen({this.singleCorrectTest});
+  
+  @override
+  _MultipleChoiceQuestionScreenState createState() => _MultipleChoiceQuestionScreenState(this.singleCorrectTest);
+}
+
+class _MultipleChoiceQuestionScreenState extends State<MultipleChoiceQuestionScreen> {
+  final singleCorrectTest;
+  _MultipleChoiceQuestionScreenState(this.singleCorrectTest);
+  
+  var answers = Map();
+  var choices = Map();
+
+  void initState(){
+    for(var _ in singleCorrectTest.questions){
+      answers[_.text] = false;
+      choices[_.text] = null;
+    }
+    // print(answers);
+    // print(choices);
+  }
+
+  void _updateProgress(){
+    var progress = Provider.of<StudentProgress>(context,listen: false);
+    List<String> responses = List<String>();
+    for(var _ in choices.values){
+      responses.add(_);
+    }
+    print(responses);
+    progress.addResponses("4",responses);
+    int count = 0, total = 0;
+    for(var _ in answers.values){
+      if(_){
+        count++;
+      }
+      total++;
+    }
+    progress.setPerformance("4",count,total);
+    DatabaseService().writeProgress(progress.getPerformance(), "4");
+  }
+
+
   // final SingleCorrectTest singleCorrectTest = SingleCorrectTest(
   //   testName: "Test",
   //   subject: "Lorem Ipsum",
@@ -36,6 +80,7 @@ class MultipleChoiceQuestionScreen extends StatelessWidget {
   //   ))
   // );
 
+  
 
   @override
   Widget build(BuildContext context) {
@@ -49,7 +94,7 @@ class MultipleChoiceQuestionScreen extends StatelessWidget {
         height: MediaQuery.of(context).size.height,
         width: MediaQuery.of(context).size.width,
         child: ListView(
-          children: [
+          children: <Widget>[
             Container(
               margin: EdgeInsets.symmetric(horizontal: 7, vertical: 10),
               decoration: BoxDecoration(
@@ -59,7 +104,7 @@ class MultipleChoiceQuestionScreen extends StatelessWidget {
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 mainAxisAlignment: MainAxisAlignment.center,
-                children: [
+                children: <Widget>[
                   Container(
                     height: 5,
                     decoration: BoxDecoration(
@@ -76,7 +121,23 @@ class MultipleChoiceQuestionScreen extends StatelessWidget {
               ),
             ),
             Column(
-              children: singleCorrectTest.questions.map<Widget>((e) => QuestionWidget(question: e,)).toList(),
+              children: singleCorrectTest.questions.map<Widget>((e) => QuestionWidget(e,this.answers,this.choices)).toList()
+            ),
+            SizedBox(
+              height: 10,
+            ),
+            SizedBox(
+              width: 50,
+              height: 50,
+              child: RaisedButton(
+                onPressed: (){
+                  _updateProgress();
+                  Navigator.pop(context);
+                },
+                elevation: 8,
+                child: Text("Submit"),
+                color: HexColor("#ed2a26"),
+              ),
             )
           ],
         )
@@ -87,7 +148,8 @@ class MultipleChoiceQuestionScreen extends StatelessWidget {
 
 class QuestionWidget extends StatelessWidget {
   final QuestionData question;
-  QuestionWidget({this.question});
+  final Map answers,choices;
+  QuestionWidget(this.question,this.answers,this.choices);
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -106,12 +168,12 @@ class QuestionWidget extends StatelessWidget {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.spaceAround,
         mainAxisSize: MainAxisSize.max,
-        children: [
+        children: <Widget>[
           Padding(
             padding: EdgeInsets.all(7),
             child: Text(question.text),
           ),
-          OptionBuilder(options: question.options,)
+          OptionBuilder(question.options,this.answers,this.choices,question.text)
         ],
       ),
     );
@@ -120,16 +182,28 @@ class QuestionWidget extends StatelessWidget {
 
 class OptionBuilder extends StatefulWidget {
   final List<Option> options;
-  OptionBuilder({this.options});
+  final Map answers,choices;
+  final String question;
+  OptionBuilder(this.options,this.answers,this.choices,this.question);
   @override
-  _OptionBuilderState createState() => _OptionBuilderState();
+  _OptionBuilderState createState() => _OptionBuilderState(this.answers,this.choices,this.question);
 }
 
 class _OptionBuilderState extends State<OptionBuilder> {
   int groupValue = -1;
   int i = 0;
+  final Map choices,answers;
+  final String question;
+  _OptionBuilderState(this.answers,this.choices,this.question);
   @override
   Widget build(BuildContext context) {
+    String answer;
+    for(var _ in widget.options){
+      if(_.choice){
+        answer = _.text;
+        break;
+      }
+    }
     return Column(
       children: widget.options.map<Widget>((e) {
         return RadioListTile(
@@ -139,8 +213,16 @@ class _OptionBuilderState extends State<OptionBuilder> {
           onChanged: (int val) {
             setState(() {
               groupValue = val;
+              if(e.choice == true){
+                answers[this.question] = true;
+                choices[this.question] = e.text;
+              }
+              else{
+                choices[this.question] = e.text;
+              }
             });
-            print(i);
+            print(val);
+            // if()
           },
           activeColor: HexColor('#ed2a26'),
         );

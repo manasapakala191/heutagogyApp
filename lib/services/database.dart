@@ -66,4 +66,15 @@ class DatabaseService{
     return await schoolDoc.collection('Students/').doc(uid).set({
     });
   }
+  void writeProgress(Map<String, dynamic> data,String lessonID) async {
+    print(data);
+    DocumentReference progressReference = db.doc("Schools/School 1/Students/Student 1/Progress/C1");
+    await progressReference.set({lessonID: data[lessonID]},SetOptions(merge:true)).then(
+      (_){
+        print(data["C1"][lessonID]);
+        print("updated");
+      }
+    );
+  }
+
 }

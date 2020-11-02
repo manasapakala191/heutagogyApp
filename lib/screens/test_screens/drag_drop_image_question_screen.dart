@@ -6,6 +6,9 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:heutagogy/hex_color.dart';
 import 'package:heutagogy/models/test_type_models/drag_drop_test.dart';
 import 'package:heutagogy/models/test_type_models/option_class.dart';
+import 'package:provider/provider.dart';
+import 'package:heutagogy/services/database.dart';
+import 'package:heutagogy/models/studentProgress.dart';
 
 class DragDropImageScreen extends StatefulWidget {
   final DragDropImageTest dragDropImageTest;
@@ -20,15 +23,39 @@ class _DragDropImageScreenState extends State<DragDropImageScreen> {
   DragDropImageTest dragDropImageTest;
   Map<String, bool> correct;
   Map<String, bool> correct2;
+  var choices;
 
   _DragDropImageScreenState(DragDropImageTest dragDropImageTest) {
     this.dragDropImageTest = dragDropImageTest;
     this.correct = Map();
     this.correct2 = Map();
+    this.choices = Map();
     for (var image in this.dragDropImageTest.pictures) {
       correct[image.description] = false;
       correct2[image.description] = false;
+      choices[image.description] = null;
     }
+  }
+
+  void _updateProgress(){
+    var progress = Provider.of<StudentProgress>(context,listen: false);
+    List<String> responses = [];
+    // print(choices.values);
+    for (var response in choices.values) {
+        responses.add(response);
+    }
+    progress.addResponses("1",responses);
+    int count = 0, total = 0;
+    for(var val in correct.values){
+      if(val == true){
+        count++;
+      }
+      total++;
+    }
+    print(count);
+    print(total);
+    progress.setPerformance("1",count,total);
+    DatabaseService().writeProgress(progress.getPerformance(),"1");
   }
 
   @override
@@ -65,6 +92,7 @@ class _DragDropImageScreenState extends State<DragDropImageScreen> {
           ),
         ),
       ),
+      
     );
   }
 
@@ -145,10 +173,17 @@ class _DragDropImageScreenState extends State<DragDropImageScreen> {
             setState(() {
               correct[data] = true;
               correct2[image.description] = true;
+              print(data);
+              print(image.description);
+              choices[image.description] = image.description;
             });
           },
-          onLeave: (data) {},
-          onWillAccept: (data) => true,
+          onLeave: (data) {
+            print(data);
+            print(image.description);
+            choices[data] = image.description;
+          },
+          onWillAccept: (data) => data == image.description,
         ),
       );
     }
@@ -161,6 +196,24 @@ class _DragDropImageScreenState extends State<DragDropImageScreen> {
             children: <Widget>[drops[i], targets[i]],
           )));
     }
+    body.add(
+      SizedBox(height:20)
+    );
+    body.add(
+      MaterialButton(
+        minWidth: 75,
+        height: 75,
+        elevation: 8,
+        child: Text("Submit"),
+        color: HexColor("#ed2a26"),
+        padding: const EdgeInsets.all(5),
+        onPressed: (){
+          _updateProgress();
+          Navigator.pop(context);
+          // Update progress and write to database
+        },
+      ),
+    );
     return body;
   }
 }
