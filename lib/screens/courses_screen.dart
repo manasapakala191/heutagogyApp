@@ -6,6 +6,7 @@ import 'package:heutagogy/models/userModel.dart';
 import 'package:heutagogy/screens/course_screen.dart';
 import 'package:heutagogy/screens/login-resources/login.dart';
 import 'package:heutagogy/screens/login-resources/register.dart';
+import 'package:heutagogy/screens/misc-screens/profile.dart';
 import 'package:heutagogy/services/database.dart';
 import 'package:provider/provider.dart';
 
@@ -30,40 +31,43 @@ class _CoursesHomeScreenState extends State<CoursesHomeScreen> {
     final _screenSize = MediaQuery.of(context).size;
     return Scaffold(
       appBar: AppBar(
+        centerTitle: true,
         title: Text(
           'Heutagogy',
           style: TextStyle(color: HexColor("#ed2a26")),
         ),
       ),
       drawer: Drawer(
-        child: Container(
-          child: Column(
-            children: [
-              SizedBox(height: 50),
-              RaisedButton(
-                color: Colors.redAccent,
-                onPressed: () {
-                  Navigator.push(context,
-                      MaterialPageRoute(builder: (context) => RegisterPage()));
-                },
-                child: Text(
-                  "Register",
-                  style: TextStyle(color: Colors.white),
-                ),
+        child: ListView(
+          children: [
+            DrawerHeader(
+              child: Center(child: Text("Hi")),
+              decoration: BoxDecoration(
+                color: HexColor("#ed2a26"),
               ),
-              RaisedButton(
-                color: Colors.redAccent,
-                onPressed: () {
-                  Navigator.push(context,
-                      MaterialPageRoute(builder: (context) => LoginPage()));
-                },
-                child: Text(
-                  "Login",
-                  style: TextStyle(color: Colors.white),
-                ),
-              ),
-            ],
-          ),
+            ),
+            ListTile(
+              title: Text("My Profile"),
+              trailing: Icon(Icons.account_circle),
+              onTap: () {
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (context) {
+                      return ProfilePage();
+                    },
+                  ),
+                );
+              },
+            ),
+            ListTile(
+              title: Text("Settings"),
+              trailing: Icon(Icons.settings),
+            ),
+            ListTile(
+              title: Text("Logout"),
+              trailing: Icon(Icons.logout),
+            ),
+          ],
         ),
       ),
       floatingActionButton: FloatingActionButton(
