@@ -53,7 +53,6 @@ class _BufferPageState extends State<BufferPage> {
                       Form(
                         key: _formKey,
                         child: Container(
-                          height: MediaQuery.of(context).size.height * 1 / 2,
                           margin: EdgeInsets.all(30.0),
                           padding: EdgeInsets.all(20.0),
                           decoration: BoxDecoration(
@@ -63,7 +62,8 @@ class _BufferPageState extends State<BufferPage> {
                               BoxShadow(color: Colors.grey, blurRadius: 10.0)
                             ],
                           ),
-                          child: ListView(
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min,
                             children: [
                               Center(
                                 child: Container(

@@ -72,7 +72,6 @@ class _MultipleChoiceQuestionScreenState
     return Scaffold(
       appBar: AppBar(
         title: Text('${singleCorrectTest.subject}'),
-        backgroundColor: HexColor("#ed2a26"),
       ),
       backgroundColor: HexColor('#f7f7f7'),
       body: SizedBox(

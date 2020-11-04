@@ -50,7 +50,6 @@ class _LessonViewerState extends State<LessonViewer> {
     return Scaffold(
       appBar: AppBar(
         title: Text(lesson.subject),
-        backgroundColor: HexColor('#ed2a26'),
       ),
       body: SizedBox(
         height: MediaQuery.of(context).size.height,

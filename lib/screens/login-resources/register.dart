@@ -65,7 +65,6 @@ class _RegisterPageState extends State<RegisterPage> {
                     Form(
                       key: _formKey,
                       child: Container(
-                        height: MediaQuery.of(context).size.height * 5 / 7,
                         margin: EdgeInsets.all(30.0),
                         padding: EdgeInsets.all(20.0),
                         decoration: BoxDecoration(
@@ -75,7 +74,8 @@ class _RegisterPageState extends State<RegisterPage> {
                             BoxShadow(color: Colors.grey, blurRadius: 10.0)
                           ],
                         ),
-                        child: ListView(
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
                           children: [
                             Center(
                               child: Container(

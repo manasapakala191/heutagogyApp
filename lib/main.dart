@@ -3,9 +3,11 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:heutagogy/hex_color.dart';
+import 'package:heutagogy/models/studentPerformance.dart';
 import 'package:heutagogy/models/studentProgress.dart';
 import 'package:heutagogy/models/userModel.dart';
 import 'package:heutagogy/screens/login-resources/login.dart';
+import 'package:heutagogy/services/database.dart';
 import 'package:provider/provider.dart';
 
 void main() {
@@ -15,6 +17,7 @@ void main() {
       ChangeNotifierProvider(create: (_) => UserModel()),
       // add after signup
       ChangeNotifierProvider(create: (_) => StudentProgress()),
+      ChangeNotifierProvider(create: (_) => StudentPerfomance()),
     ], child: MyApp()),
   );
 }
@@ -121,5 +124,49 @@ class MyApp extends StatelessWidget {
       ),
       home: MyHomePage(),
     );
+  }
+}
+
+
+
+// to update Firestore when the app is closed, it's not working now though
+class LifecycleWatcher extends StatefulWidget {
+  @override
+  _LifecycleWatcherState createState() => _LifecycleWatcherState();
+}
+
+class _LifecycleWatcherState extends State<LifecycleWatcher> with WidgetsBindingObserver {
+  AppLifecycleState _notification;
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addObserver(this);
+  }
+
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    super.dispose();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    setState(() {
+      _notification = state;
+    });
+
+    if(_notification==AppLifecycleState.inactive){
+      print("out");
+      DatabaseService.updateCoursesAndSlides(context);
+    //  db. update courses and slide numbers
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    if (_notification == null || _notification==AppLifecycleState.resumed)
+      return MyHomePage();
+    return Container();
   }
 }
