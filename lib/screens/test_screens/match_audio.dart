@@ -4,13 +4,15 @@ import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
 import 'package:heutagogy/models/studentProgress.dart';
 import 'package:heutagogy/models/test_type_models/match_audio.dart';
+import 'package:heutagogy/models/userModel.dart';
 import 'package:provider/provider.dart';
 import 'package:heutagogy/services/database.dart';
 import '../../hex_color.dart';
 
 class DragDropAudioScreen extends StatefulWidget {
   final DragDropAudioTest data;
-  DragDropAudioScreen(this.data, {Key key}) : super(key: key);
+  final String courseID,lessonID,type;
+  DragDropAudioScreen(this.data,this.type,this.courseID,this.lessonID, {Key key}) : super(key: key);
   @override
   _DragDropAudioScreenState createState() => _DragDropAudioScreenState(data);
 }
@@ -37,10 +39,12 @@ class _DragDropAudioScreenState extends State<DragDropAudioScreen> {
     var progress = Provider.of<StudentProgress>(context, listen: false);
     List<String> responses = [];
     // print(choices.values);
+    var user = Provider.of<UserModel>(context,listen: false);
+    String studentID = user.getID();
     for (var response in choices.values) {
       responses.add(response);
     }
-    progress.addResponses("2", responses);
+    progress.addResponses(widget.courseID,widget.lessonID,widget.type,responses);
     int count = 0, total = 0;
     for (var val in correct.values) {
       if (val == true) {
@@ -48,8 +52,8 @@ class _DragDropAudioScreenState extends State<DragDropAudioScreen> {
       }
       total++;
     }
-    progress.setPerformance("2", count, total);
-    DatabaseService().writeProgress(progress.getPerformance(), "2");
+    progress.setPerformance(widget.courseID,widget.lessonID,widget.type,count,total);
+    DatabaseService().writeProgress(progress.getPerformance(widget.courseID,widget.lessonID,widget.type),studentID,widget.courseID,widget.lessonID,widget.type);
   }
 
   @override
@@ -205,7 +209,24 @@ class _DragDropAudioScreenState extends State<DragDropAudioScreen> {
         padding: const EdgeInsets.all(5),
         onPressed: () {
           _updateProgress();
-          Navigator.pop(context);
+          showDialog(
+            context: context,
+            builder: (BuildContext context){
+              return AlertDialog(
+                title: Text("Quiz submitted!"),
+                content: Text("The Quiz is submitted successfully"),
+                actions: [
+                  FlatButton(child: Text("Stay"),onPressed: (){
+                    Navigator.pop(context);
+                  },),
+                  FlatButton(child: Text("Leave"),onPressed: (){
+                    Navigator.pop(context);
+                    Navigator.pop(context);
+                  },)
+                ],
+              );
+            }
+          );
           // Update progress and write to database
         },
       ),

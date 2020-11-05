@@ -1,6 +1,4 @@
 import 'package:flutter/cupertino.dart';
-import 'package:provider/provider.dart';
-
 
 class UserModel extends ChangeNotifier{
   String name;
@@ -17,6 +15,10 @@ class UserModel extends ChangeNotifier{
   UserModel({this.isFirstTime,this.currentPassword,this.screentime,this.name,this.roll,this.photoURL,this.courses_enrolled});
   factory UserModel.fromJSON(){
     return UserModel();
+  }
+
+  String getID(){
+    return this.roll;
   }
 
 

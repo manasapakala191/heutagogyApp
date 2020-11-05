@@ -6,7 +6,8 @@ import 'package:video_player/video_player.dart';
 
 class LessonViewer extends StatefulWidget {
   final Lesson lesson;
-  LessonViewer({this.lesson});
+  final String lessonID, courseID,type;
+  LessonViewer({this.lesson,this.lessonID,this.courseID,this.type});
   @override
   _LessonViewerState createState() => _LessonViewerState();
 }
@@ -50,7 +51,7 @@ class _LessonViewerState extends State<LessonViewer> {
     return Scaffold(
       appBar: AppBar(
         title: Text(lesson.subject),
-        backgroundColor: HexColor('#ed2a26'),
+        backgroundColor: Colors.white,
       ),
       body: SizedBox(
         height: MediaQuery.of(context).size.height,
