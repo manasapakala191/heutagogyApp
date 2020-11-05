@@ -6,14 +6,16 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:heutagogy/hex_color.dart';
 import 'package:heutagogy/models/test_type_models/drag_drop_test.dart';
 import 'package:heutagogy/models/test_type_models/option_class.dart';
+import 'package:heutagogy/models/userModel.dart';
 import 'package:provider/provider.dart';
 import 'package:heutagogy/services/database.dart';
 import 'package:heutagogy/models/studentProgress.dart';
 
 class DragDropImageScreen extends StatefulWidget {
   final DragDropImageTest dragDropImageTest;
+  final String courseID, lessonID, type;
 
-  DragDropImageScreen(this.dragDropImageTest, {Key key}) : super(key: key);
+  DragDropImageScreen(this.dragDropImageTest,this.type,this.courseID,this.lessonID, {Key key}) : super(key: key);
 
   @override
   _DragDropImageScreenState createState() => _DragDropImageScreenState(dragDropImageTest);
@@ -39,12 +41,16 @@ class _DragDropImageScreenState extends State<DragDropImageScreen> {
 
   void _updateProgress(){
     var progress = Provider.of<StudentProgress>(context,listen: false);
-    List<String> responses = [];
     // print(choices.values);
+    var user = Provider.of<UserModel>(context,listen: false);
+    String studentID = user.getID();
+    List<String> responses = [];
     for (var response in choices.values) {
         responses.add(response);
     }
-    progress.addResponses("1",responses);
+    print("Hoyyaa");
+    print(responses);
+    print("Whyyya");
     int count = 0, total = 0;
     for(var val in correct.values){
       if(val == true){
@@ -54,8 +60,9 @@ class _DragDropImageScreenState extends State<DragDropImageScreen> {
     }
     print(count);
     print(total);
-    progress.setPerformance("1",count,total);
-    DatabaseService().writeProgress(progress.getPerformance(),"1");
+    progress.setPerformance(widget.courseID,widget.lessonID,widget.type,count,total);
+    progress.addResponses(widget.courseID,widget.lessonID,widget.type,responses);
+    DatabaseService().writeProgress(progress.getPerformance(widget.courseID,widget.lessonID,widget.type),studentID,widget.courseID,widget.lessonID,widget.type);
   }
 
   @override
@@ -209,7 +216,24 @@ class _DragDropImageScreenState extends State<DragDropImageScreen> {
         padding: const EdgeInsets.all(5),
         onPressed: (){
           _updateProgress();
-          Navigator.pop(context);
+          showDialog(
+            context: context,
+            builder: (BuildContext context){
+              return AlertDialog(
+                title: Text("Quiz submitted!"),
+                content: Text("The Quiz is submitted successfully"),
+                actions: [
+                  FlatButton(child: Text("Stay"),onPressed: (){
+                    Navigator.pop(context);
+                  },),
+                  FlatButton(child: Text("Leave"),onPressed: (){
+                    Navigator.pop(context);
+                    Navigator.pop(context);
+                  },)
+                ],
+              );
+            }
+          );
           // Update progress and write to database
         },
       ),

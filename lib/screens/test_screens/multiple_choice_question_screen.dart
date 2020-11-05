@@ -4,13 +4,15 @@ import 'package:heutagogy/hex_color.dart';
 import 'package:heutagogy/models/studentProgress.dart';
 import 'package:heutagogy/models/test_type_models/option_class.dart';
 import 'package:heutagogy/models/test_type_models/question_class.dart';
+import 'package:heutagogy/models/userModel.dart';
 import 'package:heutagogy/services/database.dart';
 import 'package:provider/provider.dart';
 import 'package:heutagogy/models/time_object_model.dart';
 
 class MultipleChoiceQuestionScreen extends StatefulWidget {
   final singleCorrectTest;
-  MultipleChoiceQuestionScreen({this.singleCorrectTest});
+  final String courseID,lessonID,type;
+  MultipleChoiceQuestionScreen({this.singleCorrectTest,this.type,this.courseID,this.lessonID});
 
   @override
   _MultipleChoiceQuestionScreenState createState() =>
@@ -28,11 +30,13 @@ class _MultipleChoiceQuestionScreenState
   void _updateProgress() {
     var progress = Provider.of<StudentProgress>(context, listen: false);
     List<String> responses = List<String>();
+    var user = Provider.of<UserModel>(context,listen: false);
+    String studentID = user.getID();
     for (var _ in choices.values) {
       responses.add(_);
     }
     print(responses);
-    progress.addResponses("4", responses);
+    progress.addResponses(widget.courseID,widget.lessonID,widget.type,responses);
     int count = 0, total = 0;
     for (var _ in answers.values) {
       if (_) {
@@ -40,8 +44,8 @@ class _MultipleChoiceQuestionScreenState
       }
       total++;
     }
-    progress.setPerformance("4", count, total);
-    DatabaseService().writeProgress(progress.getPerformance(), "4");
+    progress.setPerformance(widget.courseID,widget.lessonID,widget.type,count,total);
+    DatabaseService().writeProgress(progress.getPerformance(widget.courseID,widget.lessonID,widget.type),studentID,widget.courseID,widget.lessonID,widget.type);
   }
 
   final TimeObject timeObject = TimeObject(
@@ -72,6 +76,7 @@ class _MultipleChoiceQuestionScreenState
     return Scaffold(
       appBar: AppBar(
         title: Text('${singleCorrectTest.subject}'),
+        backgroundColor: Colors.white,
       ),
       backgroundColor: HexColor('#f7f7f7'),
       body: SizedBox(
@@ -120,7 +125,24 @@ class _MultipleChoiceQuestionScreenState
                 child: RaisedButton(
                   onPressed: () {
                     _updateProgress();
+                    showDialog(
+            context: context,
+            builder: (BuildContext context){
+              return AlertDialog(
+                title: Text("Quiz submitted!"),
+                content: Text("The Quiz is submitted successfully"),
+                actions: [
+                  FlatButton(child: Text("Stay"),onPressed: (){
                     Navigator.pop(context);
+                  },),
+                  FlatButton(child: Text("Leave"),onPressed: (){
+                    Navigator.pop(context);
+                    Navigator.pop(context);
+                  },)
+                ],
+              );
+            }
+          );
                   },
                   elevation: 8,
                   child: Text("Submit"),

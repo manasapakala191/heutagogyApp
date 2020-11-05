@@ -55,40 +55,85 @@ class LessonScreen extends StatelessWidget {
 
   _returnSlideScreen(String type, var data) {
     print("type" + type);
+    var course_details = Map();
+    course_details['l0'] = {
+      "course_id": 'C3',
+      "lesson_id": 'L1',
+      "type": 'S2'
+    };
+    course_details['q0'] = {
+      "course_id": 'C3',
+      "lesson_id": 'L1',
+      "type": 'S1'
+    };
+    course_details['q5'] = {
+      "course_id": 'C3',
+      "lesson_id": 'L1',
+      "type": 'S4'
+    };
+    course_details['q3'] = {
+      "course_id": 'C3',
+      "lesson_id": 'L1',
+      "type": 'S3'
+    };
+    course_details['q1'] = {
+      "course_id": 'C1',
+      "lesson_id": 'C1L1',
+      "type": 'C1L1S3'
+    };
+    course_details['q2'] = {
+      "course_id": 'C1',
+      "lesson_id": 'C1L1',
+      "type": 'C1L1S2'
+    };
+    course_details['q4'] = {
+      "course_id": 'C1',
+      "lesson_id": 'C1L1',
+      "type": 'C1L1S1'
+    };
+    
     switch (type) {
       case 'l0':
         {
-          return LessonViewer(lesson: Lesson.fromJson(data));
+          //done
+          return LessonViewer(lesson: Lesson.fromJson(data),type: course_details[type]["type"], courseID: course_details[type]["course_id"],lessonID: course_details[type]["lesson_id"]);
         }
         break;
       case 'q0':
         {
-          return MatchText(matchPicWithText: MatchPicWithText.fromJSON(data));
+          //done
+          return MatchText(matchPicWithText: MatchPicWithText.fromJSON(data),type: course_details[type]["type"], courseID: course_details[type]["course_id"],lessonID: course_details[type]["lesson_id"]);
         }
         break;
       case 'q1':
         {
-          return MultipleChoiceImageQuestionScreen(imageQuestionTest: ImageQuestionTest.fromJson(data));
+          //done
+          return MultipleChoiceImageQuestionScreen(
+              imageQuestionTest: ImageQuestionTest.fromJson(data),type: course_details[type]["type"], courseID: course_details[type]["course_id"],lessonID: course_details[type]["lesson_id"]);
         }
         break;
       case 'q2':
         {
           return MultipleChoiceQuestionScreen(
-              singleCorrectTest: SingleCorrectTest.fromJson(data));
+              singleCorrectTest: SingleCorrectTest.fromJson(data),type: course_details[type]["type"], courseID: course_details[type]["course_id"],lessonID: course_details[type]["lesson_id"]);
         }
         break;
       case 'q3':
         {
-          return DragDropImageScreen(DragDropImageTest.fromJSON(data));
+          //done
+          return DragDropImageScreen(DragDropImageTest.fromJSON(data), course_details[type]["type"], course_details[type]["course_id"], course_details[type]["lesson_id"]);
         }
         break;
-      case 'q4':{
-          return DragDropAudioScreen(DragDropAudioTest.fromJSON(data));
-      }
-      break;
+      case 'q4':
+        {
+          //done
+          return DragDropAudioScreen(DragDropAudioTest.fromJSON(data), course_details[type]["type"], course_details[type]["course_id"], course_details[type]["lesson_id"]);
+        }
+        break;
       case 'q5':
         {
-          return MathMatchScreen(MathMatchTest.fromJSON(data));
+          //done
+          return MathMatchScreen(MathMatchTest.fromJSON(data), course_details[type]["type"], course_details[type]["course_id"], course_details[type]["lesson_id"]);
         }
         break;
       default:

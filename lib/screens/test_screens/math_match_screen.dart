@@ -3,14 +3,15 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:heutagogy/hex_color.dart';
 import 'package:heutagogy/models/test_type_models/math_match.dart';
+import 'package:heutagogy/models/userModel.dart';
 import 'package:provider/provider.dart';
 import 'package:heutagogy/services/database.dart';
 import 'package:heutagogy/models/studentProgress.dart';
 
 class MathMatchScreen extends StatefulWidget {
   final MathMatchTest data;
-
-  MathMatchScreen(this.data);
+  final String courseID,lessonID,type;
+  MathMatchScreen(this.data,this.type,this.courseID,this.lessonID);
 
   @override
   _MathMatchScreenState createState() => _MathMatchScreenState(data);
@@ -35,11 +36,13 @@ class _MathMatchScreenState extends State<MathMatchScreen> {
 
   void _updateProgress() {
     var progress = Provider.of<StudentProgress>(context, listen: false);
+    var user = Provider.of<UserModel>(context,listen: false);
+    String studentID = user.getID();
     List<String> responses = [];
     for (var response in choices.values) {
       responses.add(response);
     }
-    progress.addResponses("3", responses);
+    progress.addResponses(widget.courseID,widget.lessonID,widget.type,responses);
     int count = 0, total = 0;
     for (var val in data.values) {
       if (val == true) {
@@ -47,8 +50,8 @@ class _MathMatchScreenState extends State<MathMatchScreen> {
       }
       total++;
     }
-    progress.setPerformance("3", count, total);
-    DatabaseService().writeProgress(progress.getPerformance(), "3");
+    progress.setPerformance(widget.courseID,widget.lessonID,widget.type,count,total);
+    DatabaseService().writeProgress(progress.getPerformance(widget.courseID,widget.lessonID,widget.type),studentID,widget.courseID,widget.lessonID,widget.type);
   }
 
   @override
@@ -82,7 +85,24 @@ class _MathMatchScreenState extends State<MathMatchScreen> {
         padding: const EdgeInsets.all(5),
         onPressed: () {
           _updateProgress();
-          Navigator.pop(context);
+          showDialog(
+            context: context,
+            builder: (BuildContext context){
+              return AlertDialog(
+                title: Text("Quiz submitted!"),
+                content: Text("The Quiz is submitted successfully"),
+                actions: [
+                  FlatButton(child: Text("Stay"),onPressed: (){
+                    Navigator.pop(context);
+                  },),
+                  FlatButton(child: Text("Leave"),onPressed: (){
+                    Navigator.pop(context);
+                    Navigator.pop(context);
+                  },)
+                ],
+              );
+            }
+          );
           // Update progress and write to database
         },
       ),
@@ -117,7 +137,7 @@ class _MathMatchScreenState extends State<MathMatchScreen> {
       items.add(Draggable<String>(
           data: x.second,
           child: Container(
-            width: 135,
+            width: 115,
             height: 80,
             padding: EdgeInsets.all(10),
             margin: EdgeInsets.only(top: 10, left: 40),
@@ -137,7 +157,7 @@ class _MathMatchScreenState extends State<MathMatchScreen> {
           ),
           childWhenDragging: Material(
               child: Container(
-            width: 135,
+            width: 115,
             height: 80,
             padding: EdgeInsets.all(10),
             margin: EdgeInsets.only(top: 10, left: 40),
@@ -152,7 +172,7 @@ class _MathMatchScreenState extends State<MathMatchScreen> {
           feedback: Material(
               color: Colors.transparent,
               child: Container(
-                width: 135,
+                width: 115,
                 height: 80,
                 padding: EdgeInsets.all(10),
                 margin: EdgeInsets.only(top: 10, left: 40),
@@ -175,7 +195,7 @@ class _MathMatchScreenState extends State<MathMatchScreen> {
       if (data[x.second]) {
         items.add(
           Container(
-            width: 135,
+            width: 105,
             height: 80,
             padding: EdgeInsets.all(10),
             margin: EdgeInsets.only(top: 10, right: 40),
@@ -198,7 +218,7 @@ class _MathMatchScreenState extends State<MathMatchScreen> {
             builder:
                 (BuildContext context, List<String> incoming, List rejected) {
               return Container(
-                width: 135,
+                width: 105,
                 height: 80,
                 padding: EdgeInsets.all(10),
                 margin: EdgeInsets.only(top: 10, right: 40),

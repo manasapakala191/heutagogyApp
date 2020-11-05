@@ -1,10 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:heutagogy/screens/courses_screen.dart';
-import 'package:heutagogy/screens/login-resources/login.dart';
 import 'package:heutagogy/screens/misc-screens/buffer_screen.dart';
-import 'package:heutagogy/screens/misc-screens/profile.dart';
 import 'package:provider/provider.dart';
 import '../../models/userModel.dart';
 import '../../services/database.dart';
