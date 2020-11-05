@@ -2,27 +2,27 @@ import 'package:flutter/cupertino.dart';
 import 'package:heutagogy/models/time_object_model.dart';
 
 class StudentProgress extends ChangeNotifier {
-  // Map<String, dynamic> coursePercentage =
-  //     // dummy before integration
-  //     {
-  //   'C3': {
-  //     'L1': {
-  //       'S1': {'responses': {}, 'partsDone': 0, 'total': 4, 'percentage': 0.0},
-  //       'S2': {'responses': {}, 'partsDone': 0, 'total': 4, 'percentage': 0.0},
-  //       'S3': {'responses': {}, 'partsDone': 0, 'total': 4, 'percentage': 0.0},
-  //       'S4': {'responses': {}, 'partsDone': 0, 'total': 4, 'percentage': 0.0},
-  //     },
-  //   },
-  //   'C1': {
-  //     'C1L1': {
-  //       'C1L1S1': {'responses': {}, 'partsDone': 0, 'total': 4, 'percentage': 0.0},
-  //       'C1L1S2': {'responses': {}, 'partsDone': 0, 'total': 4, 'percentage': 0.0},
-  //       'C1L1S3': {'responses': {}, 'partsDone': 0, 'total': 4, 'percentage': 0.0},
-  //     }
-  //   }
-  // };
+  Map<String, dynamic> coursePercentage =
+      // dummy before integration
+      {
+    'C3': {
+      'L1': {
+        'S1': {'responses': {}, 'partsDone': 0, 'total': 4, 'percentage': 0.0},
+        'S2': {'responses': {}, 'partsDone': 0, 'total': 4, 'percentage': 0.0},
+        'S3': {'responses': {}, 'partsDone': 0, 'total': 4, 'percentage': 0.0},
+        'S4': {'responses': {}, 'partsDone': 0, 'total': 4, 'percentage': 0.0},
+      },
+    },
+    'C1': {
+      'C1L1': {
+        'C1L1S1': {'responses': {}, 'partsDone': 0, 'total': 4, 'percentage': 0.0},
+        'C1L1S2': {'responses': {}, 'partsDone': 0, 'total': 4, 'percentage': 0.0},
+        'C1L1S3': {'responses': {}, 'partsDone': 0, 'total': 4, 'percentage': 0.0},
+      }
+    }
+  };
 
-  Map<String, dynamic> coursePercentage = {};
+  // Map<String, dynamic> coursePercentage = {};
 
   List<TimeObject> get performanceTimes => [];
 
