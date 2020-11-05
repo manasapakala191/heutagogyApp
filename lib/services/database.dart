@@ -67,15 +67,49 @@ class DatabaseService {
     },SetOptions(merge: true));
   }
 
-  void writeProgress(Map<String, dynamic> data, String lessonID) async {
+  void writeProgress(Map<String,dynamic> data,String studentID,String courseID,String lessonID,String type) async {
     print(data);
-    DocumentReference progressReference =
-        db.doc("Schools/School 1/Students/Student 1/Progress/C1");
-    await progressReference
-        .set({lessonID: data[lessonID]}, SetOptions(merge: true)).then((_) {
-      print(data["C1"][lessonID]);
-      print("updated");
-    });
+    CollectionReference studentsCollection = schoolDoc.collection("Students");
+    DocumentReference studentReference = studentsCollection.doc(studentID);
+    await studentReference.collection("Progress")
+                          .doc(courseID)
+                          .collection("Lessons")
+                          .doc(lessonID)
+                          .collection("slides")
+                          .doc(type)
+                          .get().then((value){
+                            if(value.data()["percentage"]<data["percentage"]){
+                              writeProgressHelper(data,studentID,courseID,lessonID,type);
+                            }
+                          });
+  }
+
+  void writeProgressHelper(Map<String, dynamic> data, String studentID, String courseID, String lessonID, String type) async {
+    print(data);
+    CollectionReference studentsCollection = schoolDoc.collection("Students");
+    DocumentReference studentReference = studentsCollection.doc(studentID);
+    
+    // Check if Progress exists, if not create one
+    // Check if course doc with slides collection exists, if not create one
+    // Update that particular slide progress
+
+    await studentReference.collection("Progress")
+                          .doc(courseID)
+                          .collection("Lessons")
+                          .doc(lessonID)
+                          .collection("slides")
+                          .doc(type)
+                          .set(data,SetOptions(merge: true)).then((value){
+                            print(data);
+                            print("Updated");
+                          });
+    
+    
+    // await progressReference
+    //     .set({lessonID: data[lessonID]}, SetOptions(merge: true)).then((_) {
+    //   print(data["C1"][lessonID]);
+    //   print("updated");
+    // });
   }
 
   Future<bool> signInStudent(
@@ -110,6 +144,7 @@ class DatabaseService {
       );
       return true;
     } else {
+      print("Password is wrong");
       return false;
     }
   }

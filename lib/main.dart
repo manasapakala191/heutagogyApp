@@ -3,7 +3,6 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:heutagogy/hex_color.dart';
-import 'package:heutagogy/models/studentPerformance.dart';
 import 'package:heutagogy/models/studentProgress.dart';
 import 'package:heutagogy/models/userModel.dart';
 import 'package:heutagogy/screens/login-resources/login.dart';
@@ -17,7 +16,6 @@ void main() {
       ChangeNotifierProvider(create: (_) => UserModel()),
       // add after signup
       ChangeNotifierProvider(create: (_) => StudentProgress()),
-      ChangeNotifierProvider(create: (_) => StudentPerfomance()),
     ], child: MyApp()),
   );
 }

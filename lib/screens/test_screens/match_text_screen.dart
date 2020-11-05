@@ -5,13 +5,15 @@ import 'package:flutter/material.dart';
 import 'package:heutagogy/hex_color.dart';
 import 'package:heutagogy/models/studentProgress.dart';
 import 'package:heutagogy/models/test_type_models/match_text_test.dart';
+import 'package:heutagogy/models/userModel.dart';
 import 'package:heutagogy/services/database.dart';
 import 'package:provider/provider.dart';
 import 'package:heutagogy/models/time_object_model.dart';
 
 class MatchText extends StatefulWidget {
   final MatchPicWithText matchPicWithText;
-  MatchText({this.matchPicWithText});
+  final String type, courseID, lessonID;
+  MatchText({this.matchPicWithText,this.type,this.courseID, this.lessonID});
   @override
   _MatchTextState createState() => _MatchTextState();
 }
@@ -23,11 +25,16 @@ class _MatchTextState extends State<MatchText> {
 
   void _updateProgress(){
     var progress = Provider.of<StudentProgress>(context,listen: false);
+    var user = Provider.of<UserModel>(context,listen: false);
+    String studentID = user.getID();
     List<String> responses = [];
     for (var response in choices.values) {
         responses.add(response);
     }
-    progress.addResponses("0",responses);
+    print("Hoyaaa");
+    print(responses);
+    print("Whyyyaa");
+    // print(progress.getPerformance(widget.courseID, widget.lessonID));
     int count = 0, total = 0;
     for(var val in data.values){
       if(val == true){
@@ -35,8 +42,10 @@ class _MatchTextState extends State<MatchText> {
       }
       total++;
     }
-    progress.setPerformance("0",count,total);
-    DatabaseService().writeProgress(progress.getPerformance(),"0");
+
+    progress.setPerformance(widget.courseID,widget.lessonID,widget.type,count,total);
+    progress.addResponses(widget.courseID,widget.lessonID,widget.type,responses);
+    DatabaseService().writeProgress(progress.getPerformance(widget.courseID,widget.lessonID,widget.type),studentID,widget.courseID,widget.lessonID,widget.type);
   }
 
   final timeObject  = TimeObject(
@@ -50,23 +59,23 @@ class _MatchTextState extends State<MatchText> {
     _matchPicWithText = widget.matchPicWithText;
     // Uncomment the following to test this out
     timeObject.setStartTime(DateTime.now());
-    _matchPicWithText = new MatchPicWithText(
-      testName: "Lorem ipsum",
-      testDescription: "Type the name of the picture in the given box:",
-      subject: "Something",
-      choices: [
-        PictureData(
-          picture:
-              "http://may123.pythonanywhere.com/media/picture_text_input/baby.png",
-          correctText: "baby",
-        ),
-        PictureData(
-          picture:
-              "http://may123.pythonanywhere.com/media/picture_text_input/cat_XTqprK4.png",
-          correctText: "cat",
-        ),
-      ],
-    );
+    // _matchPicWithText = new MatchPicWithText(
+    //   testName: "Lorem ipsum",
+    //   testDescription: "Type the name of the picture in the given box:",
+    //   subject: "Something",
+    //   choices: [
+    //     PictureData(
+    //       picture:
+    //           "http://may123.pythonanywhere.com/media/picture_text_input/baby.png",
+    //       correctText: "baby",
+    //     ),
+    //     PictureData(
+    //       picture:
+    //           "http://may123.pythonanywhere.com/media/picture_text_input/cat_XTqprK4.png",
+    //       correctText: "cat",
+    //     ),
+    //   ],
+    // );
 
 
     data = Map<String, bool>();
@@ -185,7 +194,24 @@ class _MatchTextState extends State<MatchText> {
         padding: const EdgeInsets.all(5),
         onPressed: (){
           _updateProgress();
-          Navigator.pop(context);
+          showDialog(
+            context: context,
+            builder: (BuildContext context){
+              return AlertDialog(
+                title: Text("Quiz submitted!"),
+                content: Text("The Quiz is submitted successfully"),
+                actions: [
+                  FlatButton(child: Text("Stay"),onPressed: (){
+                    Navigator.pop(context);
+                  },),
+                  FlatButton(child: Text("Leave"),onPressed: (){
+                    Navigator.pop(context);
+                    Navigator.pop(context);
+                  },)
+                ],
+              );
+            }
+          );
         },
       ),
     );

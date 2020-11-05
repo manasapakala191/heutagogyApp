@@ -1,59 +1,33 @@
 import 'package:flutter/cupertino.dart';
+import 'package:heutagogy/models/time_object_model.dart';
 
-class StudentProgress extends ChangeNotifier{
-  Map<String, dynamic> coursePercentage=
-  // dummy before integration
-  {
+class StudentProgress extends ChangeNotifier {
+  Map<String, dynamic> coursePercentage =
+      // dummy before integration
+      {
+    'C3': {
+      'L1': {
+        'S1': {'responses': {}, 'partsDone': 0, 'total': 4, 'percentage': 0.0},
+        'S2': {'responses': {}, 'partsDone': 0, 'total': 4, 'percentage': 0.0},
+        'S3': {'responses': {}, 'partsDone': 0, 'total': 4, 'percentage': 0.0},
+        'S4': {'responses': {}, 'partsDone': 0, 'total': 4, 'percentage': 0.0},
+      },
+    },
     'C1': {
-      '0': {
-        'responses': {},
-        'partsDone': 0,
-        'total': 4,
-        'percentage': 0.0
-      },
-      '1': {
-        'responses': {},
-        'partsDone': 0,
-        'total': 4,
-        'percentage': 0.0
-      },
-      '2': {
-        'responses': {},
-        'partsDone': 0,
-        'total': 4,
-        'percentage': 0.0
-      },
-      '3': {
-        'responses': {},
-        'partsDone': 0,
-        'total': 4,
-        'percentage': 0.0
-      },
-      '4': {
-        'responses': {},
-        'partsDone': 0,
-        'total': 4,
-        'percentage': 0.0
-      },
-      '5': {
-        'responses': {},
-        'partsDone': 0,
-        'total': 4,
-        'percentage': 0.0
-      },
-      '6': {
-        'responses': {},
-        'partsDone': 0,
-        'total': 4,
-        'percentage': 0.0
+      'C1L1': {
+        'C1L1S1': {'responses': {}, 'partsDone': 0, 'total': 4, 'percentage': 0.0},
+        'C1L1S2': {'responses': {}, 'partsDone': 0, 'total': 4, 'percentage': 0.0},
+        'C1L1S3': {'responses': {}, 'partsDone': 0, 'total': 4, 'percentage': 0.0},
       }
     }
   };
-    
-    StudentProgress({this.coursePercentage});
 
+  // Map<String, dynamic> coursePercentage = {};
 
-  
+  List<TimeObject> get performanceTimes => [];
+
+  // StudentProgress({this.coursePercentage});
+
   // void addCourse(String courseID){
   //   // dummy add for now
   //   coursePercentage.addAll(
@@ -67,41 +41,46 @@ class StudentProgress extends ChangeNotifier{
   //   );
   // }
 
-  void populate(Map json){
-    coursePercentage=json;
+  void populate(Map json) {
+    coursePercentage = json;
     notifyListeners();
   }
-    void addResponses(String lessonID, List<String> responses){
-      int i=0;
-      for(var val in responses){
-        coursePercentage["C1"][lessonID]["responses"].addAll(
-          {
-            i.toString(): val,
-          }
-        );
-        i++;
-      }
-      print(coursePercentage);
+
+  void addResponses(String courseID, String lessonID, String type, List<String> responses) {
+    int i = 0;
+    for(var response in responses){
+      coursePercentage[courseID][lessonID][type]["responses"].addAll({
+        i.toString(): response,
+      });
+      i++;
     }
+    print(coursePercentage);
+    notifyListeners();
+  }
 
-    void setPerformance(String lessonID,int parts,int total){
-      coursePercentage["C1"][lessonID]["partsDone"] = parts;
-      coursePercentage["C1"][lessonID]["total"] = total;
-      coursePercentage["C1"][lessonID]["percentage"] = ((parts/total).toDouble())*100;
-      notifyListeners();
-    }
+  void setPerformance(String courseID, String lessonID, String type, int parts, int total) {
+    print("setting");
+    print(courseID+" "+lessonID+" "+type);
+    print(coursePercentage);
+    coursePercentage[courseID][lessonID][type]["partsDone"] = parts;
+    print("partsdoone");
+    coursePercentage[courseID][lessonID][type]["total"] = total;
+    print("toootal");
+    coursePercentage[courseID][lessonID][type]["percentage"] =
+        ((parts / total).toDouble()) * 100;
+        print("finall");
+    notifyListeners();
+  }
 
-    Map<String, dynamic> getPerformance(){
-      return coursePercentage["C1"];
-    }
+  Map<String, dynamic> getPerformance(String courseID, String lessonID, String type) {
+    return coursePercentage[courseID][lessonID][type];
+  }
 
-
-
-    // void finishSlide(String lessonID){
-    //   coursePercentage["C1"][lessonID]['partsDone']++;
-    //   // coursePercentage["0"][lessonID]['percentage']=((coursePercentage["0"][lessonID]['partsDone']/coursePercentage["0"][lessonID]['total'])*100).toDouble();
-    //   print("The percentage is ${coursePercentage["0"][lessonID]["percentage"]}");
-    //   notifyListeners();
-    // }
+  // void finishSlide(String lessonID){
+  //   coursePercentage["C1"][lessonID]['partsDone']++;
+  //   // coursePercentage["0"][lessonID]['percentage']=((coursePercentage["0"][lessonID]['partsDone']/coursePercentage["0"][lessonID]['total'])*100).toDouble();
+  //   print("The percentage is ${coursePercentage["0"][lessonID]["percentage"]}");
+  //   notifyListeners();
+  // }
 
 }

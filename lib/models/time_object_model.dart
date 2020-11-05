@@ -1,6 +1,5 @@
-
 import 'package:flutter/cupertino.dart';
-import 'package:heutagogy/models/studentPerformance.dart';
+import 'package:heutagogy/models/studentProgress.dart';
 import 'package:provider/provider.dart';
 
 class TimeObject{
@@ -11,7 +10,7 @@ class TimeObject{
   final String courseId;
   final String testId;
 
-  StudentPerfomance studentPerfomance;
+  StudentProgress studentPerfomance;
   
   TimeObject({
     this.screen,
@@ -43,7 +42,7 @@ class TimeObject{
   }
 
   void getStudent(BuildContext context){
-    this.studentPerfomance = Provider.of<StudentPerfomance>(context, listen: false);
+    this.studentPerfomance = Provider.of<StudentProgress>(context, listen: false);
   }
 
   void addTimeObjectToStudentPerformance(){
