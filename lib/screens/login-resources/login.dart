@@ -45,6 +45,8 @@ class _LoginPageState extends State<LoginPage>
     });
   }
 
+  var loading;
+
   @override
   Widget build(BuildContext context) {
     UserModel userModel = Provider.of<UserModel>(context);
@@ -111,7 +113,8 @@ class _LoginPageState extends State<LoginPage>
                                 ),
                               ),
                               Container(
-                                margin: EdgeInsets.fromLTRB(0.0, 10.0, 0.0, 10.0),
+                                margin:
+                                    EdgeInsets.fromLTRB(0.0, 10.0, 0.0, 10.0),
                                 decoration: BoxDecoration(
                                   color: Colors.grey[200],
                                   borderRadius: BorderRadius.circular(10.0),
@@ -134,12 +137,14 @@ class _LoginPageState extends State<LoginPage>
                                 ),
                               ),
                               Container(
-                                margin: EdgeInsets.fromLTRB(0.0, 10.0, 0.0, 10.0),
+                                margin:
+                                    EdgeInsets.fromLTRB(0.0, 10.0, 0.0, 10.0),
                                 decoration: BoxDecoration(
                                   color: Colors.grey[200],
                                   borderRadius: BorderRadius.circular(10.0),
                                 ),
-                                padding: EdgeInsets.fromLTRB(5.0, 0.0, 5.0, 0.0),
+                                padding:
+                                    EdgeInsets.fromLTRB(5.0, 0.0, 5.0, 0.0),
                                 child: TextFormField(
                                   controller: _passwordController,
                                   obscureText: _obscure,
@@ -189,10 +194,21 @@ class _LoginPageState extends State<LoginPage>
                                   color: Colors.red,
                                   onPressed: () async {
                                     if (_formKey.currentState.validate()) {
-                                      var result = await DatabaseService().signInStudent(userModel, _rollNumberController.text, _passwordController.text);
-                                      if(result == true){
-                                        Navigator.of(context).push(MaterialPageRoute(builder: (context)=> CoursesHomeScreen()));
-                                      }else{
+                                      loading = CircularProgressIndicator();
+                                      var result = await DatabaseService()
+                                          .signInStudent(
+                                              userModel,
+                                              _rollNumberController.text,
+                                              _passwordController.text);
+                                      if (result == true) {
+                                        Navigator.of(context).push(
+                                            MaterialPageRoute(
+                                                builder: (context) =>
+                                                    CoursesHomeScreen()));
+                                      } else {
+                                        setState(() {
+                                          loading = Container(child :Text("Somthing went wrong"),);
+                                        });
                                         print("Somthing went wrong");
                                       }
                                     }
@@ -216,11 +232,16 @@ class _LoginPageState extends State<LoginPage>
                                   color: Colors.white,
                                   onPressed: () {
                                     Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                            builder: (context) => RegisterPage()));
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) => RegisterPage(),
+                                      ),
+                                    );
                                   },
                                 ),
+                              ),
+                              Container(
+                                child: loading,
                               ),
                             ],
                           ),
