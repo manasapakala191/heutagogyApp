@@ -17,12 +17,10 @@ class CoursesHomeScreen extends StatefulWidget {
 
 class _CoursesHomeScreenState extends State<CoursesHomeScreen> {
   GlobalKey<RefreshIndicatorState> _refreshKey=GlobalKey<RefreshIndicatorState>();
-  @override
-  void initState() {
-    // TODO: implement initState
-    super.initState();
-  }
+  final _formCourseKey = GlobalKey<FormState>();
+  String courseCode;
 
+  final TextEditingController _courseCodeT = TextEditingController();
   @override
   Widget build(BuildContext context) {
     final userModel = Provider.of<UserModel>(context);
@@ -83,16 +81,15 @@ class _CoursesHomeScreenState extends State<CoursesHomeScreen> {
         ),
         backgroundColor: HexColor("#ed2a26"),
         onPressed: () {
-          String courseCode;
           showDialog(
               context: context,
               builder: (_) => AlertDialog(
                     actions: [
                       FlatButton(onPressed: () {
                         print(courseCode);
-                        DatabaseService.addNewCourse(courseCode, userModel.roll);
-                        userModel.addCourse(courseCode);
-                        Navigator.pop(context);
+                        if(_formCourseKey.currentState.validate()){
+                          _formCourseKey.currentState.save();
+                        }
                       }, child: Text("Add")),
                       FlatButton(
                           onPressed: () {
@@ -103,10 +100,46 @@ class _CoursesHomeScreenState extends State<CoursesHomeScreen> {
                     title: Text('Add New Course'),
                     content: Container(
                       width: _screenSize.width * 0.7,
-                      child: TextField(
-                        onChanged: (val) {
-                          courseCode=val;
-                        },
+                      child: Column(
+                        children: [
+                          Form(
+                            key: _formCourseKey,
+                            child: TextFormField(
+                              onSaved: (val) {
+                                setState(() {
+                                  courseCode=val;
+                                });
+                              },
+                              validator: (val) {
+                                print(val);
+                                if(val.isEmpty) {
+                                  print("empty");
+                                  return "Type a course code.";
+                                }
+                                return null;
+                              },
+                            ),
+                          ),
+                          courseCode!=null ? FutureBuilder(
+                            future: DatabaseService.courseFilter(courseCode),
+                              builder: (context,snapshot){
+                              if(snapshot.connectionState==ConnectionState.done){
+                                if(snapshot.hasData){
+                                  if(snapshot.data==true){
+                                    DatabaseService.addNewCourse(courseCode, userModel.roll);
+                                    userModel.addCourse(courseCode);
+                                    return Icon(Icons.check_circle);
+                                  }
+                                  else
+                                    return Text("No such course code");
+                                }
+                              }
+                              else if(snapshot.connectionState==ConnectionState.waiting){
+                                return CircularProgressIndicator();
+                              }
+                              return Container();
+                              }): Container()
+                        ],
                       ),
                     ),
                   ));

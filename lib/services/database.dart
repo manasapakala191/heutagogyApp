@@ -14,8 +14,48 @@ class DatabaseService {
     //TODO: Get user data, then populate user model and student performance model
   }
 
-//     TODO: in register/login get courses, lesson ID, slide ID: and populate student performance model
+  static updateProfileName(String name,UserModel userModel) async {
+    final result=await schoolDoc.collection("Students").doc(userModel.roll).update({
+      "Name": name,
+    });
+    userModel.updateName(name);
+  }
 
+  static updatePassword(String password,UserModel userModel) async {
+    final result=await schoolDoc.collection("Students").doc(userModel.roll).update({
+      "Password": password,
+    });
+    userModel.updatePassword(password);
+  }
+
+  static resetPassword(String oldPassword, String newPassword, String roll) async {
+    final result=await await schoolDoc.collection("Students").doc(roll).update({
+      "Password": newPassword,
+    });
+    return result;
+  }
+
+  static checkPassword(String password, String roll) async {
+    final result=await schoolDoc.collection("Students").doc(roll).get();
+    Map data = result.data();
+    if(data["Password"]==password){
+      return true;
+    }
+    else{
+      return false;
+    }
+  }
+
+  static Future<bool> courseFilter(String cid) async {
+    schoolDoc.collection('Courses').doc(cid).get().then((courseDocSnap){
+      if(courseDocSnap.exists){
+        return true;
+      }
+      else {
+        return false;
+      }
+    });
+  }
   static Stream<List<CourseData>> populateCourse(Map progressJSON) async* {
    List<CourseData> courses=[];
    for(String cid in progressJSON.keys){
@@ -59,7 +99,7 @@ class DatabaseService {
   }
 
   static addNewCourse(String cid, String roll) async {
-    // update that students courseID array
+    // update that student's courseID array
     return await schoolDoc.collection('Students/').doc(roll).set({
       'Courses': {
         cid: {},
@@ -140,6 +180,7 @@ class DatabaseService {
           doc_required["Name"],
           doc_required["Password"],
           doc_required["Roll_No"],
+          doc_required["Photo_URL"],
           doc_required["Courses"],
       );
       return true;
@@ -181,12 +222,13 @@ class DatabaseService {
           "First_time": false,
           "Password": newPassword,
           "Courses": [],
+          "PhotoURL":"",
         },
       );
 
       //print(doc_required["First_time"]);
       userModel.fillDataWhileSigningUp(
-          rNo, newPassword, !doc_required["First_time"], doc_required["Name"],doc_required["Courses"]);
+          rNo, newPassword, !doc_required["First_time"], doc_required["Name"],"",doc_required["Courses"]);
       return true;
     } else {
       return false;
