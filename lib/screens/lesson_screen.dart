@@ -53,87 +53,50 @@ class LessonScreen extends StatelessWidget {
         ));
   }
 
-  _returnSlideScreen(String type, var data) {
+  _returnSlideScreen(String type, var data, String sid, String cid, String lid) {
     print("type" + type);
-    var course_details = Map();
-    course_details['l0'] = {
-      "course_id": 'C3',
-      "lesson_id": 'L1',
-      "type": 'S2'
-    };
-    course_details['q0'] = {
-      "course_id": 'C3',
-      "lesson_id": 'L1',
-      "type": 'S1'
-    };
-    course_details['q5'] = {
-      "course_id": 'C3',
-      "lesson_id": 'L1',
-      "type": 'S4'
-    };
-    course_details['q3'] = {
-      "course_id": 'C3',
-      "lesson_id": 'L1',
-      "type": 'S3'
-    };
-    course_details['q1'] = {
-      "course_id": 'C1',
-      "lesson_id": 'C1L1',
-      "type": 'C1L1S3'
-    };
-    course_details['q2'] = {
-      "course_id": 'C1',
-      "lesson_id": 'C1L1',
-      "type": 'C1L1S2'
-    };
-    course_details['q4'] = {
-      "course_id": 'C1',
-      "lesson_id": 'C1L1',
-      "type": 'C1L1S1'
-    };
-    
     switch (type) {
       case 'l0':
         {
           //done
-          return LessonViewer(lesson: Lesson.fromJson(data),type: course_details[type]["type"], courseID: course_details[type]["course_id"],lessonID: course_details[type]["lesson_id"]);
+          return LessonViewer(lesson: Lesson.fromJson(data),type: sid, courseID: cid,lessonID: lid);
         }
         break;
       case 'q0':
         {
           //done
-          return MatchText(matchPicWithText: MatchPicWithText.fromJSON(data),type: course_details[type]["type"], courseID: course_details[type]["course_id"],lessonID: course_details[type]["lesson_id"]);
+          return MatchText(matchPicWithText: MatchPicWithText.fromJSON(data),type: sid, courseID: cid,lessonID: lid);
         }
         break;
       case 'q1':
         {
           //done
           return MultipleChoiceImageQuestionScreen(
-              imageQuestionTest: ImageQuestionTest.fromJson(data),type: course_details[type]["type"], courseID: course_details[type]["course_id"],lessonID: course_details[type]["lesson_id"]);
+              imageQuestionTest: ImageQuestionTest.fromJson(data),type: sid, courseID: cid,lessonID: lid);
         }
         break;
       case 'q2':
         {
           return MultipleChoiceQuestionScreen(
-              singleCorrectTest: SingleCorrectTest.fromJson(data),type: course_details[type]["type"], courseID: course_details[type]["course_id"],lessonID: course_details[type]["lesson_id"]);
+              singleCorrectTest: SingleCorrectTest.fromJson(data),type: sid, courseID: cid,lessonID: lid);
         }
         break;
       case 'q3':
         {
           //done
-          return DragDropImageScreen(DragDropImageTest.fromJSON(data), course_details[type]["type"], course_details[type]["course_id"], course_details[type]["lesson_id"]);
+          return DragDropImageScreen(DragDropImageTest.fromJSON(data),sid,cid,lid);
         }
         break;
       case 'q4':
         {
           //done
-          return DragDropAudioScreen(DragDropAudioTest.fromJSON(data), course_details[type]["type"], course_details[type]["course_id"], course_details[type]["lesson_id"]);
+          return DragDropAudioScreen(DragDropAudioTest.fromJSON(data),sid,cid,lid);
         }
         break;
       case 'q5':
         {
           //done
-          return MathMatchScreen(MathMatchTest.fromJSON(data), course_details[type]["type"], course_details[type]["course_id"], course_details[type]["lesson_id"]);
+          return MathMatchScreen(MathMatchTest.fromJSON(data),sid,cid,lid);
         }
         break;
       default:
@@ -175,11 +138,15 @@ class LessonScreen extends StatelessWidget {
                           onTap: () {
                             print(userModel.courses_enrolled[cid]["slide"]);
                             userModel.updateSlide(cid, slideData["sid"]);
+                            String sid = userModel.courses_enrolled[cid]["slide"];
+                            String lid = userModel.courses_enrolled[cid]["lesson"];
+                            print(":)   -----");
+                            print(sid);
                             Navigator.push(
                                 context,
                                 MaterialPageRoute(
                                     builder: (context) =>
-                                        _returnSlideScreen(slideData["type"], slideData)));
+                                        _returnSlideScreen(slideData["type"], slideData,sid,cid,lid)));
                           },
                           child: Column(
                               mainAxisSize: MainAxisSize.max,

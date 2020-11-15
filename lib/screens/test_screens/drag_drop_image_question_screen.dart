@@ -4,6 +4,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/rendering.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:heutagogy/hex_color.dart';
+import 'package:heutagogy/models/progress.dart';
 import 'package:heutagogy/models/test_type_models/drag_drop_test.dart';
 import 'package:heutagogy/models/test_type_models/option_class.dart';
 import 'package:heutagogy/models/userModel.dart';
@@ -24,33 +25,31 @@ class DragDropImageScreen extends StatefulWidget {
 class _DragDropImageScreenState extends State<DragDropImageScreen> {
   DragDropImageTest dragDropImageTest;
   Map<String, bool> correct;
-  Map<String, bool> correct2;
+  Map<String, bool> leftMarked;
+  Map<String,bool> rightMarked;
   var choices;
 
   _DragDropImageScreenState(DragDropImageTest dragDropImageTest) {
     this.dragDropImageTest = dragDropImageTest;
     this.correct = Map();
-    this.correct2 = Map();
+    this.leftMarked = Map();
     this.choices = Map();
+    this.rightMarked = Map();
     for (var image in this.dragDropImageTest.pictures) {
       correct[image.description] = false;
-      correct2[image.description] = false;
+      leftMarked[image.description] = false;
+      rightMarked[image.description] = false;
       choices[image.description] = null;
     }
   }
 
   void _updateProgress(){
-    var progress = Provider.of<StudentProgress>(context,listen: false);
-    // print(choices.values);
     var user = Provider.of<UserModel>(context,listen: false);
     String studentID = user.getID();
     List<String> responses = [];
     for (var response in choices.values) {
         responses.add(response);
     }
-    print("Hoyyaa");
-    print(responses);
-    print("Whyyya");
     int count = 0, total = 0;
     for(var val in correct.values){
       if(val == true){
@@ -58,11 +57,9 @@ class _DragDropImageScreenState extends State<DragDropImageScreen> {
       }
       total++;
     }
-    print(count);
-    print(total);
-    progress.setPerformance(widget.courseID,widget.lessonID,widget.type,count,total);
-    progress.addResponses(widget.courseID,widget.lessonID,widget.type,responses);
-    DatabaseService().writeProgress(progress.getPerformance(widget.courseID,widget.lessonID,widget.type),studentID,widget.courseID,widget.lessonID,widget.type);
+    var progress = Progress(count,total,responses);
+    Map<String,dynamic> json = progress.toMap();
+    DatabaseService().writeProgress(json,studentID,widget.courseID,widget.lessonID,widget.type);
   }
 
   @override
@@ -109,7 +106,7 @@ class _DragDropImageScreenState extends State<DragDropImageScreen> {
     List<Widget> targets = [];
 
     for (var image in dragDropImageTest.pictures) {
-      if (correct[image.description]) {
+      if (leftMarked[image.description]) {
         drops.add(Container(
             width: 64,
             height: 64,
@@ -128,7 +125,7 @@ class _DragDropImageScreenState extends State<DragDropImageScreen> {
       targets.add(
         DragTarget(
           builder: (BuildContext context, List<String> incoming, List rejected) {
-            if (!correct2[image.description]) {
+            if (!rightMarked[image.description]) {
               return Container(
                 padding: EdgeInsets.only(bottom: 4),
                 width: 140,
@@ -177,18 +174,25 @@ class _DragDropImageScreenState extends State<DragDropImageScreen> {
             }
           },
           onAccept: (data) {
+            print("This is correct :)");
             setState(() {
               correct[data] = true;
-              correct2[image.description] = true;
+              leftMarked[image.description] = true;
+              rightMarked[image.description] = true;
               print(data);
               print(image.description);
               choices[image.description] = image.description;
             });
           },
           onLeave: (data) {
+            print("This is wrong :(");
             print(data);
             print(image.description);
-            choices[data] = image.description;
+            setState(() {
+                leftMarked[data] = true;
+                rightMarked[image.description] = true;
+                choices[data] = image.description;
+            });
           },
           onWillAccept: (data) => data == image.description,
         ),
