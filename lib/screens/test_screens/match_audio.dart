@@ -2,6 +2,7 @@ import 'dart:math';
 import 'package:audioplayers/audio_cache.dart';
 import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
+import 'package:heutagogy/models/progress.dart';
 import 'package:heutagogy/models/studentProgress.dart';
 import 'package:heutagogy/models/test_type_models/match_audio.dart';
 import 'package:heutagogy/models/userModel.dart';
@@ -22,6 +23,8 @@ class _DragDropAudioScreenState extends State<DragDropAudioScreen> {
   var correct;
   var seed;
   var choices;
+  var leftMarked;
+  var rightMarked;
   StudentProgress progress;
 
   _DragDropAudioScreenState(DragDropAudioTest data) {
@@ -29,22 +32,23 @@ class _DragDropAudioScreenState extends State<DragDropAudioScreen> {
     this.audiodata = data;
     this.correct = Map();
     this.choices = Map();
+    this.leftMarked = Map();
+    this.rightMarked = Map();
     for (var audio in this.audiodata.audios) {
       correct[audio.description] = false;
       choices[audio.description] = null;
+      leftMarked[audio.description] = false;
+      rightMarked[audio.description] = false;
     }
   }
 
   void _updateProgress() {
-    var progress = Provider.of<StudentProgress>(context, listen: false);
     List<String> responses = [];
-    // print(choices.values);
     var user = Provider.of<UserModel>(context,listen: false);
     String studentID = user.getID();
     for (var response in choices.values) {
       responses.add(response);
     }
-    progress.addResponses(widget.courseID,widget.lessonID,widget.type,responses);
     int count = 0, total = 0;
     for (var val in correct.values) {
       if (val == true) {
@@ -52,8 +56,9 @@ class _DragDropAudioScreenState extends State<DragDropAudioScreen> {
       }
       total++;
     }
-    progress.setPerformance(widget.courseID,widget.lessonID,widget.type,count,total);
-    DatabaseService().writeProgress(progress.getPerformance(widget.courseID,widget.lessonID,widget.type),studentID,widget.courseID,widget.lessonID,widget.type);
+    var progress = Progress(count,total,responses);
+    Map<String,dynamic> json = progress.toMap();
+    DatabaseService().writeProgress(json,studentID,widget.courseID,widget.lessonID,widget.type);
   }
 
   @override
@@ -106,7 +111,7 @@ class _DragDropAudioScreenState extends State<DragDropAudioScreen> {
     List<Widget> drops = [];
     List<Widget> targets = [];
     for (var sound in audiodata.audios) {
-      if (correct[sound.description]) {
+      if (leftMarked[sound.description]) {
         drops.add(Container(
             width: 64,
             height: 64,
@@ -127,7 +132,7 @@ class _DragDropAudioScreenState extends State<DragDropAudioScreen> {
         DragTarget(
           builder:
               (BuildContext context, List<String> incoming, List rejected) {
-            if (!correct[sound.description]) {
+            if (!rightMarked[sound.description]) {
               return Container(
                 padding: EdgeInsets.only(bottom: 4),
                 width: 140,
@@ -175,15 +180,23 @@ class _DragDropAudioScreenState extends State<DragDropAudioScreen> {
             }
           },
           onAccept: (data) {
+            print("This is correct :)");
             setState(() {
               correct[sound.description] = true;
+              leftMarked[sound.description] = true;
+              rightMarked[sound.description] = true;
               choices[sound.description] = sound.description;
             });
           },
           onLeave: (data) {
+            print("This is wrong :(");
             print(sound.description);
             print(data);
-            choices[data] = sound.description;
+            setState(() {
+              choices[data] = sound.description;
+              leftMarked[data] = true;
+              rightMarked[sound.description] = true;
+            });
           },
           onWillAccept: (data) => data == sound.description,
         ),
