@@ -1,6 +1,6 @@
 import 'package:flutter/cupertino.dart';
 
-class UserModel extends ChangeNotifier{
+class UserModel extends ChangeNotifier {
   String name;
   String roll;
   String photoURL;
@@ -38,6 +38,11 @@ class UserModel extends ChangeNotifier{
     this.name = name;
     this.courses_enrolled=courses_enrolled;
     this.photoURL=photoURL;
+    notifyListeners();
+  }
+
+  updateImage(String imageURL){
+    this.photoURL=imageURL;
     notifyListeners();
   }
 

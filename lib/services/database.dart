@@ -14,6 +14,13 @@ class DatabaseService {
     //TODO: Get user data, then populate user model and student performance model
   }
 
+  static updateImage(UserModel userModel, String imageURL) async {
+    final result=await schoolDoc.collection("Students").doc(userModel.roll).update({
+      "PhotoURL": imageURL,
+    });
+    userModel.updateImage(imageURL);
+  }
+
   static updateProfileName(String name,UserModel userModel) async {
     final result=await schoolDoc.collection("Students").doc(userModel.roll).update({
       "Name": name,
@@ -47,14 +54,14 @@ class DatabaseService {
   }
 
   static Future<bool> courseFilter(String cid) async {
-    schoolDoc.collection('Courses').doc(cid).get().then((courseDocSnap){
-      if(courseDocSnap.exists){
-        return true;
-      }
-      else {
-        return false;
-      }
-    });
+    print("courseFilter");
+    var courseRef=schoolDoc.collection('Courses').doc(cid);
+    DocumentSnapshot courseDoc = await courseRef.get();
+    if(courseDoc.exists){
+      return true;
+    } else {
+      return false;
+    }
   }
   static Stream<List<CourseData>> populateCourse(Map progressJSON) async* {
    List<CourseData> courses=[];
@@ -180,7 +187,7 @@ class DatabaseService {
           doc_required["Name"],
           doc_required["Password"],
           doc_required["Roll_No"],
-          doc_required["Photo_URL"],
+          doc_required["PhotoURL"],
           doc_required["Courses"],
       );
       return true;
@@ -228,7 +235,7 @@ class DatabaseService {
 
       //print(doc_required["First_time"]);
       userModel.fillDataWhileSigningUp(
-          rNo, newPassword, !doc_required["First_time"], doc_required["Name"],"",doc_required["Courses"]);
+          rNo, newPassword, !doc_required["First_time"], doc_required["Name"],doc_required["PhotoURL"],doc_required["Courses"]);
       return true;
     } else {
       return false;

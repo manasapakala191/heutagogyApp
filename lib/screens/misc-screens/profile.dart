@@ -35,16 +35,17 @@ class _ProfilePageState extends State<ProfilePage> {
   bool _obscure1 = true;
   bool _obscure2 = true;
 
-  Future pickImage() async {
-    final pickedFile = await imagePicker.getImage(source: ImageSource.gallery);
+  pickImage() async {
+    final PickedFile pickedFile = await imagePicker.getImage(source: ImageSource.gallery);
 
     setState(() {
       _image = File(pickedFile.path);
     });
+    print(_image.path);
   }
 
-  Future uploadImageToFirebase() async {
-    String fileName = basename(_image.path);
+  Future uploadImageToFirebase(UserModel userModel) async {
+    String fileName = basename(userModel.roll);
     Reference firebaseStorageRef =
         FirebaseStorage.instance.ref().child('studentProfileImages/$fileName');
     UploadTask uploadTask = firebaseStorageRef.putFile(_image);
@@ -55,6 +56,7 @@ class _ProfilePageState extends State<ProfilePage> {
       setState(() {
         _imageURL = value;
       });
+      DatabaseService.updateImage(userModel, _imageURL);
     });
   }
 
@@ -75,16 +77,18 @@ class _ProfilePageState extends State<ProfilePage> {
           children: [
             Container(
               child: InkWell(
-                onTap: (){
-                  pickImage();
+                onTap: () async {
+                  print(userModel.photoURL);
+                  await pickImage();
                   if(_image!=null){
-                    uploadImageToFirebase();
+                    print("uploading");
+                    uploadImageToFirebase(userModel);
                   }
                 },
                   child: userModel.photoURL!=null && userModel.photoURL.isNotEmpty
                       ? FadeInImage.assetNetwork(
-                          placeholder: "assets/images/empty_account_circle.png",
-                          image: _imageURL != null ? _imageURL : "No image")
+                          placeholder: "assets/images/loading.gif",
+                          image: userModel.photoURL != null ? userModel.photoURL : "No image")
                       : Image.asset(
                           "assets/images/empty_account_circle.png",
                         )),
@@ -185,7 +189,7 @@ class _ProfilePageState extends State<ProfilePage> {
                           ),
                           padding: EdgeInsets.fromLTRB(10.0, 0.0, 10.0, 0.0),
                           child: TextFormField(
-                            obscureText: _obscure1,
+                            obscureText: _obscure0,
                             controller: _pass,
                             decoration: InputDecoration(
                               border: InputBorder.none,
