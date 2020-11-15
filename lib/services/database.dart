@@ -103,13 +103,6 @@ class DatabaseService {
                             print(data);
                             print("Updated");
                           });
-    
-    
-    // await progressReference
-    //     .set({lessonID: data[lessonID]}, SetOptions(merge: true)).then((_) {
-    //   print(data["C1"][lessonID]);
-    //   print("updated");
-    // });
   }
 
   Future<bool> signInStudent(
