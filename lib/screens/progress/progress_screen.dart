@@ -1,136 +1,28 @@
 import 'package:flutter/material.dart';
 import 'package:heutagogy/hex_color.dart';
 import 'package:heutagogy/models/course_model.dart';
+import 'package:heutagogy/models/lessonModel.dart';
 import 'package:heutagogy/models/userModel.dart';
 import 'package:heutagogy/screens/course_screen.dart';
-import 'package:heutagogy/screens/login-resources/login.dart';
-import 'package:heutagogy/screens/misc-screens/profile.dart';
-import 'package:heutagogy/screens/progress/progress_screen.dart';
+import 'package:heutagogy/screens/lesson_screen.dart';
+import 'package:heutagogy/screens/progress/progress_sub_screen.dart';
 import 'package:heutagogy/services/database.dart';
 import 'package:provider/provider.dart';
 
-// courses with (+) for adding a new course
-
-class CoursesHomeScreen extends StatefulWidget {
-  @override
-  _CoursesHomeScreenState createState() => _CoursesHomeScreenState();
-}
-
-class _CoursesHomeScreenState extends State<CoursesHomeScreen> {
-  GlobalKey<RefreshIndicatorState> _refreshKey =
-      GlobalKey<RefreshIndicatorState>();
-  @override
-  void initState() {
-    // TODO: implement initState
-    super.initState();
-  }
+class ProgressScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final userModel = Provider.of<UserModel>(context);
-    final _screenSize = MediaQuery.of(context).size;
-    return Scaffold(
-      appBar: AppBar(
-        centerTitle: true,
-        title: Text(
-          'Heutagogy',
-          style: TextStyle(color: HexColor("#ed2a26")),
-        ),
-      ),
-      drawer: Drawer(
-        child: ListView(
-          children: [
-            DrawerHeader(
-              child: Center(child: Text("Hi")),
-              decoration: BoxDecoration(
-                color: HexColor("#ed2a26"),
-              ),
+    return Consumer<UserModel>(
+      builder: (context, userModel, child) {
+        return Scaffold(
+          appBar: AppBar(
+            title: Text("My Progress",
+              style: TextStyle(color: HexColor("#ed2a26")),
             ),
-            ListTile(
-              title: Text("My Profile"),
-              trailing: Icon(Icons.account_circle),
-              onTap: () {
-                Navigator.of(context).push(
-                  MaterialPageRoute(
-                    builder: (context) {
-                      return ProfilePage();
-                    },
-                  ),
-                );
-              },
-            ),
-            ListTile(
-              title: Text("My Progress"),
-              trailing: Icon(Icons.assignment_turned_in),
-              onTap: () {
-                Navigator.of(context).push(
-                  MaterialPageRoute(
-                    builder: (context) {
-                      return ProgressScreen();
-                    },
-                  ),
-                );
-              },
-            ),
-            ListTile(
-              title: Text("Settings"),
-              trailing: Icon(Icons.settings),
-            ),
-            ListTile(
-              title: Text("Logout"),
-              trailing: Icon(Icons.logout),
-              onTap: () {
-                Navigator.of(context).push(
-                  MaterialPageRoute(
-                    builder: (context) {
-                      return LoginPage();
-                    },
-                  ),
-                );
-              },
-            ),
-          ],
-        ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        child: Icon(
-          Icons.add,
-        ),
-        backgroundColor: HexColor("#ed2a26"),
-        onPressed: () {
-          String courseCode;
-          showDialog(
-            context: context,
-            builder: (_) => AlertDialog(
-              actions: [
-                FlatButton(
-                    onPressed: () {
-                      print(courseCode);
-                      DatabaseService.addNewCourse(courseCode, userModel.roll);
-                      userModel.addCourse(courseCode);
-                      Navigator.pop(context);
-                    },
-                    child: Text("Add")),
-                FlatButton(
-                    onPressed: () {
-                      Navigator.pop(context);
-                    },
-                    child: Text("Cancel"))
-              ],
-              title: Text('Add New Course'),
-              content: Container(
-                width: _screenSize.width * 0.7,
-                child: TextField(
-                  onChanged: (val) {
-                    courseCode = val;
-                  },
-                ),
-              ),
-            ),
-          );
-        },
-      ),
-      body: Center(
+          ),
+          backgroundColor: Colors.white,
+          body: Center(
         child: Container(
           // child: Text(courses.length.toString()),
           child: (userModel.courses_enrolled != null &&
@@ -171,7 +63,7 @@ class _CoursesHomeScreenState extends State<CoursesHomeScreen> {
                                           context,
                                           MaterialPageRoute(
                                               builder: (context) =>
-                                                  CourseScreen(course[idx])));
+                                                  ProgressSubScreen(course[idx])));
                                     },
                                     child: Column(
                                       mainAxisSize: MainAxisSize.max,
@@ -223,8 +115,7 @@ class _CoursesHomeScreenState extends State<CoursesHomeScreen> {
                 )
               : Container(
                   child: Text(
-                    "No courses yet. \n"
-                    "Tap + to add a course",
+                    "No courses yet. \n",
                     style: TextStyle(
                       fontSize: 40,
                     ),
@@ -233,6 +124,8 @@ class _CoursesHomeScreenState extends State<CoursesHomeScreen> {
                 ),
         ),
       ),
+        );
+      }
     );
   }
 }

@@ -193,4 +193,5 @@ class DatabaseService {
       'Courses': userModel.courses_enrolled,
     },SetOptions(merge: true));
   }
+
 }
