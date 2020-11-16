@@ -3,6 +3,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:heutagogy/hex_color.dart';
+import 'package:heutagogy/models/progress.dart';
 import 'package:heutagogy/models/studentProgress.dart';
 import 'package:heutagogy/models/test_type_models/match_text_test.dart';
 import 'package:heutagogy/models/userModel.dart';
@@ -30,7 +31,6 @@ class _MatchTextState extends State<MatchText> {
   List<String> responses = [];
 
   void _updateProgress(){
-    var progress = Provider.of<StudentProgress>(context,listen: false);
     var user = Provider.of<UserModel>(context,listen: false);
     String studentID = user.getID();
     for (var response in choices.values) {
@@ -46,10 +46,9 @@ class _MatchTextState extends State<MatchText> {
       }
       total++;
     }
-
-    progress.setPerformance(widget.courseID,widget.lessonID,widget.type,count,total);
-    progress.addResponses(widget.courseID,widget.lessonID,widget.type,responses);
-    DatabaseService().writeProgress(progress.getPerformance(widget.courseID,widget.lessonID,widget.type),studentID,widget.courseID,widget.lessonID,widget.type);
+    var progress = Progress(count,total,responses);
+    Map<String,dynamic> json = progress.toMap();
+    DatabaseService().writeProgress(json,studentID,widget.courseID,widget.lessonID,widget.type);
   }
 
   final timeObject  = TimeObject(

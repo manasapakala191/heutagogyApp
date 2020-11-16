@@ -57,7 +57,7 @@ class CourseScreen extends StatelessWidget {
                                           elevation: 3,
                                           shape: RoundedRectangleBorder(
                                             side: BorderSide(
-                                                color: (userModel.courses_enrolled[courseData.courseID]["lesson"]==lessons[idx].lID) ? HexColor("#ed2a26") : Colors.black,
+                                                color: (userModel.courses_enrolled[courseData.courseID]["lesson"]==lessons[idx].lID) ? HexColor("#ed2a26") : Color(0xffed2a26).withAlpha(5),
                                                 style: BorderStyle.solid,
                                                 width: 1.0),
                                             borderRadius: BorderRadius.circular(16.0),

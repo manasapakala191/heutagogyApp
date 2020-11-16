@@ -2,6 +2,7 @@ import 'dart:math';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:heutagogy/hex_color.dart';
+import 'package:heutagogy/models/progress.dart';
 import 'package:heutagogy/models/test_type_models/math_match.dart';
 import 'package:heutagogy/models/userModel.dart';
 import 'package:provider/provider.dart';
@@ -21,6 +22,8 @@ class _MathMatchScreenState extends State<MathMatchScreen> {
   MathMatchTest testdata;
   Map<String, bool> data;
   var choices = Map();
+  var leftMarked = Map();
+  var rightMarked = Map();
 
   _MathMatchScreenState(this.testdata);
 
@@ -31,18 +34,18 @@ class _MathMatchScreenState extends State<MathMatchScreen> {
     for (var x in testdata.questions) {
       data[x.second] = false;
       choices[x.second] = null;
+      leftMarked[x.second] = false;
+      rightMarked[x.second] = false;
     }
   }
 
   void _updateProgress() {
-    var progress = Provider.of<StudentProgress>(context, listen: false);
     var user = Provider.of<UserModel>(context,listen: false);
     String studentID = user.getID();
     List<String> responses = [];
     for (var response in choices.values) {
       responses.add(response);
     }
-    progress.addResponses(widget.courseID,widget.lessonID,widget.type,responses);
     int count = 0, total = 0;
     for (var val in data.values) {
       if (val == true) {
@@ -50,8 +53,9 @@ class _MathMatchScreenState extends State<MathMatchScreen> {
       }
       total++;
     }
-    progress.setPerformance(widget.courseID,widget.lessonID,widget.type,count,total);
-    DatabaseService().writeProgress(progress.getPerformance(widget.courseID,widget.lessonID,widget.type),studentID,widget.courseID,widget.lessonID,widget.type);
+    var progress = Progress(count,total,responses);
+    Map<String,dynamic> json = progress.toMap();
+    DatabaseService().writeProgress(json,studentID,widget.courseID,widget.lessonID,widget.type);
   }
 
   @override
@@ -144,7 +148,7 @@ class _MathMatchScreenState extends State<MathMatchScreen> {
             decoration: BoxDecoration(
                 color: HexColor("#ed2a26"),
                 borderRadius: BorderRadius.circular(10)),
-            child: data[x.second] == true
+            child: leftMarked[x.second] == true
                 ? Icon(
                     Icons.assignment_turned_in,
                     color: Colors.white,
@@ -192,7 +196,7 @@ class _MathMatchScreenState extends State<MathMatchScreen> {
   _buildDragTargets() {
     List<Widget> items = [];
     for (var x in testdata.questions) {
-      if (data[x.second]) {
+      if (rightMarked[x.second]) {
         items.add(
           Container(
             width: 105,
@@ -233,19 +237,26 @@ class _MathMatchScreenState extends State<MathMatchScreen> {
             },
             onWillAccept: (t) => t == x.second,
             onAccept: (t) {
+              print(":)");
+              print(x.second);
               setState(
                 () {
                   data[x.second] = true;
-                  print(x.second);
-                  print(x.second);
                   choices[x.second] = x.second;
+                  leftMarked[x.second] = true;
+                  rightMarked[x.second] = true;
                 },
               );
             },
             onLeave: (t) {
+              print(":(");
               print(t);
               print(x.second);
-              choices[t] = x.second;
+              setState(() {
+                choices[t] = x.second;
+                leftMarked[t] = true;
+                rightMarked[x.second] = true;
+              });
             },
           ),
         );

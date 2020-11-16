@@ -21,7 +21,9 @@ dependencies:
     sdk: flutter
   audioplayers: 
   cached_network_image: ^2.3.3
-  cloud_firestore: 
+  cloud_firestore:
+  firebase_storage:
+  image_picker:
   cupertino_icons: 
   faker: ^1.2.1
   firebase_core: 
@@ -55,6 +57,7 @@ flutter:
   assets:
     - assets/images/sign.svg
     - assets/images/empty_account_circle.png
+    - assets/images/loading.gif
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.
   # For details regarding adding assets from package dependencies, see

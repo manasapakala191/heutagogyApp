@@ -128,43 +128,43 @@ class MyApp extends StatelessWidget {
 
 
 // to update Firestore when the app is closed, it's not working now though
-class LifecycleWatcher extends StatefulWidget {
-  @override
-  _LifecycleWatcherState createState() => _LifecycleWatcherState();
-}
-
-class _LifecycleWatcherState extends State<LifecycleWatcher> with WidgetsBindingObserver {
-  AppLifecycleState _notification;
-
-  @override
-  void initState() {
-    super.initState();
-    WidgetsBinding.instance.addObserver(this);
-  }
-
-  @override
-  void dispose() {
-    WidgetsBinding.instance.removeObserver(this);
-    super.dispose();
-  }
-
-  @override
-  void didChangeAppLifecycleState(AppLifecycleState state) {
-    setState(() {
-      _notification = state;
-    });
-
-    if(_notification==AppLifecycleState.inactive){
-      print("out");
-      DatabaseService.updateCoursesAndSlides(context);
-    //  db. update courses and slide numbers
-    }
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    if (_notification == null || _notification==AppLifecycleState.resumed)
-      return MyHomePage();
-    return Container();
-  }
-}
+// class LifecycleWatcher extends StatefulWidget {
+//   @override
+//   _LifecycleWatcherState createState() => _LifecycleWatcherState();
+// }
+//
+// class _LifecycleWatcherState extends State<LifecycleWatcher> with WidgetsBindingObserver {
+//   AppLifecycleState _notification;
+//
+//   @override
+//   void initState() {
+//     super.initState();
+//     WidgetsBinding.instance.addObserver(this);
+//   }
+//
+//   @override
+//   void dispose() {
+//     WidgetsBinding.instance.removeObserver(this);
+//     super.dispose();
+//   }
+//
+//   @override
+//   void didChangeAppLifecycleState(AppLifecycleState state) {
+//     setState(() {
+//       _notification = state;
+//     });
+//
+//     if(_notification==AppLifecycleState.inactive){
+//       print("out");
+//       DatabaseService.updateCoursesAndSlides(context);
+//     //  db. update courses and slide numbers
+//     }
+//   }
+//
+//   @override
+//   Widget build(BuildContext context) {
+//     if (_notification == null || _notification==AppLifecycleState.resumed)
+//       return MyHomePage();
+//     return Container();
+//   }
+// }

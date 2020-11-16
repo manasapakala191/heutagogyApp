@@ -16,19 +16,17 @@ class CoursesHomeScreen extends StatefulWidget {
 }
 
 class _CoursesHomeScreenState extends State<CoursesHomeScreen> {
-  GlobalKey<RefreshIndicatorState> _refreshKey =
-      GlobalKey<RefreshIndicatorState>();
-  @override
-  void initState() {
-    // TODO: implement initState
-    super.initState();
-  }
+  final _formCourseKey = GlobalKey<FormState>();
+  String courseCode = "";
+  bool add;
+  final GlobalKey<ScaffoldState> _scaffoldkey = new GlobalKey<ScaffoldState>();
 
   @override
   Widget build(BuildContext context) {
     final userModel = Provider.of<UserModel>(context);
     final _screenSize = MediaQuery.of(context).size;
     return Scaffold(
+      key: _scaffoldkey,
       appBar: AppBar(
         centerTitle: true,
         title: Text(
@@ -83,37 +81,53 @@ class _CoursesHomeScreenState extends State<CoursesHomeScreen> {
           Icons.add,
         ),
         backgroundColor: HexColor("#ed2a26"),
-        onPressed: () {
-          String courseCode;
-          showDialog(
-            context: context,
-            builder: (_) => AlertDialog(
-              actions: [
-                FlatButton(
-                    onPressed: () {
-                      print(courseCode);
-                      DatabaseService.addNewCourse(courseCode, userModel.roll);
-                      userModel.addCourse(courseCode);
-                      Navigator.pop(context);
-                    },
-                    child: Text("Add")),
-                FlatButton(
-                    onPressed: () {
-                      Navigator.pop(context);
-                    },
-                    child: Text("Cancel"))
-              ],
-              title: Text('Add New Course'),
-              content: Container(
-                width: _screenSize.width * 0.7,
-                child: TextField(
-                  onChanged: (val) {
-                    courseCode = val;
-                  },
-                ),
-              ),
-            ),
-          );
+        onPressed: () async {
+          bool add = false;
+          bool added = await showDialog(
+              barrierDismissible: false,
+              context: context,
+              builder: (_) => AlertDialog(
+                    actions: [
+                      FlatButton(
+                          onPressed: () {
+                            print(courseCode);
+                            if (_formCourseKey.currentState.validate()) {
+                              _formCourseKey.currentState.save();
+                              Navigator.pop(context, true);
+                            }
+                          },
+                          child: Text("Add")),
+                      FlatButton(
+                          onPressed: () {
+                            Navigator.pop(context, false);
+                          },
+                          child: Text("Cancel"))
+                    ],
+                    title: Text('Add New Course'),
+                    content: Container(
+                      width: _screenSize.width * 0.3,
+                      child: Form(
+                        key: _formCourseKey,
+                        child: TextFormField(
+                          onSaved: (val) {
+                            setState(() {
+                              courseCode = val;
+                            });
+                          },
+                          validator: (val) {
+                            if (val.isEmpty) {
+                              print("empty");
+                              return "Type a course code.";
+                            }
+                            return null;
+                          },
+                        ),
+                      ),
+                    ),
+                  ));
+          if (added) {
+            await showAdding(userModel.roll, userModel);
+          }
         },
       ),
       body: Center(
@@ -220,5 +234,42 @@ class _CoursesHomeScreenState extends State<CoursesHomeScreen> {
         ),
       ),
     );
+  }
+
+  showAdding(String roll, UserModel userModel) {
+    final _screenSize = MediaQuery.of(context).size;
+    return _scaffoldkey.currentState
+        .showSnackBar(SnackBar(
+          content: Container(
+            height: _screenSize.height * 0.03,
+            child: FutureBuilder(
+                future: DatabaseService.courseFilter(courseCode),
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.done) {
+                    if (snapshot.hasData) {
+                      if (snapshot.data == true) {
+                        add = true;
+                        DatabaseService.addNewCourse(courseCode, roll);
+                        return Icon(Icons.check_circle);
+                      } else {
+                        add = false;
+                        return Text("No such course code");
+                      }
+                    } else if (snapshot.hasError) {
+                      return Text("Problem!");
+                    }
+                  }
+                  return Container(
+                      height: _screenSize.height * 0.03,
+                      width: _screenSize.width * 0.3,
+                      child: Center(child: CircularProgressIndicator()));
+                }),
+          ),
+        ))
+        .closed
+        .then((value) {
+      print(add);
+      if (add) userModel.addCourse(courseCode);
+    });
   }
 }

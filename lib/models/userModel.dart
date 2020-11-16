@@ -1,6 +1,6 @@
 import 'package:flutter/cupertino.dart';
 
-class UserModel extends ChangeNotifier{
+class UserModel extends ChangeNotifier {
   String name;
   String roll;
   String photoURL;
@@ -22,20 +22,37 @@ class UserModel extends ChangeNotifier{
   }
 
 
-  void fillDataWhileSigningUp(String rNo, String passWord, bool isFirstTime, String name,Map courses_enrolled){
+  void fillDataWhileSigningUp(String rNo, String passWord, bool isFirstTime, String name,String photoURL,Map courses_enrolled){
     this.roll = rNo;
     this.currentPassword = passWord;
     this.isFirstTime = isFirstTime;
     this.name = name;
     this.courses_enrolled=courses_enrolled;
+    this.photoURL=photoURL;
     notifyListeners();
   }
 
-  void fillDataWhileSigningIn(String name, String passWord, String rNo,Map courses_enrolled){
+  void fillDataWhileSigningIn(String name, String passWord, String rNo,String photoURL,Map courses_enrolled){
     this.roll = rNo;
     this.currentPassword = passWord;
     this.name = name;
     this.courses_enrolled=courses_enrolled;
+    this.photoURL=photoURL;
+    notifyListeners();
+  }
+
+  updateImage(String imageURL){
+    this.photoURL=imageURL;
+    notifyListeners();
+  }
+
+  updateName(String name){
+    this.name=name;
+    notifyListeners();
+  }
+
+  updatePassword(String password){
+    this.currentPassword=password;
     notifyListeners();
   }
 
