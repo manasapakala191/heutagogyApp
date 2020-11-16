@@ -7,6 +7,7 @@ import 'package:heutagogy/models/progress.dart';
 import 'package:heutagogy/models/studentProgress.dart';
 import 'package:heutagogy/models/test_type_models/match_text_test.dart';
 import 'package:heutagogy/models/userModel.dart';
+import 'package:heutagogy/screens/score_screens/result_screen.dart';
 import 'package:heutagogy/services/database.dart';
 import 'package:provider/provider.dart';
 import 'package:heutagogy/models/time_object_model.dart';
@@ -24,10 +25,14 @@ class _MatchTextState extends State<MatchText> {
   Map<String, bool> data;
   var choices = Map();
 
+  int total = 0;
+  int count = 0;
+
+  List<String> responses = [];
+
   void _updateProgress(){
     var user = Provider.of<UserModel>(context,listen: false);
     String studentID = user.getID();
-    List<String> responses = [];
     for (var response in choices.values) {
         responses.add(response);
     }
@@ -35,7 +40,6 @@ class _MatchTextState extends State<MatchText> {
     print(responses);
     print("Whyyyaa");
     // print(progress.getPerformance(widget.courseID, widget.lessonID));
-    int count = 0, total = 0;
     for(var val in data.values){
       if(val == true){
         count++;
@@ -193,24 +197,14 @@ class _MatchTextState extends State<MatchText> {
         padding: const EdgeInsets.all(5),
         onPressed: (){
           _updateProgress();
-          showDialog(
-            context: context,
-            builder: (BuildContext context){
-              return AlertDialog(
-                title: Text("Quiz submitted!"),
-                content: Text("The Quiz is submitted successfully"),
-                actions: [
-                  FlatButton(child: Text("Stay"),onPressed: (){
-                    Navigator.pop(context);
-                  },),
-                  FlatButton(child: Text("Leave"),onPressed: (){
-                    Navigator.pop(context);
-                    Navigator.pop(context);
-                  },)
-                ],
-              );
-            }
-          );
+          Navigator.of(context).push(MaterialPageRoute(
+            builder: (context) => ResultScreen(
+              matchPicWithText: widget.matchPicWithText,
+              responseMap: responses,
+              total: widget.matchPicWithText.choices.length,
+              count: count,
+            )
+          ));
         },
       ),
     );

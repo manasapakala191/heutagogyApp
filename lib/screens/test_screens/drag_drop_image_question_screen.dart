@@ -8,6 +8,7 @@ import 'package:heutagogy/models/progress.dart';
 import 'package:heutagogy/models/test_type_models/drag_drop_test.dart';
 import 'package:heutagogy/models/test_type_models/option_class.dart';
 import 'package:heutagogy/models/userModel.dart';
+import 'package:heutagogy/screens/score_screens/drag_drop_score.dart';
 import 'package:provider/provider.dart';
 import 'package:heutagogy/services/database.dart';
 import 'package:heutagogy/models/studentProgress.dart';
@@ -233,6 +234,12 @@ class _DragDropImageScreenState extends State<DragDropImageScreen> {
         padding: const EdgeInsets.all(5),
         onPressed: () {
           _updateProgress();
+          Navigator.of(context).push(MaterialPageRoute(
+            builder: (context) => DragDropScoreWidget(
+              correct: correct,
+              choices: choices,
+            )
+          ));
           showDialog(
               context: context,
               builder: (BuildContext context) {

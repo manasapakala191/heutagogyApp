@@ -7,6 +7,7 @@ import 'package:heutagogy/models/test_type_models/option_class.dart';
 import 'package:heutagogy/models/test_type_models/question_class.dart';
 import 'package:heutagogy/models/time_object_model.dart';
 import 'package:heutagogy/models/userModel.dart';
+import 'package:heutagogy/screens/score_screens/single_correct_image_response_viewer.dart';
 import 'package:heutagogy/services/database.dart';
 import 'package:provider/provider.dart';
 
@@ -30,7 +31,23 @@ class _MultipleChoiceImageQuestionScreenState
   final ImageQuestionTest imageQuestionTest;
   _MultipleChoiceImageQuestionScreenState(this.imageQuestionTest);
 
+  int count = 0;
+
+  int total = 0;
+
+  List<String> responses = List<String>();
+
+  Map<String, dynamic> getResponseMap(){
+    Map<String, dynamic> responseMap = Map<String, dynamic>();
+    for(int i=0; i < imageQuestionTest.questions.length; i++){
+      responseMap[imageQuestionTest.questions[i].question] = responses[i];
+    }
+    print(responseMap);
+    return responseMap;
+  }
+
   void _updateProgress() {
+    var progress = Provider.of<StudentProgress>(context, listen: false);
     List<String> responses = List<String>();
     var user = Provider.of<UserModel>(context, listen: false);
     String studentID = user.getID();
@@ -38,6 +55,7 @@ class _MultipleChoiceImageQuestionScreenState
       responses.add(_);
     }
     print(responses);
+    progress.addResponses(widget.courseID,widget.lessonID,widget.type,responses);
     int count = 0, total = 0;
     for (var _ in answers.values) {
       if (_) {
@@ -126,24 +144,33 @@ class _MultipleChoiceImageQuestionScreenState
               child: RaisedButton(
                 onPressed: () {
                   _updateProgress();
-                  showDialog(
-            context: context,
-            builder: (BuildContext context){
-              return AlertDialog(
-                title: Text("Quiz submitted!"),
-                content: Text("The Quiz is submitted successfully"),
-                actions: [
-                  FlatButton(child: Text("Stay"),onPressed: (){
-                    Navigator.pop(context);
-                  },),
-                  FlatButton(child: Text("Leave"),onPressed: (){
-                    Navigator.pop(context);
-                    Navigator.pop(context);
-                  },)
-                ],
-              );
-            }
-          );
+                  Map<String , dynamic> responseMap = getResponseMap();
+                  responseMap['totalQuestions'] = total;
+                  responseMap['correctAnswers'] = count;
+                  Navigator.of(context).push(MaterialPageRoute(
+                    builder: (context) => SingleCorrectImageResponseViewer(
+                      responseMap: responseMap,
+                      imageQuestionTest: imageQuestionTest,
+                    )
+                  ));
+          //         showDialog(
+          //   context: context,
+          //   builder: (BuildContext context){
+          //     return AlertDialog(
+          //       title: Text("Quiz submitted!"),
+          //       content: Text("The Quiz is submitted successfully"),
+          //       actions: [
+          //         FlatButton(child: Text("Stay"),onPressed: (){
+          //           Navigator.pop(context);
+          //         },),
+          //         FlatButton(child: Text("Leave"),onPressed: (){
+          //           Navigator.pop(context);
+          //           Navigator.pop(context);
+          //         },)
+          //       ],
+          //     );
+          //   }
+          // );
                 },
                 elevation: 8,
                 child: Text("Submit"),
@@ -243,3 +270,4 @@ class _ImageOptionBuilderState extends State<ImageOptionBuilder> {
     );
   }
 }
+
