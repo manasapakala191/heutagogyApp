@@ -273,8 +273,15 @@ class _DraggableAudioButtonState extends State<DraggableAudioButton>
   @override
   void initState() {
     super.initState();
-    audioCache = AudioCache(prefix: 'audio/');
-    audioCache.load("$audioPath.mp3");
+    audioCache = AudioCache(prefix: 'assets/audios/');
+    // try {
+      print("\n\nFind the audio Path here ");
+      print(audioPath);
+      print("Audio path is above here!!");
+    audioCache.load("$audioPath.mp3"); 
+    // } catch (e) {
+    //   print("There has been an error loading the audio file");
+    // }
     playing = false;
     _controller =
         AnimationController(duration: Duration(milliseconds: 200), vsync: this);

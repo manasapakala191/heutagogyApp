@@ -35,7 +35,7 @@ class ProgressSubScreen extends StatelessWidget {
                 ),
                 FutureBuilder<List<LessonData>>(
                     future:
-                        DatabaseService.getLessonsForCourse(courseData.courseID),
+                        DatabaseService.getLessonsForCourseFromProgress(userModel.roll,courseData.courseID),
                     builder: (context, snapshot) {
                       if (snapshot.hasError) {
                         return Container(
@@ -44,6 +44,8 @@ class ProgressSubScreen extends StatelessWidget {
                       } else {
                         if (snapshot.connectionState == ConnectionState.done) {
                           if (snapshot.hasData) {
+                            print("It is here!!");
+                            print(snapshot.data);
                             List<LessonData> lessons = snapshot.data;
                             return ListView.builder(
                                 itemCount: lessons.length,
@@ -65,7 +67,7 @@ class ProgressSubScreen extends StatelessWidget {
                                           child: InkWell(
                                               splashColor: Color.fromARGB(40, 0, 0, 200),
                                               onTap: () {
-                                                print(userModel.courses_enrolled[courseData.courseID]["lesson"]);
+                                                // print(userModel.courses_enrolled[courseData.courseID]["lesson"]);
                                                 // userModel.updateLesson(courseData.courseID, lessons[idx].lID);
                                                 Navigator.push(
                                                                 context,
@@ -108,6 +110,9 @@ class ProgressSubScreen extends StatelessWidget {
                                                         ))
                                                   ]))));
                                 });
+                          }
+                          else{
+                            return Text("No lessons yet!");
                           }
                         }
                         return Center(child: CircularProgressIndicator());

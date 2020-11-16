@@ -41,13 +41,52 @@ class DatabaseService {
     return lessons;
   }
 
+  static Future<List<LessonData>> getLessonsForCourseFromProgress(String sid,String cid) async {
+    QuerySnapshot lessonsSnapshot = await getLessons(cid);
+    List<QueryDocumentSnapshot> lessonDocs = lessonsSnapshot.docs;
+    List<LessonData> lessons = [];
+    for (int i = 0; i < lessonDocs.length; i++) {
+      LessonData data = LessonData.fromJSON(lessonDocs[i].data());
+      CollectionReference studentsCollection = schoolDoc.collection("Students");
+      DocumentReference studentReference = studentsCollection.doc(sid);
+      bool flag = false;
+      print(sid);
+      print(cid+" "+data.lID);
+      await studentReference.collection("Progress")
+                            .doc(cid)
+                            .collection("Lessons")
+                            .doc(data.lID)
+                            .get().then((value){
+                              print(value.exists);
+                              if(value.exists){
+                                print("Yes, progress exists");
+                                flag = true;
+                              }
+                              else{
+                                print("No, progress doesnot exists");
+                                flag = false;
+                              }
+                            });
+      if(flag == true){
+        lessons.add(data);
+      } 
+    }
+    return lessons;
+  }
+
   static Future getLessons(String cid) async {
     return await schoolDoc.collection('Courses/' + cid + '/Lessons').get();
   }
 
-  static Future<List<QueryDocumentSnapshot>> getSlidesForLessons(
-      String cid, String lid) async {
+  static Future<List<QueryDocumentSnapshot>> getSlidesForLessons(String cid, String lid) async {
     QuerySnapshot slidesSnapshot = await getSlides(cid, lid);
+    List<QueryDocumentSnapshot> slideDocs = slidesSnapshot.docs;
+    print(slideDocs.length);
+    return slideDocs;
+  }
+
+  static Future<List<QueryDocumentSnapshot>> getSlidesForLessonsFromProgress(String sid,String cid, String lid) async {
+    QuerySnapshot slidesSnapshot = await schoolDoc.collection("Students").doc(sid).collection("Progress").doc(cid).collection("Lessons").doc(lid).collection("slides").get();
     List<QueryDocumentSnapshot> slideDocs = slidesSnapshot.docs;
     print(slideDocs.length);
     return slideDocs;
@@ -71,17 +110,42 @@ class DatabaseService {
     print(data);
     CollectionReference studentsCollection = schoolDoc.collection("Students");
     DocumentReference studentReference = studentsCollection.doc(studentID);
-    await studentReference.collection("Progress")
-                          .doc(courseID)
-                          .collection("Lessons")
-                          .doc(lessonID)
-                          .collection("slides")
-                          .doc(type)
-                          .get().then((value){
-                            if(value.data()["percentage"]<data["percentage"]){
-                              writeProgressHelper(data,studentID,courseID,lessonID,type);
-                            }
-                          });
+    DocumentReference doc2 = studentReference.collection("Progress").doc(courseID);
+    doc2.get().then((snapshot){
+      if(snapshot.exists){
+        DocumentReference doc1 = doc2.collection("Lessons").doc(lessonID);
+        doc1.get().then((snapshot){
+          if(snapshot.exists){
+            DocumentReference doc = doc1.collection("slides").doc(type);
+            doc.get().then((snapshot){
+              if(snapshot.exists){
+                if(snapshot.data()["percentage"]<data["percentage"]){
+                  writeProgressHelper(data,studentID,courseID,lessonID,type);
+                }
+              }
+              else{
+                doc.set({});
+                writeProgressHelper(data,studentID,courseID,lessonID,type);
+              }
+            });
+          }
+          else{
+            doc1.set({});
+            DocumentReference doc = doc1.collection("slides").doc(type);
+            doc.set({});
+            writeProgressHelper(data,studentID,courseID,lessonID,type);
+          }
+        });
+      }
+      else{
+        doc2.set({});
+        DocumentReference doc1 = doc2.collection("Lessons").doc(lessonID);
+        doc1.set({});
+        DocumentReference doc = doc1.collection("slides").doc(type);
+        doc.set({});
+        writeProgressHelper(data,studentID,courseID,lessonID,type);
+      }
+    });
   }
 
   void writeProgressHelper(Map<String, dynamic> data, String studentID, String courseID, String lessonID, String type) async {

@@ -33,7 +33,7 @@ class ProgressQuizScreen extends StatelessWidget {
         title: Text("Progress in "+lessonData.lname,),
       ),
       body: FutureBuilder<List<QueryDocumentSnapshot>>(
-        future: DatabaseService.getSlidesForLessons(courseData.courseID, lessonData.lID),
+        future: DatabaseService.getSlidesForLessonsFromProgress(userModel.roll,courseData.courseID, lessonData.lID),
         builder: (context,snapshot) {
           if (snapshot.hasError) {
             return Container(
@@ -128,8 +128,8 @@ class ProgressQuizScreen extends StatelessWidget {
                       elevation: 3,
                       shape: RoundedRectangleBorder(
                         side: BorderSide(
-                            color:
-                            (userModel.courses_enrolled[cid]["slide"]==slideData["sid"])? HexColor("#ed2a26"):  Color(0xffed2a26).withAlpha(5),
+                            color: Colors.black,
+                            // (userModel.courses_enrolled[cid]["slide"]==slideData["sid"])? HexColor("#ed2a26"):  Color(0xffed2a26).withAlpha(5),
                             style: BorderStyle.solid,
                             width: 1.0),
                         borderRadius: BorderRadius.circular(16.0),
@@ -143,11 +143,11 @@ class ProgressQuizScreen extends StatelessWidget {
                             String lid = userModel.courses_enrolled[cid]["lesson"];
                             print(":)   -----");
                             print(sid);
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) =>
-                                        _returnSlideScreen(slideData["type"], slideData,sid,cid,lid)));
+                            // Navigator.push(
+                            //     context,
+                            //     MaterialPageRoute(
+                            //         builder: (context) =>
+                            //             _returnSlideScreen(slideData["type"], slideData,sid,cid,lid)));
                           },
                           child: Column(
                               mainAxisSize: MainAxisSize.max,
@@ -159,7 +159,8 @@ class ProgressQuizScreen extends StatelessWidget {
                                     child: Material(
                                       color: Colors.transparent,
                                       child: Text(
-                                        slideData["name"],
+                                        // slideData["name"] == null ? "No name":slideData["name"],
+                                        "Test",
                                         style: TextStyle(
                                           fontSize: 20,
                                           fontFamily: 'Nunito',
@@ -175,7 +176,8 @@ class ProgressQuizScreen extends StatelessWidget {
                                     padding: EdgeInsets.only(
                                         top: 10, left: 20, right: 20, bottom: 20),
                                     child: Text(
-                                      slideData["description"],
+                                      // slideData["description"] ? "No name": slideData["description"],
+                                      "Progress here is "+slideData["percentage"].toString()+"%",
                                       style: TextStyle(
                                         fontSize: 16,
                                         fontFamily: 'Nunito',
