@@ -58,6 +58,7 @@ flutter:
     - assets/images/sign.svg
     - assets/images/empty_account_circle.png
     - assets/images/loading.gif
+    - assets/audios/
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.
   # For details regarding adding assets from package dependencies, see

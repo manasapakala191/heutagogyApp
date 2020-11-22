@@ -29,16 +29,16 @@ class DragDropImageScreen extends StatefulWidget {
 
 class _DragDropImageScreenState extends State<DragDropImageScreen> {
   DragDropImageTest dragDropImageTest;
-  Map<String, bool> correct;
+  Map<String, dynamic> correct;
   Map<String, bool> leftMarked;
-  Map<String, bool> rightMarked;
-  var choices;
+  Map<String,bool> rightMarked;
+  Map<String,dynamic> choices;
 
   _DragDropImageScreenState(DragDropImageTest dragDropImageTest) {
     this.dragDropImageTest = dragDropImageTest;
-    this.correct = Map();
+    this.correct = Map<String,dynamic>();
     this.leftMarked = Map();
-    this.choices = Map();
+    this.choices = Map<String,dynamic>();
     this.rightMarked = Map();
     for (var image in this.dragDropImageTest.pictures) {
       correct[image.description] = false;
@@ -48,8 +48,8 @@ class _DragDropImageScreenState extends State<DragDropImageScreen> {
     }
   }
 
-  void _updateProgress() {
-    var user = Provider.of<UserModel>(context, listen: false);
+  void _updateProgress(){
+    var user = Provider.of<UserModel>(context,listen: false);
     String studentID = user.getID();
     List<String> responses = [];
     for (var response in choices.values) {
@@ -62,7 +62,7 @@ class _DragDropImageScreenState extends State<DragDropImageScreen> {
       }
       total++;
     }
-    var progress = Progress(count, total, responses);
+    var progress = Progress(dragDropImageTest.testName,dragDropImageTest.testDescription,count, total, responses);
     Map<String, dynamic> json = progress.toMap();
     DatabaseService().writeProgress(
         json, studentID, widget.courseID, widget.lessonID, widget.type);
@@ -70,6 +70,7 @@ class _DragDropImageScreenState extends State<DragDropImageScreen> {
 
   @override
   Widget build(BuildContext context) {
+
     return Scaffold(
       appBar: AppBar(
         title: Text(
@@ -138,8 +139,7 @@ class _DragDropImageScreenState extends State<DragDropImageScreen> {
       }
       targets.add(
         DragTarget(
-          builder:
-              (BuildContext context, List<String> incoming, List rejected) {
+          builder: (BuildContext context, List<String> incoming, List rejected) {
             if (!rightMarked[image.description]) {
               return Container(
                 padding: EdgeInsets.only(bottom: 4),
@@ -205,9 +205,9 @@ class _DragDropImageScreenState extends State<DragDropImageScreen> {
             print(data);
             print(image.description);
             setState(() {
-              leftMarked[data] = true;
-              rightMarked[image.description] = true;
-              choices[data] = image.description;
+                leftMarked[data] = true;
+                rightMarked[image.description] = true;
+                choices[data] = image.description;
             });
           },
           onWillAccept: (data) => data == image.description,
@@ -240,29 +240,29 @@ class _DragDropImageScreenState extends State<DragDropImageScreen> {
               choices: choices,
             )
           ));
-          showDialog(
-              context: context,
-              builder: (BuildContext context) {
-                return AlertDialog(
-                  title: Text("Quiz submitted!"),
-                  content: Text("The Quiz is submitted successfully"),
-                  actions: [
-                    FlatButton(
-                      child: Text("Stay"),
-                      onPressed: () {
-                        Navigator.pop(context);
-                      },
-                    ),
-                    FlatButton(
-                      child: Text("Leave"),
-                      onPressed: () {
-                        Navigator.pop(context);
-                        Navigator.pop(context);
-                      },
-                    )
-                  ],
-                );
-              });
+          // showDialog(
+          //     context: context,
+          //     builder: (BuildContext context) {
+          //       return AlertDialog(
+          //         title: Text("Quiz submitted!"),
+          //         content: Text("The Quiz is submitted successfully"),
+          //         actions: [
+          //           FlatButton(
+          //             child: Text("Stay"),
+          //             onPressed: () {
+          //               Navigator.pop(context);
+          //             },
+          //           ),
+          //           FlatButton(
+          //             child: Text("Leave"),
+          //             onPressed: () {
+          //               Navigator.pop(context);
+          //               Navigator.pop(context);
+          //             },
+          //           )
+          //         ],
+          //       );
+          //     });
           // Update progress and write to database
         },
       ),

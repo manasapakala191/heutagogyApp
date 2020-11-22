@@ -9,6 +9,7 @@ import 'package:heutagogy/models/userModel.dart';
 import 'package:provider/provider.dart';
 import 'package:heutagogy/services/database.dart';
 import '../../hex_color.dart';
+import 'package:heutagogy/screens/score_screens/drag_drop_score.dart';
 
 class DragDropAudioScreen extends StatefulWidget {
   final DragDropAudioTest data;
@@ -20,9 +21,9 @@ class DragDropAudioScreen extends StatefulWidget {
 
 class _DragDropAudioScreenState extends State<DragDropAudioScreen> {
   DragDropAudioTest audiodata;
-  var correct;
+  Map<String,dynamic> correct;
   var seed;
-  var choices;
+  Map<String,dynamic> choices;
   var leftMarked;
   var rightMarked;
   StudentProgress progress;
@@ -30,8 +31,8 @@ class _DragDropAudioScreenState extends State<DragDropAudioScreen> {
   _DragDropAudioScreenState(DragDropAudioTest data) {
     seed = Random().nextInt(100);
     this.audiodata = data;
-    this.correct = Map();
-    this.choices = Map();
+    this.correct = Map<String,dynamic>();
+    this.choices = Map<String,dynamic>();
     this.leftMarked = Map();
     this.rightMarked = Map();
     for (var audio in this.audiodata.audios) {
@@ -56,7 +57,7 @@ class _DragDropAudioScreenState extends State<DragDropAudioScreen> {
       }
       total++;
     }
-    var progress = Progress(count,total,responses);
+    var progress = Progress(audiodata.testName,audiodata.testDescription,count,total,responses);
     Map<String,dynamic> json = progress.toMap();
     DatabaseService().writeProgress(json,studentID,widget.courseID,widget.lessonID,widget.type);
   }
@@ -222,24 +223,30 @@ class _DragDropAudioScreenState extends State<DragDropAudioScreen> {
         padding: const EdgeInsets.all(5),
         onPressed: () {
           _updateProgress();
-          showDialog(
-            context: context,
-            builder: (BuildContext context){
-              return AlertDialog(
-                title: Text("Quiz submitted!"),
-                content: Text("The Quiz is submitted successfully"),
-                actions: [
-                  FlatButton(child: Text("Stay"),onPressed: (){
-                    Navigator.pop(context);
-                  },),
-                  FlatButton(child: Text("Leave"),onPressed: (){
-                    Navigator.pop(context);
-                    Navigator.pop(context);
-                  },)
-                ],
-              );
-            }
-          );
+           Navigator.of(context).push(MaterialPageRoute(
+            builder: (context) => DragDropScoreWidget(
+              correct: correct,
+              choices: choices,
+            )
+          ));
+          // showDialog(
+          //   context: context,
+          //   builder: (BuildContext context){
+          //     return AlertDialog(
+          //       title: Text("Quiz submitted!"),
+          //       content: Text("The Quiz is submitted successfully"),
+          //       actions: [
+          //         FlatButton(child: Text("Stay"),onPressed: (){
+          //           Navigator.pop(context);
+          //         },),
+          //         FlatButton(child: Text("Leave"),onPressed: (){
+          //           Navigator.pop(context);
+          //           Navigator.pop(context);
+          //         },)
+          //       ],
+          //     );
+          //   }
+          // );
           // Update progress and write to database
         },
       ),
@@ -273,8 +280,15 @@ class _DraggableAudioButtonState extends State<DraggableAudioButton>
   @override
   void initState() {
     super.initState();
-    audioCache = AudioCache(prefix: 'audio/');
-    audioCache.load("$audioPath.mp3");
+    audioCache = AudioCache(prefix: 'assets/audios/');
+    // try {
+      print("\n\nFind the audio Path here ");
+      print(audioPath);
+      print("Audio path is above here!!");
+    audioCache.load("$audioPath.mp3"); 
+    // } catch (e) {
+    //   print("There has been an error loading the audio file");
+    // }
     playing = false;
     _controller =
         AnimationController(duration: Duration(milliseconds: 200), vsync: this);

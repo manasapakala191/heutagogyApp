@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:heutagogy/hex_color.dart';
 import 'package:heutagogy/models/progress.dart';
+import 'package:heutagogy/models/studentProgress.dart';
 import 'package:heutagogy/models/test_type_models/multiple_choice_question_test.dart';
 import 'package:heutagogy/models/test_type_models/option_class.dart';
 import 'package:heutagogy/models/test_type_models/question_class.dart';
@@ -46,8 +47,6 @@ class _MultipleChoiceImageQuestionScreenState
   }
 
   void _updateProgress() {
-    // var progress = Provider.of<StudentProgress>(context, listen: false);
-    List<String> responses = List<String>();
     var user = Provider.of<UserModel>(context, listen: false);
     String studentID = user.getID();
     for (var _ in choices.values) {
@@ -61,7 +60,7 @@ class _MultipleChoiceImageQuestionScreenState
       }
       total++;
     }
-    var progress = Progress(count,total,responses);
+    var progress = Progress(imageQuestionTest.testName,imageQuestionTest.testDescription,count,total,responses);
     Map<String,dynamic> json = progress.toMap();
     DatabaseService().writeProgress(json,studentID,widget.courseID,widget.lessonID,widget.type);
   }

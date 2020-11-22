@@ -46,7 +46,7 @@ class _MatchTextState extends State<MatchText> {
       }
       total++;
     }
-    var progress = Progress(count,total,responses);
+    var progress = Progress(_matchPicWithText.testName,_matchPicWithText.testDescription,count,total,responses);
     Map<String,dynamic> json = progress.toMap();
     DatabaseService().writeProgress(json,studentID,widget.courseID,widget.lessonID,widget.type);
   }

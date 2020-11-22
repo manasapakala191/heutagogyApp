@@ -5,6 +5,7 @@ import 'package:heutagogy/models/userModel.dart';
 import 'package:heutagogy/screens/course_screen.dart';
 import 'package:heutagogy/screens/login-resources/login.dart';
 import 'package:heutagogy/screens/misc-screens/profile.dart';
+import 'package:heutagogy/screens/progress/progress_screen.dart';
 import 'package:heutagogy/services/database.dart';
 import 'package:provider/provider.dart';
 
@@ -51,6 +52,19 @@ class _CoursesHomeScreenState extends State<CoursesHomeScreen> {
                   MaterialPageRoute(
                     builder: (context) {
                       return ProfilePage();
+                    },
+                  ),
+                );
+              },
+            ),
+            ListTile(
+              title: Text("My Progress"),
+              trailing: Icon(Icons.assignment_turned_in),
+              onTap: () {
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (context) {
+                      return ProgressScreen();
                     },
                   ),
                 );
