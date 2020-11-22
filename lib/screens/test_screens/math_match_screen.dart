@@ -53,7 +53,7 @@ class _MathMatchScreenState extends State<MathMatchScreen> {
       }
       total++;
     }
-    var progress = Progress(count,total,responses);
+    var progress = Progress(testdata.heading,testdata.subject,count,total,responses);
     Map<String,dynamic> json = progress.toMap();
     DatabaseService().writeProgress(json,studentID,widget.courseID,widget.lessonID,widget.type);
   }

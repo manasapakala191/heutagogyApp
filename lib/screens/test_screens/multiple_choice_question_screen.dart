@@ -43,7 +43,7 @@ class _MultipleChoiceQuestionScreenState
       }
       total++;
     }
-    var progress = Progress(count,total,responses);
+    var progress = Progress(singleCorrectTest.testName,singleCorrectTest.testDescription,count,total,responses);
     Map<String,dynamic> json = progress.toMap();
     DatabaseService().writeProgress(json,studentID,widget.courseID,widget.lessonID,widget.type);
   }

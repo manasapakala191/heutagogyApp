@@ -56,7 +56,7 @@ class _DragDropAudioScreenState extends State<DragDropAudioScreen> {
       }
       total++;
     }
-    var progress = Progress(count,total,responses);
+    var progress = Progress(audiodata.testName,audiodata.testDescription,count,total,responses);
     Map<String,dynamic> json = progress.toMap();
     DatabaseService().writeProgress(json,studentID,widget.courseID,widget.lessonID,widget.type);
   }
