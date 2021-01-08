@@ -93,7 +93,8 @@ class DatabaseService {
     return lessons;
   }
 
-  static Future<List<LessonData>> getLessonsForCourseFromProgress(String sid,String cid) async {
+  static Future<List<LessonData>> getLessonsForCourseFromProgress(
+      String sid, String cid) async {
     QuerySnapshot lessonsSnapshot = await getLessons(cid);
     List<QueryDocumentSnapshot> lessonDocs = lessonsSnapshot.docs;
     List<LessonData> lessons = [];
@@ -103,25 +104,26 @@ class DatabaseService {
       DocumentReference studentReference = studentsCollection.doc(sid);
       bool flag = false;
       print(sid);
-      print(cid+" "+data.lID);
-      await studentReference.collection("Progress")
-                            .doc(cid)
-                            .collection("Lessons")
-                            .doc(data.lID)
-                            .get().then((value){
-                              print(value.exists);
-                              if(value.exists){
-                                print("Yes, progress exists");
-                                flag = true;
-                              }
-                              else{
-                                print("No, progress doesnot exists");
-                                flag = false;
-                              }
-                            });
-      if(flag == true){
+      print(cid + " " + data.lID);
+      await studentReference
+          .collection("Progress")
+          .doc(cid)
+          .collection("Lessons")
+          .doc(data.lID)
+          .get()
+          .then((value) {
+        print(value.exists);
+        if (value.exists) {
+          print("Yes, progress exists");
+          flag = true;
+        } else {
+          print("No, progress doesnot exists");
+          flag = false;
+        }
+      });
+      if (flag == true) {
         lessons.add(data);
-      } 
+      }
     }
     return lessons;
   }
@@ -130,15 +132,25 @@ class DatabaseService {
     return await schoolDoc.collection('Courses/' + cid + '/Lessons').get();
   }
 
-  static Future<List<QueryDocumentSnapshot>> getSlidesForLessons(String cid, String lid) async {
+  static Future<List<QueryDocumentSnapshot>> getSlidesForLessons(
+      String cid, String lid) async {
     QuerySnapshot slidesSnapshot = await getSlides(cid, lid);
     List<QueryDocumentSnapshot> slideDocs = slidesSnapshot.docs;
     print(slideDocs.length);
     return slideDocs;
   }
 
-  static Future<List<QueryDocumentSnapshot>> getSlidesForLessonsFromProgress(String sid,String cid, String lid) async {
-    QuerySnapshot slidesSnapshot = await schoolDoc.collection("Students").doc(sid).collection("Progress").doc(cid).collection("Lessons").doc(lid).collection("slides").get();
+  static Future<List<QueryDocumentSnapshot>> getSlidesForLessonsFromProgress(
+      String sid, String cid, String lid) async {
+    QuerySnapshot slidesSnapshot = await schoolDoc
+        .collection("Students")
+        .doc(sid)
+        .collection("Progress")
+        .doc(cid)
+        .collection("Lessons")
+        .doc(lid)
+        .collection("slides")
+        .get();
     List<QueryDocumentSnapshot> slideDocs = slidesSnapshot.docs;
     print(slideDocs.length);
     return slideDocs;
@@ -165,48 +177,47 @@ class DatabaseService {
     print(data);
     CollectionReference studentsCollection = schoolDoc.collection("Students");
     DocumentReference studentReference = studentsCollection.doc(studentID);
-    DocumentReference doc2 = studentReference.collection("Progress").doc(courseID);
-    doc2.get().then((snapshot){
-      if(snapshot.exists){
+    DocumentReference doc2 =
+        studentReference.collection("Progress").doc(courseID);
+    doc2.get().then((snapshot) {
+      if (snapshot.exists) {
         DocumentReference doc1 = doc2.collection("Lessons").doc(lessonID);
-        doc1.get().then((snapshot){
-          if(snapshot.exists){
+        doc1.get().then((snapshot) {
+          if (snapshot.exists) {
             DocumentReference doc = doc1.collection("slides").doc(type);
-            doc.get().then((snapshot){
-              if(snapshot.exists){
-                if(snapshot.data()["percentage"]<data["percentage"]){
-                  writeProgressHelper(data,studentID,courseID,lessonID,type);
-                }
-                else{
+            doc.get().then((snapshot) {
+              if (snapshot.exists) {
+                if (snapshot.data()["percentage"] < data["percentage"]) {
+                  writeProgressHelper(
+                      data, studentID, courseID, lessonID, type);
+                } else {
                   print("No need to update");
                 }
-              }
-              else{
+              } else {
                 doc.set({});
-                writeProgressHelper(data,studentID,courseID,lessonID,type);
+                writeProgressHelper(data, studentID, courseID, lessonID, type);
               }
             });
-          }
-          else{
+          } else {
             doc1.set({});
             DocumentReference doc = doc1.collection("slides").doc(type);
             doc.set({});
-            writeProgressHelper(data,studentID,courseID,lessonID,type);
+            writeProgressHelper(data, studentID, courseID, lessonID, type);
           }
         });
-      }
-      else{
+      } else {
         doc2.set({});
         DocumentReference doc1 = doc2.collection("Lessons").doc(lessonID);
         doc1.set({});
         DocumentReference doc = doc1.collection("slides").doc(type);
         doc.set({});
-        writeProgressHelper(data,studentID,courseID,lessonID,type);
+        writeProgressHelper(data, studentID, courseID, lessonID, type);
       }
     });
   }
 
-  void writeProgressHelper(Map<String, dynamic> data, String studentID, String courseID, String lessonID, String type) async {
+  void writeProgressHelper(Map<String, dynamic> data, String studentID,
+      String courseID, String lessonID, String type) async {
     print(data);
     CollectionReference studentsCollection = schoolDoc.collection("Students");
     DocumentReference studentReference = studentsCollection.doc(studentID);
@@ -215,53 +226,60 @@ class DatabaseService {
     // Check if course doc with slides collection exists, if not create one
     // Update that particular slide progress
 
-    await studentReference.collection("Progress")
-                          .doc(courseID)
-                          .collection("Lessons")
-                          .doc(lessonID)
-                          .collection("slides")
-                          .doc(type)
-                          .set(data,SetOptions(merge: true)).then((value){
-                            print(data);
-                            print("Updated");
-                          });
+    await studentReference
+        .collection("Progress")
+        .doc(courseID)
+        .collection("Lessons")
+        .doc(lessonID)
+        .collection("slides")
+        .doc(type)
+        .set(data, SetOptions(merge: true))
+        .then((value) {
+      print(data);
+      print("Updated");
+    });
   }
 
-  Future<bool> signInStudent(
+  Future<String> signInStudent(
       UserModel userModel, String rollNumber, String passWord) async {
-    var doc_list = await db
-        .collection("Schools")
-        .doc("School 1")
-        .collection('Students')
-        .get();
-
-    int fact = 0;
-    var doc_required;
-    for (var doc in doc_list.docs) {
-      print(doc.id);
-      if (doc.id == rollNumber) {
-        print("Found doc");
-        fact = 1;
-        doc_required = doc.data();
-        break;
+    try {
+      var doc_list = await db
+          .collection("Schools")
+          .doc("School 1")
+          .collection('Students')
+          .get();
+      if (doc_list == null || doc_list.size == 0) return "Something went wrong";
+      print(doc_list.size);
+      int fact = 0;
+      var doc_required;
+      for (var doc in doc_list.docs) {
+        print(doc.id);
+        if (doc.id == rollNumber) {
+          print("Found doc");
+          fact = 1;
+          doc_required = doc.data();
+          break;
+        }
       }
-    }
 
-    if (fact == 0) return false;
+      if (fact == 0) return "User not found";
 
-    if (!doc_required["First_time"] && doc_required["Password"] == passWord) {
-      print("updating doc");
-      userModel.fillDataWhileSigningIn(
-        doc_required["Name"],
-        doc_required["Password"],
-        doc_required["Roll_No"],
-        doc_required["PhotoURL"],
-        doc_required["Courses"],
-      );
-      return true;
-    } else {
-      print("Password is wrong");
-      return false;
+      if (!doc_required["First_time"] && doc_required["Password"] == passWord) {
+        print("updating doc");
+        userModel.fillDataWhileSigningIn(
+          doc_required["Name"],
+          doc_required["Password"],
+          doc_required["Roll_No"],
+          doc_required["PhotoURL"],
+          doc_required["Courses"],
+        );
+        return "Success";
+      } else {
+        print("Password is wrong");
+        return "Wrong password";
+      }
+    } catch (e) {
+      print(e);
     }
   }
 
@@ -321,5 +339,4 @@ class DatabaseService {
       'Courses': userModel.courses_enrolled,
     }, SetOptions(merge: true));
   }
-
 }

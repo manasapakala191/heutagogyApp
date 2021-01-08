@@ -51,6 +51,7 @@ class _LoginPageState extends State<LoginPage>
   Widget build(BuildContext context) {
     UserModel userModel = Provider.of<UserModel>(context);
     return Scaffold(
+      resizeToAvoidBottomPadding: false,
       body: SafeArea(
         child: Stack(
           children: [
@@ -158,9 +159,11 @@ class _LoginPageState extends State<LoginPage>
                                           : Icon(Icons.visibility_off),
                                       onPressed: () {
                                         changeTransition();
-                                        setState(() {
-                                          _obscure = !_obscure;
-                                        });
+                                        setState(
+                                          () {
+                                            _obscure = !_obscure;
+                                          },
+                                        );
                                       },
                                     ), //Icon(Icons.remove_red_eye_outlined),
                                   ),
@@ -194,22 +197,134 @@ class _LoginPageState extends State<LoginPage>
                                   color: Colors.red,
                                   onPressed: () async {
                                     if (_formKey.currentState.validate()) {
-                                      loading = CircularProgressIndicator();
+                                      FocusScope.of(context).unfocus();
+                                      setState(() {
+                                        loading = CircularProgressIndicator();
+                                      });
                                       var result = await DatabaseService()
                                           .signInStudent(
                                               userModel,
                                               _rollNumberController.text,
                                               _passwordController.text);
-                                      if (result == true) {
+                                      if (result == "Success") {
+                                        setState(
+                                          () {
+                                            loading = Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.center,
+                                              children: [
+                                                Container(
+                                                  child: Icon(
+                                                    Icons.check_circle,
+                                                    color: Colors.green,
+                                                  ),
+                                                ),
+                                                SizedBox(
+                                                  width: 10.0,
+                                                ),
+                                                Container(
+                                                  child: Text(
+                                                    "Success !",
+                                                    style: TextStyle(
+                                                      color: Colors.green,
+                                                    ),
+                                                  ),
+                                                ),
+                                              ],
+                                            );
+                                          },
+                                        );
                                         Navigator.of(context).push(
-                                            MaterialPageRoute(
-                                                builder: (context) =>
-                                                    CoursesHomeScreen()));
-                                      } else {
+                                          MaterialPageRoute(
+                                            builder: (context) =>
+                                                CoursesHomeScreen(),
+                                          ),
+                                        );
+                                      } else if (result == "User not found") {
                                         setState(() {
-                                          loading = Container(child :Text("Somthing went wrong"),);
+                                          loading = Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.center,
+                                            children: [
+                                              Container(
+                                                child: Icon(
+                                                  Icons.error,
+                                                  color: Colors.red,
+                                                ),
+                                              ),
+                                              SizedBox(
+                                                width: 10.0,
+                                              ),
+                                              Container(
+                                                child: Text(
+                                                  "R.No not found. Please sign up first !",
+                                                  style: TextStyle(
+                                                    color: Colors.red,
+                                                  ),
+                                                ),
+                                              ),
+                                            ],
+                                          );
                                         });
-                                        print("Somthing went wrong");
+                                        print("User not found");
+                                      } else if (result == "Wrong password") {
+                                        setState(
+                                          () {
+                                            loading = Center(
+                                              child: Row(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.center,
+                                                children: [
+                                                  Container(
+                                                    child: Icon(
+                                                      Icons.error,
+                                                      color: Colors.red,
+                                                    ),
+                                                  ),
+                                                  SizedBox(
+                                                    width: 10.0,
+                                                  ),
+                                                  Container(
+                                                    child: Text(
+                                                      "Wrong password, please try again !",
+                                                      style: TextStyle(
+                                                        color: Colors.red,
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
+                                            );
+                                          },
+                                        );
+                                      } else {
+                                        setState(
+                                          () {
+                                            loading = Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.center,
+                                              children: [
+                                                Container(
+                                                  child: Icon(
+                                                    Icons.error,
+                                                    color: Colors.red,
+                                                  ),
+                                                ),
+                                                SizedBox(
+                                                  width: 10.0,
+                                                ),
+                                                Container(
+                                                  child: Text(
+                                                    "Something went wrong, please try again later.",
+                                                    style: TextStyle(
+                                                      color: Colors.red,
+                                                    ),
+                                                  ),
+                                                ),
+                                              ],
+                                            );
+                                          },
+                                        );
                                       }
                                     }
                                   },
@@ -217,6 +332,10 @@ class _LoginPageState extends State<LoginPage>
                               ),
                               SizedBox(
                                 height: 10.0,
+                              ),
+                              Container(
+                                padding: EdgeInsets.all(5.0),
+                                child: loading,
                               ),
                               Container(
                                 child: RaisedButton(
@@ -239,9 +358,6 @@ class _LoginPageState extends State<LoginPage>
                                     );
                                   },
                                 ),
-                              ),
-                              Container(
-                                child: loading,
                               ),
                             ],
                           ),
