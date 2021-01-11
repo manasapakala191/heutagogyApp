@@ -236,8 +236,10 @@ class _DragDropImageScreenState extends State<DragDropImageScreen> {
           _updateProgress();
           Navigator.of(context).push(MaterialPageRoute(
             builder: (context) => DragDropScoreWidget(
-              correct: correct,
-              choices: choices,
+              // correct: correct,
+              // choices: choices,
+              responseMap: null,
+              questionTest: null,
             )
           ));
           // showDialog(

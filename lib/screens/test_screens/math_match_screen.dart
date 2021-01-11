@@ -90,12 +90,12 @@ class _MathMatchScreenState extends State<MathMatchScreen> {
         padding: const EdgeInsets.all(5),
         onPressed: () {
           _updateProgress();
-           Navigator.of(context).push(MaterialPageRoute(
-            builder: (context) => DragDropScoreWidget(
-              correct: data,
-              choices: choices,
-            )
-          ));
+          //  Navigator.of(context).push(MaterialPageRoute(
+          //   builder: (context) => DragDropScoreWidget(
+          //     correct: data,
+          //     choices: choices,
+          //   )
+          // ));
           // showDialog(
           //   context: context,
           //   builder: (BuildContext context){

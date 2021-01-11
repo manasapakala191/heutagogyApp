@@ -12,9 +12,12 @@ import '../../hex_color.dart';
 import 'package:heutagogy/screens/score_screens/drag_drop_score.dart';
 
 class DragDropAudioScreen extends StatefulWidget {
+
   final DragDropAudioTest data;
   final String courseID,lessonID,type;
+  
   DragDropAudioScreen(this.data,this.type,this.courseID,this.lessonID, {Key key}) : super(key: key);
+  
   @override
   _DragDropAudioScreenState createState() => _DragDropAudioScreenState(data);
 }
@@ -225,8 +228,10 @@ class _DragDropAudioScreenState extends State<DragDropAudioScreen> {
           _updateProgress();
            Navigator.of(context).push(MaterialPageRoute(
             builder: (context) => DragDropScoreWidget(
-              correct: correct,
-              choices: choices,
+              // correct: correct,
+              // choices: choices,
+              responseMap: ,
+              questionTest: null,
             )
           ));
           // showDialog(
