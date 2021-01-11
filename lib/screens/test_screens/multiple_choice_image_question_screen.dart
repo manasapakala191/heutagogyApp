@@ -141,15 +141,15 @@ class _MultipleChoiceImageQuestionScreenState
               child: RaisedButton(
                 onPressed: () {
                   _updateProgress();
-                  Map<String , dynamic> responseMap = getResponseMap();
-                  responseMap['totalQuestions'] = total;
-                  responseMap['correctAnswers'] = count;
-                  Navigator.of(context).push(MaterialPageRoute(
-                    builder: (context) => SingleCorrectImageResponseViewer(
-                      responseMap: responseMap,
-                      imageQuestionTest: imageQuestionTest,
-                    )
-                  ));
+                  // Map<String , dynamic> responseMap = getResponseMap();
+                  // responseMap['totalQuestions'] = total;
+                  // responseMap['correctAnswers'] = count;
+                  // Navigator.of(context).push(MaterialPageRoute(
+                  //   builder: (context) => SingleCorrectImageResponseViewer(
+                  //     responseMap: responseMap,
+                  //     imageQuestionTest: imageQuestionTest,
+                  //   )
+                  // ));
           //         showDialog(
           //   context: context,
           //   builder: (BuildContext context){

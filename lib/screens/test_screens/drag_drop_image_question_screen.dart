@@ -64,6 +64,7 @@ class _DragDropImageScreenState extends State<DragDropImageScreen> {
     }
     var progress = Progress(dragDropImageTest.testName,dragDropImageTest.testDescription,count, total, responses);
     Map<String, dynamic> json = progress.toMap();
+    print(json);
     DatabaseService().writeProgress(
         json, studentID, widget.courseID, widget.lessonID, widget.type);
   }
@@ -234,14 +235,14 @@ class _DragDropImageScreenState extends State<DragDropImageScreen> {
         padding: const EdgeInsets.all(5),
         onPressed: () {
           _updateProgress();
-          Navigator.of(context).push(MaterialPageRoute(
-            builder: (context) => DragDropScoreWidget(
-              // correct: correct,
-              // choices: choices,
-              responseMap: null,
-              questionTest: null,
-            )
-          ));
+          // Navigator.of(context).push(MaterialPageRoute(
+          //   builder: (context) => DragDropScoreWidget(
+          //     // correct: correct,
+          //     // choices: choices,
+          //     responseMap: null,
+          //     questionTest: null,
+          //   )
+          // ));
           // showDialog(
           //     context: context,
           //     builder: (BuildContext context) {
