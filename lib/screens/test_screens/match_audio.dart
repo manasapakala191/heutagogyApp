@@ -218,20 +218,19 @@ class _DragDropAudioScreenState extends State<DragDropAudioScreen> {
     body.add(SizedBox(height: 20));
     body.add(
       MaterialButton(
-        minWidth: 75,
-        height: 75,
+        height: 55,
         elevation: 8,
         child: Text("Submit"),
         color: HexColor("#ed2a26"),
         padding: const EdgeInsets.all(5),
         onPressed: () {
-          _updateProgress();
+           _updateProgress();
            Navigator.of(context).push(MaterialPageRoute(
             builder: (context) => DragDropScoreWidget(
               // correct: correct,
               // choices: choices,
-              responseMap: ,
-              questionTest: null,
+              responseMap: choices,
+              questionTest: audiodata,
             )
           ));
           // showDialog(

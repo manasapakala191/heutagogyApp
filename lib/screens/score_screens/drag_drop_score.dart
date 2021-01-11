@@ -1,38 +1,46 @@
-// import 'package:flutter/material.dart';
-
-// class DragDropScoreWidget extends StatelessWidget {
-
-//   final Map<String,dynamic> correct;
-//   final Map<String,dynamic> choices;
-
-//   DragDropScoreWidget({this.correct,this.choices});
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return Container(
-      
-//     );
-//   }
-// }
-
+import 'package:audioplayers/audio_cache.dart';
+import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:heutagogy/hex_color.dart';
 import 'package:heutagogy/models/test_type_models/match_audio.dart';
-import 'package:heutagogy/models/test_type_models/multiple_choice_question_test.dart';
 import 'package:heutagogy/models/test_type_models/option_class.dart';
-import 'package:heutagogy/models/test_type_models/question_class.dart';
-import 'package:heutagogy/screens/score_screens/line_chart_widget.dart';
 import 'package:heutagogy/screens/score_screens/pie_chart_widget.dart';
 
-class DragDropScoreWidget extends StatelessWidget {
+class DragDropScoreWidget extends StatefulWidget {
   final Map<String,dynamic> responseMap;
   final DragDropAudioTest questionTest;
+
   DragDropScoreWidget({this.responseMap, this.questionTest});
+
+  @override
+  _DragDropScoreWidgetState createState() => _DragDropScoreWidgetState();
+}
+
+class _DragDropScoreWidgetState extends State<DragDropScoreWidget> {
+  int wrong = 0, right = 0;
+
+  void evaluateAnswers(){
+    for(var key in widget.responseMap.keys){
+      if(key == widget.responseMap[key]){
+        right++;
+      }
+      else{
+        wrong++;
+      }
+    }
+  }
+  @override
+  void initState(){
+    super.initState();
+    evaluateAnswers();
+  }
+
   @override
   Widget build(BuildContext context) {
+
     return Scaffold(
       appBar: AppBar(
+        title: Text("Your score in " + widget.questionTest.testName),
         leading: IconButton(
           icon: Icon(Icons.arrow_back),
           onPressed: (){
@@ -46,28 +54,45 @@ class DragDropScoreWidget extends StatelessWidget {
         width: MediaQuery.of(context).size.width,
         child: ListView(
           children: [
+            ListTile(
+              title: Text(widget.questionTest.testName),
+              subtitle: Text(widget.questionTest.testDescription),
+              trailing: Text(widget.questionTest.subject),
+            ),
             Padding(
               padding: const EdgeInsets.all(8.0),
               child: PieChartWidget(
-                // wrong: responseMap['totalQuestions'] - responseMap['correctAnswers'] ,
-                wrong: 2,
-                right: 1,
-                // right: responseMap['correctAnswers'],
+                wrong: wrong,
+                right: right,
               ),
             ),
             ListTile(
               title: Text('Responses',style: GoogleFonts.varelaRound(fontSize: 20),),
             ),
-            ListTile(
-              title: Text("testname"),
-              subtitle: Text("test description"),
-              trailing: Text("subject"),
+            Card(
+              margin: EdgeInsets.all(8),
+              child: Container(
+                padding: EdgeInsets.all(10),
+                decoration: BoxDecoration(
+                  color: Colors.red,
+                ),
+                child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    // crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: <Widget>[
+                      Text("Acceptance",style: TextStyle(fontWeight: FontWeight.bold,color:Colors.white, ),),
+                      Text("Audio",style: TextStyle(color:Colors.white,fontWeight: FontWeight.bold,),),
+                      Text("Correct choice",style: TextStyle(color:Colors.white,fontWeight: FontWeight.bold,),),
+                      Text("Chosen choice",style: TextStyle(color:Colors.white,fontWeight: FontWeight.bold,),)
+                    ]
+                  ),
+              ),
             ),
             Column(
-              children: questionTest.audios.map((e) => SizedBox(
+              children: widget.questionTest.audios.map((e) => SizedBox(
                 width: MediaQuery.of(context).size.width,
                 child: AudioQuestionResponseViewer(
-                  responseMap: responseMap,
+                  responseMap: widget.responseMap,
                   questionData: e,
                 ),
               )).toList(),
@@ -85,102 +110,115 @@ class AudioQuestionResponseViewer extends StatelessWidget {
 
   AudioQuestionResponseViewer({this.questionData, this.responseMap});
 
-  // Widget check(String question, ImageChoice option){
-  //   if(option.correct == true){
-  //     return Text('Correct', style: GoogleFonts.varelaRound(color: Colors.green),);
-  //   }else{
-  //     if(responseMap[question] == option.text){
-  //       return Text('Wrong', style: GoogleFonts.varelaRound(color: Colors.red));
-  //     }else{
-  //       return SizedBox(
-  //         height: 1,
-  //         width: 1,
-  //       );
-  //     }
-  //   }
-  // }
-
   @override
   Widget build(BuildContext context) {
+    print("hhjbfjsbfja--------");
+    print(responseMap);
+    print(questionData.description);
     return Card(
       margin: EdgeInsets.all(10),
-      child: Column(
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
-          ListTile(
-            title: Text("mm"),
-          ),
-          // Column(
-          //   mainAxisSize: MainAxisSize.max,
-          //   mainAxisAlignment: MainAxisAlignment.center,
-          //   children: [
-          //     Row(
-          //       mainAxisSize: MainAxisSize.max,
-          //       mainAxisAlignment: MainAxisAlignment.spaceAround,
-          //       children: [
-          //         SizedBox(
-          //           width: MediaQuery.of(context).size.width/3,
-          //           child: OptionWidget(option: questionData.options[0],
-          //           widget: check(questionData.question, questionData.options[0]),),
-          //         ),
-          //         SizedBox(
-          //           width: MediaQuery.of(context).size.width/3,
-          //           child: OptionWidget(option: questionData.options[1],
-          //           widget: check(questionData.question, questionData.options[1]),
-          //           ),
-          //         ),
-          //       ],
-          //     ),
-          //     Row(
-          //       mainAxisSize: MainAxisSize.max,
-          //       mainAxisAlignment: MainAxisAlignment.spaceAround,
-          //       children: [
-          //         SizedBox(
-          //           width: MediaQuery.of(context).size.width/3,
-          //           child: OptionWidget(option: questionData.options[2],
-          //           widget: check(questionData.question, questionData.options[2]),
-          //           ),
-          //         ),
-          //         SizedBox(
-          //           width: MediaQuery.of(context).size.width/3,
-          //           child: OptionWidget(option: questionData.options[3],
-          //           widget: check(questionData.question, questionData.options[3]),
-          //           ),
-          //         ),
-          //       ],
-          //     )
-          //   ],
-          // )
+          responseMap[questionData.description] == questionData.description ? Icon(Icons.check,color:Colors.green): Icon(Icons.clear,color:Colors.red),
+          AudioButton(active: false,audioPath: questionData.description,),
+          Text(questionData.description),
+          Text(responseMap[questionData.description] == null ? "-":responseMap[questionData.description])
         ],
       ),
     );
   }
 }
 
-// class OptionWidget extends StatelessWidget {
-//   final ImageChoice option;
-//   final Widget widget;
-//   OptionWidget({this.option, this.widget});
-//   @override
-//   Widget build(BuildContext context) {
-//     return Card(
-//       elevation: 10,
-//       margin: EdgeInsets.all(3),
-//       child: Column(
-//         crossAxisAlignment: CrossAxisAlignment.center,
-//         children: [
-//           Row(
-//             mainAxisAlignment: MainAxisAlignment.center,
-//             mainAxisSize: MainAxisSize.min,
-//             children: [
-//               widget
-//             ],
-//           ),
-//           SizedBox(
-//             height: MediaQuery.of(context).size.height/4,
-//             child: Image.network(option.picture, fit: BoxFit.contain,),
-//           )
-//         ],
-//       ),
-//     );
-//   }
-// }
+class AudioButton extends StatefulWidget {
+  final String audioPath;
+  final bool active;
+
+  AudioButton({Key key, this.audioPath, this.active})
+      : super(key: key);
+
+  @override
+  _AudioButtonState createState() =>
+      _AudioButtonState(audioPath, active);
+}
+
+class _AudioButtonState extends State<AudioButton>
+    with SingleTickerProviderStateMixin {
+  String audioPath;
+  bool playing, enabled;
+  AnimationController _controller;
+
+  _AudioButtonState(this.audioPath, this.enabled);
+
+  AudioCache audioCache;
+
+  @override
+  void initState() {
+    super.initState();
+    audioCache = AudioCache(prefix: 'assets/audios/');
+    // try {
+      print("\n\nFind the audio Path here ");
+      print(audioPath);
+      print("Audio path is above here!!");
+    audioCache.load("$audioPath.mp3"); 
+    // } catch (e) {
+    //   print("There has been an error loading the audio file");
+    // }
+    playing = false;
+    _controller =
+        AnimationController(duration: Duration(milliseconds: 200), vsync: this);
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    _controller.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    var aud = Container(
+      width: 43,
+      height: 43,
+      decoration: BoxDecoration(
+          border: Border.all(width: 2),
+          borderRadius: BorderRadius.circular(100)),
+      child: IconButton(
+        disabledColor: Colors.black,
+        splashColor: Color.fromARGB(29, 42, 242, 121),
+        icon: AnimatedIcon(
+          icon: AnimatedIcons.play_pause,
+          progress: _controller,
+        ),
+        onPressed: (playing)
+            ? null
+            : (() async {
+                if (!playing) {
+                  setState(
+                    () {
+                      playing = true;
+                    },
+                  );
+                  _controller.forward();
+                  AudioPlayer audioPlayer =
+                      await audioCache.play("$audioPath.mp3");
+                  audioPlayer.onPlayerCompletion.listen(
+                    (event) {
+                      setState(
+                        () {
+                          playing = false;
+                        },
+                      );
+                      _controller.reverse();
+                    },
+                  );
+                }
+              }),
+      ),
+    );
+    return Container(
+      padding: EdgeInsets.all(15),
+      child: aud,
+    );
+  }
+}
