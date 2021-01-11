@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:heutagogy/hex_color.dart';
+import 'package:heutagogy/models/progress.dart';
 import 'package:heutagogy/models/test_type_models/match_text_test.dart';
 import 'package:heutagogy/screens/score_screens/line_chart_widget.dart';
 import 'package:heutagogy/screens/score_screens/pie_chart_widget.dart';
@@ -8,11 +9,9 @@ import 'package:heutagogy/screens/score_screens/pie_chart_widget.dart';
 class ResultScreen extends StatelessWidget {
 
   final MatchPicWithText matchPicWithText;
-  final List<String> responseMap;
-  final int total;
-  final int count;
+  final Progress progress;
 
-  ResultScreen({this.matchPicWithText, this.responseMap, this.total, this.count});
+  ResultScreen({this.matchPicWithText,this.progress});
 
   Widget build(BuildContext context) {
     return Scaffold(
@@ -20,7 +19,6 @@ class ResultScreen extends StatelessWidget {
         leading: IconButton(
           icon: Icon(Icons.arrow_back, color: Colors.white,),
           onPressed: (){
-            Navigator.of(context).pop();
             Navigator.of(context).pop();
           },
         ),
@@ -35,8 +33,8 @@ class ResultScreen extends StatelessWidget {
             Padding(
               padding: const EdgeInsets.all(8.0),
               child: PieChartWidget(
-                right: count,
-                wrong: total - count,
+                right: progress.partsDone,
+                wrong: progress.total - progress.partsDone,
               ),
             ),
             ListTile(
@@ -51,8 +49,8 @@ class ResultScreen extends StatelessWidget {
               width: MediaQuery.of(context).size.width,
               child: MatchTextResponseViewer(
                 matchPicWithText: matchPicWithText,
-                responseMap: responseMap,
-                total: total,
+                responseList: progress.responses,
+                total: matchPicWithText.choices.length,
               ),
             )
           ],
@@ -64,17 +62,19 @@ class ResultScreen extends StatelessWidget {
 
 class MatchTextResponseViewer extends StatelessWidget {
   final MatchPicWithText matchPicWithText;
-  final List<String> responseMap;
+  final List responseList;
   final int total;
-  MatchTextResponseViewer({this.matchPicWithText, this.responseMap, this.total});
+  MatchTextResponseViewer({this.matchPicWithText, this.responseList, this.total});
 
   final checkList = <bool>[];
 
   void getCheckList(){
     for(int i=0; i<total; i++){
-      if(responseMap[i] == matchPicWithText.choices[i].correctText)
+      if(responseList[i] == matchPicWithText.choices[i].correctText)
         checkList.add(true);
-      checkList.add(false);
+      else{
+        checkList.add(false);
+      }
     }
   }
 
@@ -83,10 +83,11 @@ class MatchTextResponseViewer extends StatelessWidget {
     for(int j=0; j<total; j++){
       dataRows.add(DataRow(
         cells: [
-          DataCell(checkList[j] ? Icon(Icons.check, color: Colors.green,) : Icon(Icons.close, color: Colors.red,)),
+          // DataCell(checkList[j] ? Icon(Icons.check, color: Colors.green,) : Icon(Icons.close, color: Colors.red,)),
           DataCell(SizedBox(
               child: Image.network(matchPicWithText.choices[j].picture, fit: BoxFit.contain,))),
-          DataCell(Text(responseMap[j])),
+          DataCell(
+              Text(responseList[j],style: TextStyle(color: checkList[j] ? Colors.green : Colors.red),)),
           DataCell(Text(matchPicWithText.choices[j].correctText))
         ]
       ));
@@ -96,13 +97,16 @@ class MatchTextResponseViewer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     getCheckList();
+    final _screensize=MediaQuery.of(context).size;
     return Container(
       margin: EdgeInsets.all(10),
       child: DataTable(
+        columnSpacing: 10,
+        dataRowHeight: _screensize.height*0.2,
         columns: [
-          DataColumn(
-            label: Icon(Icons.stacked_bar_chart)
-          ),
+          // DataColumn(
+          //   label: Icon(Icons.stacked_bar_chart)
+          // ),
           DataColumn(
             label: Text('Questions')
           ),

@@ -1,10 +1,16 @@
+import 'package:heutagogy/models/test_type_models/test_class.dart';
+
 import 'option_class.dart';
 
-class MathMatchTest {
-  String heading;
+class MathMatchTest extends Test{
   List<TextPair> questions;
-  String subject;
-  MathMatchTest({this.heading, this.questions, this.subject});
+
+  MathMatchTest(
+      {String testName, String subject, String testDescription, this.questions})
+      : super(
+      testName: testName,
+      subject: subject,
+      testDescription: testDescription);
 
   factory MathMatchTest.fromJSON(Map<String, dynamic> jsonData) {
     List<TextPair> ques = [];
@@ -13,10 +19,10 @@ class MathMatchTest {
       for (var x in jsonData['questions']) {
         ques.add(TextPair.fromJson(x));
       }
-      return MathMatchTest(heading: jsonData['name'], questions: ques, subject: jsonData['subject']);
+      return MathMatchTest(testName: jsonData['name'],testDescription: jsonData['description'], questions: ques, subject: jsonData['subject']);
     }
     else{
-      return MathMatchTest(heading:"",questions:ques,subject:"");
+      return MathMatchTest(testName:"",questions:ques,subject:"");
     }
   }
 }

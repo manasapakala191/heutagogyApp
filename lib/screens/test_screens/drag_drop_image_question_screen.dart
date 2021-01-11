@@ -8,7 +8,6 @@ import 'package:heutagogy/models/progress.dart';
 import 'package:heutagogy/models/test_type_models/drag_drop_test.dart';
 import 'package:heutagogy/models/test_type_models/option_class.dart';
 import 'package:heutagogy/models/userModel.dart';
-import 'package:heutagogy/screens/score_screens/drag_drop_score.dart';
 import 'package:provider/provider.dart';
 import 'package:heutagogy/services/database.dart';
 import 'package:heutagogy/models/studentProgress.dart';
@@ -62,7 +61,7 @@ class _DragDropImageScreenState extends State<DragDropImageScreen> {
       }
       total++;
     }
-    var progress = Progress(dragDropImageTest.testName,dragDropImageTest.testDescription,count, total, responses);
+    var progress = Progress(name :dragDropImageTest.testName,description: dragDropImageTest.testDescription,partsDone:count,total: total,responses: responses);
     Map<String, dynamic> json = progress.toMap();
     DatabaseService().writeProgress(
         json, studentID, widget.courseID, widget.lessonID, widget.type);
@@ -234,35 +233,36 @@ class _DragDropImageScreenState extends State<DragDropImageScreen> {
         padding: const EdgeInsets.all(5),
         onPressed: () {
           _updateProgress();
-          Navigator.of(context).push(MaterialPageRoute(
-            builder: (context) => DragDropScoreWidget(
-              correct: correct,
-              choices: choices,
-            )
-          ));
-          // showDialog(
-          //     context: context,
-          //     builder: (BuildContext context) {
-          //       return AlertDialog(
-          //         title: Text("Quiz submitted!"),
-          //         content: Text("The Quiz is submitted successfully"),
-          //         actions: [
-          //           FlatButton(
-          //             child: Text("Stay"),
-          //             onPressed: () {
-          //               Navigator.pop(context);
-          //             },
-          //           ),
-          //           FlatButton(
-          //             child: Text("Leave"),
-          //             onPressed: () {
-          //               Navigator.pop(context);
-          //               Navigator.pop(context);
-          //             },
-          //           )
-          //         ],
-          //       );
-          //     });
+          // Navigator.of(context).push(MaterialPageRoute(
+          //   builder: (context) => DragDropScoreWidget(
+          //     // correct: correct,
+          //     choices: choices,
+          //     dragDropImageTest: dragDropImageTest,
+          //   )
+          // ));
+          showDialog(
+              context: context,
+              builder: (BuildContext context) {
+                return AlertDialog(
+                  title: Text("Quiz submitted!"),
+                  content: Text("The Quiz is submitted successfully"),
+                  actions: [
+                    FlatButton(
+                      child: Text("Stay"),
+                      onPressed: () {
+                        Navigator.pop(context);
+                      },
+                    ),
+                    FlatButton(
+                      child: Text("Leave"),
+                      onPressed: () {
+                        Navigator.pop(context);
+                        Navigator.pop(context);
+                      },
+                    )
+                  ],
+                );
+              });
           // Update progress and write to database
         },
       ),

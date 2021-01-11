@@ -91,7 +91,8 @@ class _ProfilePageState extends State<ProfilePage> {
                           image: userModel.photoURL != null ? userModel.photoURL : "No image")
                       : Image.asset(
                           "assets/images/empty_account_circle.png",
-                        )),
+                        )
+              ),
               margin: EdgeInsets.all(50.0),
               width: MediaQuery.of(context).size.width / 10,
               height: MediaQuery.of(context).size.height / 5,

@@ -13,8 +13,9 @@ import 'package:provider/provider.dart';
 
 class MultipleChoiceImageQuestionScreen extends StatefulWidget {
   final ImageQuestionTest imageQuestionTest;
-  final String courseID,lessonID,type;
-  MultipleChoiceImageQuestionScreen({this.imageQuestionTest,this.type,this.courseID,this.lessonID});
+  final String courseID, lessonID, type;
+  MultipleChoiceImageQuestionScreen(
+      {this.imageQuestionTest, this.type, this.courseID, this.lessonID});
   @override
   _MultipleChoiceImageQuestionScreenState createState() =>
       _MultipleChoiceImageQuestionScreenState(this.imageQuestionTest);
@@ -37,9 +38,9 @@ class _MultipleChoiceImageQuestionScreenState
 
   List<String> responses = List<String>();
 
-  Map<String, dynamic> getResponseMap(){
+  Map<String, dynamic> getResponseMap() {
     Map<String, dynamic> responseMap = Map<String, dynamic>();
-    for(int i=0; i < imageQuestionTest.questions.length; i++){
+    for (int i = 0; i < imageQuestionTest.questions.length; i++) {
       responseMap[imageQuestionTest.questions[i].question] = responses[i];
     }
     print(responseMap);
@@ -60,9 +61,11 @@ class _MultipleChoiceImageQuestionScreenState
       }
       total++;
     }
-    var progress = Progress(imageQuestionTest.testName,imageQuestionTest.testDescription,count,total,responses);
-    Map<String,dynamic> json = progress.toMap();
-    DatabaseService().writeProgress(json,studentID,widget.courseID,widget.lessonID,widget.type);
+    var progress = Progress(name:imageQuestionTest.testName,
+        description: imageQuestionTest.testDescription,partsDone: count,total: total,responses: responses);
+    Map<String, dynamic> json = progress.toMap();
+    DatabaseService().writeProgress(
+        json, studentID, widget.courseID, widget.lessonID, widget.type);
   }
 
   @override
@@ -141,33 +144,32 @@ class _MultipleChoiceImageQuestionScreenState
               child: RaisedButton(
                 onPressed: () {
                   _updateProgress();
-                  Map<String , dynamic> responseMap = getResponseMap();
+                  Map<String, dynamic> responseMap = getResponseMap();
                   responseMap['totalQuestions'] = total;
                   responseMap['correctAnswers'] = count;
-                  Navigator.of(context).push(MaterialPageRoute(
-                    builder: (context) => SingleCorrectImageResponseViewer(
-                      responseMap: responseMap,
-                      imageQuestionTest: imageQuestionTest,
-                    )
-                  ));
-          //         showDialog(
-          //   context: context,
-          //   builder: (BuildContext context){
-          //     return AlertDialog(
-          //       title: Text("Quiz submitted!"),
-          //       content: Text("The Quiz is submitted successfully"),
-          //       actions: [
-          //         FlatButton(child: Text("Stay"),onPressed: (){
-          //           Navigator.pop(context);
-          //         },),
-          //         FlatButton(child: Text("Leave"),onPressed: (){
-          //           Navigator.pop(context);
-          //           Navigator.pop(context);
-          //         },)
-          //       ],
-          //     );
-          //   }
-          // );
+                  // Navigator.of(context).push(MaterialPageRoute(
+                  //     builder: (context) => SingleCorrectImageResponseViewer(
+                  //           responseMap: responseMap,
+                  //           imageQuestionTest: imageQuestionTest,
+                  //         )));
+                  //         showDialog(
+                  //   context: context,
+                  //   builder: (BuildContext context){
+                  //     return AlertDialog(
+                  //       title: Text("Quiz submitted!"),
+                  //       content: Text("The Quiz is submitted successfully"),
+                  //       actions: [
+                  //         FlatButton(child: Text("Stay"),onPressed: (){
+                  //           Navigator.pop(context);
+                  //         },),
+                  //         FlatButton(child: Text("Leave"),onPressed: (){
+                  //           Navigator.pop(context);
+                  //           Navigator.pop(context);
+                  //         },)
+                  //       ],
+                  //     );
+                  //   }
+                  // );
                 },
                 elevation: 8,
                 child: Text("Submit"),
@@ -236,6 +238,7 @@ class _ImageOptionBuilderState extends State<ImageOptionBuilder> {
       width: MediaQuery.of(context).size.width,
       child: GridView.builder(
         itemCount: widget.options.length,
+        physics: ClampingScrollPhysics(),
         gridDelegate:
             SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2),
         itemBuilder: (context, index) => RadioListTile(
@@ -267,4 +270,3 @@ class _ImageOptionBuilderState extends State<ImageOptionBuilder> {
     );
   }
 }
-

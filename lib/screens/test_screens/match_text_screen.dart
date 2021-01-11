@@ -46,7 +46,7 @@ class _MatchTextState extends State<MatchText> {
       }
       total++;
     }
-    var progress = Progress(_matchPicWithText.testName,_matchPicWithText.testDescription,count,total,responses);
+    var progress = Progress(name: _matchPicWithText.testName,description: _matchPicWithText.testDescription,partsDone: count,total: total,responses: responses);
     Map<String,dynamic> json = progress.toMap();
     DatabaseService().writeProgress(json,studentID,widget.courseID,widget.lessonID,widget.type);
   }
@@ -126,8 +126,8 @@ class _MatchTextState extends State<MatchText> {
               fit: BoxFit.cover,
             ),
             SizedBox(height: 20.0),
-            (!data[x.correctText])
-                ? Container(
+            // (!data[x.correctText])?
+            Container(
                     margin: EdgeInsets.only(
                         top: 10, bottom: 20, left: 50, right: 50),
                     // key: UniqueKey(),
@@ -157,27 +157,27 @@ class _MatchTextState extends State<MatchText> {
                       style: TextStyle(fontSize: 16),
                     ),
                   )
-                : Container(
-                    // key: UniqueKey(),
-                    height: 45.00,
-                    margin: EdgeInsets.only(
-                        top: 10, bottom: 20, left: 50, right: 50),
-                    decoration: BoxDecoration(
-                      color: Colors.green,
-                        border: Border.all(color: Colors.green, width: 2),
-                        borderRadius: BorderRadius.circular(20)),
-                    child: Center(
-                      child: Text(
-                        x.correctText,
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    ),
-                  ),
+                // : Container(
+                //     // key: UniqueKey(),
+                //     height: 45.00,
+                //     margin: EdgeInsets.only(
+                //         top: 10, bottom: 20, left: 50, right: 50),
+                //     decoration: BoxDecoration(
+                //       color: Colors.green,
+                //         border: Border.all(color: Colors.green, width: 2),
+                //         borderRadius: BorderRadius.circular(20)),
+                //     child: Center(
+                //       child: Text(
+                //         x.correctText,
+                //         textAlign: TextAlign.center,
+                //         style: TextStyle(
+                //           color: Colors.white,
+                //           fontSize: 18,
+                //           fontWeight: FontWeight.bold,
+                //         ),
+                //       ),
+                //     ),
+                //   ),
           ],
         ),
       );
@@ -197,14 +197,14 @@ class _MatchTextState extends State<MatchText> {
         padding: const EdgeInsets.all(5),
         onPressed: (){
           _updateProgress();
-          Navigator.of(context).push(MaterialPageRoute(
-            builder: (context) => ResultScreen(
-              matchPicWithText: widget.matchPicWithText,
-              responseMap: responses,
-              total: widget.matchPicWithText.choices.length,
-              count: count,
-            )
-          ));
+          // Navigator.of(context).push(MaterialPageRoute(
+          //   builder: (context) => ResultScreen(
+          //     matchPicWithText: widget.matchPicWithText,
+          //     responseMap: data,
+          //     // total: widget.matchPicWithText.choices.length,
+          //     // count: count,
+          //   )
+          // ));
         },
       ),
     );

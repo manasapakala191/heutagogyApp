@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:heutagogy/hex_color.dart';
+import 'package:heutagogy/models/progress.dart';
 import 'package:heutagogy/models/test_type_models/multiple_choice_question_test.dart';
 import 'package:heutagogy/models/test_type_models/option_class.dart';
 import 'package:heutagogy/models/test_type_models/question_class.dart';
@@ -8,9 +9,9 @@ import 'package:heutagogy/screens/score_screens/line_chart_widget.dart';
 import 'package:heutagogy/screens/score_screens/pie_chart_widget.dart';
 
 class SingleCorrectImageResponseViewer extends StatelessWidget {
-  final Map<String,dynamic> responseMap;
+  final Progress progress;
   final ImageQuestionTest imageQuestionTest;
-  SingleCorrectImageResponseViewer({this.responseMap, this.imageQuestionTest});
+  SingleCorrectImageResponseViewer({this.progress, this.imageQuestionTest});
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -18,7 +19,6 @@ class SingleCorrectImageResponseViewer extends StatelessWidget {
         leading: IconButton(
           icon: Icon(Icons.arrow_back),
           onPressed: (){
-            Navigator.of(context).pop();
             Navigator.of(context).pop();
           },
         ),
@@ -31,8 +31,8 @@ class SingleCorrectImageResponseViewer extends StatelessWidget {
             Padding(
               padding: const EdgeInsets.all(8.0),
               child: PieChartWidget(
-                wrong: responseMap['totalQuestions'] - responseMap['correctAnswers'] ,
-                right: responseMap['correctAnswers'],
+                wrong: progress.total-progress.partsDone ,
+                right: progress.partsDone
               ),
             ),
             ListTile(
@@ -43,15 +43,20 @@ class SingleCorrectImageResponseViewer extends StatelessWidget {
               subtitle: Text(imageQuestionTest.testDescription),
               trailing: Text(imageQuestionTest.subject),
             ),
-            Column(
-              children: imageQuestionTest.questions.map((e) => SizedBox(
-                width: MediaQuery.of(context).size.width,
-                child: ImageQuestionResponseViewer(
-                  responseMap: responseMap,
-                  imageQuestionData: e,
-                ),
-              )).toList(),
-            )
+            ListView.builder(
+              itemCount: imageQuestionTest.questions.length,
+                shrinkWrap: true,
+                physics: ClampingScrollPhysics(),
+                itemBuilder: (context,index){
+                return  SizedBox(
+                  width: MediaQuery.of(context).size.width,
+                  child: ImageQuestionResponseViewer(
+                    responseList: progress.responses,
+                    imageQuestionData: imageQuestionTest.questions[index],
+                    idx: index,
+                  ),
+                );
+                })
           ],
         ),
       ),
@@ -61,15 +66,15 @@ class SingleCorrectImageResponseViewer extends StatelessWidget {
 
 class ImageQuestionResponseViewer extends StatelessWidget {
   final ImageQuestionData imageQuestionData;
-  final Map<String, dynamic> responseMap;
+  final List responseList;
+  int idx;
+  ImageQuestionResponseViewer({this.imageQuestionData, this.responseList,this.idx});
 
-  ImageQuestionResponseViewer({this.imageQuestionData, this.responseMap});
-
-  Widget check(String question, ImageChoice option){
+  Widget check(int index, ImageChoice option){
     if(option.correct == true){
       return Text('Correct', style: GoogleFonts.varelaRound(color: Colors.green),);
     }else{
-      if(responseMap[question] == option.text){
+      if(responseList[index] == option.text){
         return Text('Wrong', style: GoogleFonts.varelaRound(color: Colors.red));
       }else{
         return SizedBox(
@@ -100,12 +105,12 @@ class ImageQuestionResponseViewer extends StatelessWidget {
                   SizedBox(
                     width: MediaQuery.of(context).size.width/3,
                     child: OptionWidget(option: imageQuestionData.options[0],
-                    widget: check(imageQuestionData.question, imageQuestionData.options[0]),),
+                    widget: check(idx, imageQuestionData.options[0]),),
                   ),
                   SizedBox(
                     width: MediaQuery.of(context).size.width/3,
                     child: OptionWidget(option: imageQuestionData.options[1],
-                    widget: check(imageQuestionData.question, imageQuestionData.options[1]),
+                    widget: check(idx, imageQuestionData.options[1]),
                     ),
                   ),
                 ],
@@ -117,13 +122,13 @@ class ImageQuestionResponseViewer extends StatelessWidget {
                   SizedBox(
                     width: MediaQuery.of(context).size.width/3,
                     child: OptionWidget(option: imageQuestionData.options[2],
-                    widget: check(imageQuestionData.question, imageQuestionData.options[2]),
+                    widget: check(idx, imageQuestionData.options[2]),
                     ),
                   ),
                   SizedBox(
                     width: MediaQuery.of(context).size.width/3,
                     child: OptionWidget(option: imageQuestionData.options[3],
-                    widget: check(imageQuestionData.question, imageQuestionData.options[3]),
+                    widget: check(idx, imageQuestionData.options[3]),
                     ),
                   ),
                 ],

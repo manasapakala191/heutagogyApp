@@ -5,7 +5,6 @@ import 'package:heutagogy/hex_color.dart';
 import 'package:heutagogy/models/progress.dart';
 import 'package:heutagogy/models/test_type_models/math_match.dart';
 import 'package:heutagogy/models/userModel.dart';
-import 'package:heutagogy/screens/score_screens/drag_drop_score.dart';
 import 'package:provider/provider.dart';
 import 'package:heutagogy/services/database.dart';
 import 'package:heutagogy/models/studentProgress.dart';
@@ -54,7 +53,7 @@ class _MathMatchScreenState extends State<MathMatchScreen> {
       }
       total++;
     }
-    var progress = Progress(testdata.heading,testdata.subject,count,total,responses);
+    var progress = Progress(name: testdata.testName,description: testdata.testDescription,partsDone: count,total: total,responses: responses);
     Map<String,dynamic> json = progress.toMap();
     DatabaseService().writeProgress(json,studentID,widget.courseID,widget.lessonID,widget.type);
   }
@@ -66,7 +65,7 @@ class _MathMatchScreenState extends State<MathMatchScreen> {
     dragTargets..shuffle(Random(2));
     List<Widget> rows = [];
     rows.add(
-      Text(testdata.heading, style: TextStyle(fontSize: 20)),
+      Text(testdata.testName, style: TextStyle(fontSize: 20)),
     );
     for (int i = 0; i < drags.length; i++) {
       rows.add(Padding(
@@ -90,30 +89,24 @@ class _MathMatchScreenState extends State<MathMatchScreen> {
         padding: const EdgeInsets.all(5),
         onPressed: () {
           _updateProgress();
-           Navigator.of(context).push(MaterialPageRoute(
-            builder: (context) => DragDropScoreWidget(
-              correct: data,
-              choices: choices,
-            )
-          ));
-          // showDialog(
-          //   context: context,
-          //   builder: (BuildContext context){
-          //     return AlertDialog(
-          //       title: Text("Quiz submitted!"),
-          //       content: Text("The Quiz is submitted successfully"),
-          //       actions: [
-          //         FlatButton(child: Text("Stay"),onPressed: (){
-          //           Navigator.pop(context);
-          //         },),
-          //         FlatButton(child: Text("Leave"),onPressed: (){
-          //           Navigator.pop(context);
-          //           Navigator.pop(context);
-          //         },)
-          //       ],
-          //     );
-          //   }
-          // );
+          showDialog(
+            context: context,
+            builder: (BuildContext context){
+              return AlertDialog(
+                title: Text("Quiz submitted!"),
+                content: Text("The Quiz is submitted successfully"),
+                actions: [
+                  FlatButton(child: Text("Stay"),onPressed: (){
+                    Navigator.pop(context);
+                  },),
+                  FlatButton(child: Text("Leave"),onPressed: (){
+                    Navigator.pop(context);
+                    Navigator.pop(context);
+                  },)
+                ],
+              );
+            }
+          );
           // Update progress and write to database
         },
       ),
@@ -121,7 +114,7 @@ class _MathMatchScreenState extends State<MathMatchScreen> {
     return Scaffold(
         appBar: AppBar(
             title: Text(
-              testdata.heading,
+              testdata.testName,
               style: TextStyle(color: HexColor("#ed2a26")),
             ),
             backgroundColor: Colors.white,

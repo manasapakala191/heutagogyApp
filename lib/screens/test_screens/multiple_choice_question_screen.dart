@@ -14,8 +14,9 @@ import 'package:heutagogy/models/time_object_model.dart';
 
 class MultipleChoiceQuestionScreen extends StatefulWidget {
   final singleCorrectTest;
-  final String courseID,lessonID,type;
-  MultipleChoiceQuestionScreen({this.singleCorrectTest,this.type,this.courseID,this.lessonID});
+  final String courseID, lessonID, type;
+  MultipleChoiceQuestionScreen(
+      {this.singleCorrectTest, this.type, this.courseID, this.lessonID});
 
   @override
   _MultipleChoiceQuestionScreenState createState() =>
@@ -24,7 +25,7 @@ class MultipleChoiceQuestionScreen extends StatefulWidget {
 
 class _MultipleChoiceQuestionScreenState
     extends State<MultipleChoiceQuestionScreen> {
-  final SingleCorrectTest  singleCorrectTest;
+  final SingleCorrectTest singleCorrectTest;
   _MultipleChoiceQuestionScreenState(this.singleCorrectTest);
 
   var answers = Map<String, dynamic>();
@@ -36,9 +37,10 @@ class _MultipleChoiceQuestionScreenState
 
   List<String> responses = List<String>();
 
-  Map<String, dynamic> getResponseMap(){
+  Map<String, dynamic> getResponseMap() {
     Map<String, dynamic> responseMap = Map<String, dynamic>();
-    for(int i=0; i < singleCorrectTest.questions.length; i++){
+    print("debug" + responses.toString());
+    for (int i = 0; i < singleCorrectTest.questions.length; i++) {
       responseMap[singleCorrectTest.questions[i].text] = responses[i];
     }
     print(responseMap);
@@ -46,7 +48,7 @@ class _MultipleChoiceQuestionScreenState
   }
 
   void _updateProgress() {
-    var user = Provider.of<UserModel>(context,listen: false);
+    var user = Provider.of<UserModel>(context, listen: false);
     String studentID = user.getID();
     for (var _ in choices.values) {
       responses.add(_);
@@ -59,9 +61,15 @@ class _MultipleChoiceQuestionScreenState
       }
       total++;
     }
-    var progress = Progress(singleCorrectTest.testName,singleCorrectTest.testDescription,count,total,responses);
-    Map<String,dynamic> json = progress.toMap();
-    DatabaseService().writeProgress(json,studentID,widget.courseID,widget.lessonID,widget.type);
+    var progress = Progress(name: singleCorrectTest.testName,
+        description: singleCorrectTest.testDescription,
+        partsDone: count,
+        total: total,
+        responses: responses);
+    Map<String, dynamic> json = progress.toMap();
+    print(json.toString() + "mcq text progress");
+    DatabaseService().writeProgress(
+        json, studentID, widget.courseID, widget.lessonID, widget.type);
   }
 
   final TimeObject timeObject = TimeObject(
@@ -73,7 +81,7 @@ class _MultipleChoiceQuestionScreenState
   void initState() {
     for (var _ in singleCorrectTest.questions) {
       answers[_.text] = false;
-      choices[_.text] =  null;
+      choices[_.text] = null;
     }
     timeObject.setStartTime(DateTime.now());
     super.initState();
@@ -141,34 +149,33 @@ class _MultipleChoiceQuestionScreenState
                 child: RaisedButton(
                   onPressed: () {
                     _updateProgress();
-                    print('\n\n\n\n');
+                    print('\n\n\n\n carpenter');
                     Map<String, dynamic> responseMap = getResponseMap();
                     responseMap['totalQuestions'] = total;
                     responseMap['correctAnswers'] = count;
-                    Navigator.of(context).push(MaterialPageRoute(
-                      builder: (context) => SingleCorrectResultViewer(
-                        responseMap: responseMap,
-                        singleCorrectTest: singleCorrectTest,
-                      )
-                    ));
-          //           showDialog(
-          //   context: context,
-          //   builder: (BuildContext context){
-          //     return AlertDialog(
-          //       title: Text("Quiz submitted!"),
-          //       content: Text("The Quiz is submitted successfully"),
-          //       actions: [
-          //         FlatButton(child: Text("Stay"),onPressed: (){
-          //           Navigator.pop(context);
-          //         },),
-          //         FlatButton(child: Text("Leave"),onPressed: (){
-          //           Navigator.pop(context);
-          //           Navigator.pop(context);
-          //         },)
-          //       ],
-          //     );
-          //   }
-          // );
+                    // Navigator.of(context).push(MaterialPageRoute(
+                    //     builder: (context) => SingleCorrectResultViewer(
+                    //           // responseMap: responseMap,
+                    //           singleCorrectTest: singleCorrectTest,
+                    //         )));
+                    //           showDialog(
+                    //   context: context,
+                    //   builder: (BuildContext context){
+                    //     return AlertDialog(
+                    //       title: Text("Quiz submitted!"),
+                    //       content: Text("The Quiz is submitted successfully"),
+                    //       actions: [
+                    //         FlatButton(child: Text("Stay"),onPressed: (){
+                    //           Navigator.pop(context);
+                    //         },),
+                    //         FlatButton(child: Text("Leave"),onPressed: (){
+                    //           Navigator.pop(context);
+                    //           Navigator.pop(context);
+                    //         },)
+                    //       ],
+                    //     );
+                    //   }
+                    // );
                   },
                   elevation: 8,
                   child: Text("Submit"),

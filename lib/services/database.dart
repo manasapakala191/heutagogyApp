@@ -41,7 +41,7 @@ class DatabaseService {
   static resetPassword(
       String oldPassword, String newPassword, String roll) async {
     final result =
-        await await schoolDoc.collection("Students").doc(roll).update({
+    await schoolDoc.collection("Students").doc(roll).update({
       "Password": newPassword,
     });
     return result;
@@ -156,6 +156,10 @@ class DatabaseService {
     return slideDocs;
   }
 
+  static Future getSlide(String cid, String lid, String sid) async {
+    print("Slide for: "+cid+lid+sid);
+    return await schoolDoc.collection("Courses/"+cid+"/Lessons/"+lid+"/Content").doc(sid).get();
+  }
   static Future getSlides(String cid, String lid) async {
     print(cid + " " + lid);
     return await schoolDoc
@@ -174,7 +178,7 @@ class DatabaseService {
 
   void writeProgress(Map<String, dynamic> data, String studentID,
       String courseID, String lessonID, String type) async {
-    print(data);
+    print("write: " + data.toString());
     CollectionReference studentsCollection = schoolDoc.collection("Students");
     DocumentReference studentReference = studentsCollection.doc(studentID);
     DocumentReference doc2 =

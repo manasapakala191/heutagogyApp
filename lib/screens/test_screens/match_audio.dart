@@ -9,7 +9,6 @@ import 'package:heutagogy/models/userModel.dart';
 import 'package:provider/provider.dart';
 import 'package:heutagogy/services/database.dart';
 import '../../hex_color.dart';
-import 'package:heutagogy/screens/score_screens/drag_drop_score.dart';
 
 class DragDropAudioScreen extends StatefulWidget {
   final DragDropAudioTest data;
@@ -57,7 +56,7 @@ class _DragDropAudioScreenState extends State<DragDropAudioScreen> {
       }
       total++;
     }
-    var progress = Progress(audiodata.testName,audiodata.testDescription,count,total,responses);
+    var progress = Progress(name: audiodata.testName,description: audiodata.testDescription,partsDone: count,total: total,responses: responses);
     Map<String,dynamic> json = progress.toMap();
     DatabaseService().writeProgress(json,studentID,widget.courseID,widget.lessonID,widget.type);
   }
@@ -223,30 +222,24 @@ class _DragDropAudioScreenState extends State<DragDropAudioScreen> {
         padding: const EdgeInsets.all(5),
         onPressed: () {
           _updateProgress();
-           Navigator.of(context).push(MaterialPageRoute(
-            builder: (context) => DragDropScoreWidget(
-              correct: correct,
-              choices: choices,
-            )
-          ));
-          // showDialog(
-          //   context: context,
-          //   builder: (BuildContext context){
-          //     return AlertDialog(
-          //       title: Text("Quiz submitted!"),
-          //       content: Text("The Quiz is submitted successfully"),
-          //       actions: [
-          //         FlatButton(child: Text("Stay"),onPressed: (){
-          //           Navigator.pop(context);
-          //         },),
-          //         FlatButton(child: Text("Leave"),onPressed: (){
-          //           Navigator.pop(context);
-          //           Navigator.pop(context);
-          //         },)
-          //       ],
-          //     );
-          //   }
-          // );
+          showDialog(
+            context: context,
+            builder: (BuildContext context){
+              return AlertDialog(
+                title: Text("Quiz submitted!"),
+                content: Text("The Quiz is submitted successfully"),
+                actions: [
+                  FlatButton(child: Text("Stay"),onPressed: (){
+                    Navigator.pop(context);
+                  },),
+                  FlatButton(child: Text("Leave"),onPressed: (){
+                    Navigator.pop(context);
+                    Navigator.pop(context);
+                  },)
+                ],
+              );
+            }
+          );
           // Update progress and write to database
         },
       ),
