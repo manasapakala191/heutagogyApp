@@ -107,6 +107,30 @@ class _MathMatchScreenState extends State<MathMatchScreen> {
               );
             }
           );
+          //  Navigator.of(context).push(MaterialPageRoute(
+          //   builder: (context) => DragDropScoreWidget(
+          //     correct: data,
+          //     choices: choices,
+          //   )
+          // ));
+          // showDialog(
+          //   context: context,
+          //   builder: (BuildContext context){
+          //     return AlertDialog(
+          //       title: Text("Quiz submitted!"),
+          //       content: Text("The Quiz is submitted successfully"),
+          //       actions: [
+          //         FlatButton(child: Text("Stay"),onPressed: (){
+          //           Navigator.pop(context);
+          //         },),
+          //         FlatButton(child: Text("Leave"),onPressed: (){
+          //           Navigator.pop(context);
+          //           Navigator.pop(context);
+          //         },)
+          //       ],
+          //     );
+          //   }
+          // );
           // Update progress and write to database
         },
       ),

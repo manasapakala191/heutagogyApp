@@ -170,6 +170,33 @@ class _MultipleChoiceImageQuestionScreenState
                   //     );
                   //   }
                   // );
+                  // Map<String , dynamic> responseMap = getResponseMap();
+                  // responseMap['totalQuestions'] = total;
+                  // responseMap['correctAnswers'] = count;
+                  // Navigator.of(context).push(MaterialPageRoute(
+                  //   builder: (context) => SingleCorrectImageResponseViewer(
+                  //     responseMap: responseMap,
+                  //     imageQuestionTest: imageQuestionTest,
+                  //   )
+                  // ));
+          //         showDialog(
+          //   context: context,
+          //   builder: (BuildContext context){
+          //     return AlertDialog(
+          //       title: Text("Quiz submitted!"),
+          //       content: Text("The Quiz is submitted successfully"),
+          //       actions: [
+          //         FlatButton(child: Text("Stay"),onPressed: (){
+          //           Navigator.pop(context);
+          //         },),
+          //         FlatButton(child: Text("Leave"),onPressed: (){
+          //           Navigator.pop(context);
+          //           Navigator.pop(context);
+          //         },)
+          //       ],
+          //     );
+          //   }
+          // );
                 },
                 elevation: 8,
                 child: Text("Submit"),

@@ -11,9 +11,12 @@ import 'package:heutagogy/services/database.dart';
 import '../../hex_color.dart';
 
 class DragDropAudioScreen extends StatefulWidget {
+
   final DragDropAudioTest data;
   final String courseID,lessonID,type;
+  
   DragDropAudioScreen(this.data,this.type,this.courseID,this.lessonID, {Key key}) : super(key: key);
+  
   @override
   _DragDropAudioScreenState createState() => _DragDropAudioScreenState(data);
 }
@@ -214,8 +217,7 @@ class _DragDropAudioScreenState extends State<DragDropAudioScreen> {
     body.add(SizedBox(height: 20));
     body.add(
       MaterialButton(
-        minWidth: 75,
-        height: 75,
+        height: 55,
         elevation: 8,
         child: Text("Submit"),
         color: HexColor("#ed2a26"),
@@ -240,8 +242,7 @@ class _DragDropAudioScreenState extends State<DragDropAudioScreen> {
               );
             }
           );
-          // Update progress and write to database
-        },
+         },
       ),
     );
     return body;
