@@ -55,9 +55,9 @@ class _DragDropScoreWidgetState extends State<DragDropScoreWidget> {
         child: ListView(
           children: [
             ListTile(
-              title: Text(widget.questionTest.testName),
-              subtitle: Text(widget.questionTest.testDescription),
-              trailing: Text(widget.questionTest.subject),
+              title: Text(widget.questionTest.testName, style: TextStyle(color: Colors.red),),
+              subtitle: Text(widget.questionTest.testDescription,),
+              trailing: Text(widget.questionTest.subject,),
             ),
             Padding(
               padding: const EdgeInsets.all(8.0),
