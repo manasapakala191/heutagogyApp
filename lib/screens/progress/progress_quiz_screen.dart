@@ -11,6 +11,7 @@ import 'package:heutagogy/models/test_type_models/math_match.dart';
 import 'package:heutagogy/models/test_type_models/multiple_choice_question_test.dart';
 import 'package:heutagogy/models/userModel.dart';
 import 'package:heutagogy/screens/score_screens/drag_drop_image_score.dart';
+import 'package:heutagogy/screens/score_screens/drag_drop_score.dart';
 import 'package:heutagogy/screens/score_screens/drag_drop_text_score.dart';
 import 'package:heutagogy/screens/score_screens/result_screen.dart';
 import 'package:heutagogy/screens/score_screens/single_correct_image_response_viewer.dart';
@@ -110,7 +111,10 @@ class ProgressQuizScreen extends StatelessWidget {
       case 'q4':
         {
           //done
-          return DragDropAudioScreen(DragDropAudioTest.fromJSON(data),sid,cid,lid);
+          // return DragDropScoreWidget(
+          //   questionTest: DragDropAudioTest.fromJSON(data),
+          //   // responseMap: progress,
+          // );
         }
         break;
       case 'q5':

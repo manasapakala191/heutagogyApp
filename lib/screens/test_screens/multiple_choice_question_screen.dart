@@ -149,33 +149,24 @@ class _MultipleChoiceQuestionScreenState
                 child: RaisedButton(
                   onPressed: () {
                     _updateProgress();
-                    print('\n\n\n\n carpenter');
-                    Map<String, dynamic> responseMap = getResponseMap();
-                    responseMap['totalQuestions'] = total;
-                    responseMap['correctAnswers'] = count;
-                    // Navigator.of(context).push(MaterialPageRoute(
-                    //     builder: (context) => SingleCorrectResultViewer(
-                    //           // responseMap: responseMap,
-                    //           singleCorrectTest: singleCorrectTest,
-                    //         )));
-                    //           showDialog(
-                    //   context: context,
-                    //   builder: (BuildContext context){
-                    //     return AlertDialog(
-                    //       title: Text("Quiz submitted!"),
-                    //       content: Text("The Quiz is submitted successfully"),
-                    //       actions: [
-                    //         FlatButton(child: Text("Stay"),onPressed: (){
-                    //           Navigator.pop(context);
-                    //         },),
-                    //         FlatButton(child: Text("Leave"),onPressed: (){
-                    //           Navigator.pop(context);
-                    //           Navigator.pop(context);
-                    //         },)
-                    //       ],
-                    //     );
-                    //   }
-                    // );
+                     showDialog(
+                      context: context,
+                      builder: (BuildContext context){
+                        return AlertDialog(
+                          title: Text("Quiz submitted!"),
+                          content: Text("The Quiz is submitted successfully"),
+                          actions: [
+                            FlatButton(child: Text("Stay"),onPressed: (){
+                              Navigator.pop(context);
+                            },),
+                            FlatButton(child: Text("Leave"),onPressed: (){
+                              Navigator.pop(context);
+                              Navigator.pop(context);
+                            },)
+                          ],
+                        );
+                      }
+                    );
                   },
                   elevation: 8,
                   child: Text("Submit"),

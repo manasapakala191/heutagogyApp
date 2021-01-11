@@ -197,14 +197,24 @@ class _MatchTextState extends State<MatchText> {
         padding: const EdgeInsets.all(5),
         onPressed: (){
           _updateProgress();
-          // Navigator.of(context).push(MaterialPageRoute(
-          //   builder: (context) => ResultScreen(
-          //     matchPicWithText: widget.matchPicWithText,
-          //     responseMap: data,
-          //     // total: widget.matchPicWithText.choices.length,
-          //     // count: count,
-          //   )
-          // ));
+           showDialog(
+            context: context,
+            builder: (BuildContext context){
+              return AlertDialog(
+                title: Text("Quiz submitted!"),
+                content: Text("The Quiz is submitted successfully"),
+                actions: [
+                  FlatButton(child: Text("Stay"),onPressed: (){
+                    Navigator.pop(context);
+                  },),
+                  FlatButton(child: Text("Leave"),onPressed: (){
+                    Navigator.pop(context);
+                    Navigator.pop(context);
+                  },)
+                ],
+              );
+            }
+          );
         },
       ),
     );
