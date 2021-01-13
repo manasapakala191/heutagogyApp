@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:heutagogy/hex_color.dart';
 import 'package:heutagogy/models/progress.dart';
@@ -256,7 +257,17 @@ class _ImageOptionBuilderState extends State<ImageOptionBuilder> {
             fit: BoxFit.fill,
             height: MediaQuery.of(context).size.height / 5,
             width: MediaQuery.of(context).size.width / 3,
+            // errorBuilder: (BuildContext context, Object exception, StackTrace stackTrace){
+            //   return CircularProgressIndicator();
+            // },
           ),
+          // title: widget.options[index].picture!=null && widget.options[index].picture.isNotEmpty
+          //             ? FadeInImage.assetNetwork(
+          //                 placeholder: "assets/images/loading.gif",
+          //                 image: widget.options[index].picture != null ? widget.options[index].picture : "No image")
+          //             : Image.asset(
+          //                 "assets/images/loading.gif",
+          //               )
         ),
       ),
     );

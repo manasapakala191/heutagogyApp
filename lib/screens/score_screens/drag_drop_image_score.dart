@@ -17,6 +17,12 @@ class DragDropImageScore extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
+          title: Text(
+            "Your progress in Line & Line Segments",
+            style: TextStyle(
+              color: Colors.white
+            )
+          ),
           leading: IconButton(
             icon: Icon(Icons.arrow_back, color: Colors.white,),
             onPressed: (){
@@ -31,6 +37,11 @@ class DragDropImageScore extends StatelessWidget {
           height: MediaQuery.of(context).size.height,
           child: ListView(
             children: [
+              ListTile(
+                title: Text(dragDropImageTest.testName, style: TextStyle(color: Colors.red),),
+                subtitle: Text(dragDropImageTest.testDescription),
+                trailing: Text(dragDropImageTest.subject),
+              ),
               Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: PieChartWidget(
@@ -40,11 +51,6 @@ class DragDropImageScore extends StatelessWidget {
               ),
               ListTile(
                 title: Text('Responses',style: GoogleFonts.varelaRound(fontSize: 20),),
-              ),
-              ListTile(
-                title: Text(dragDropImageTest.testName),
-                subtitle: Text(dragDropImageTest.testDescription),
-                trailing: Text(dragDropImageTest.subject),
               ),
               SizedBox(
                 width: MediaQuery.of(context).size.width,
@@ -87,7 +93,7 @@ class DragDropImageResponseViewer extends StatelessWidget {
             DataCell(SizedBox(
                 child: Image.network(dragDropImageTest.pictures[j].picture, fit: BoxFit.contain,))),
             DataCell(
-                Text(responseList[j],style: TextStyle(color: checkList[j] ? Colors.green : Colors.red),)),
+                Text(responseList[j] == null ? "-":responseList[j],style: TextStyle(color: checkList[j] ? Colors.green : Colors.red),)),
             DataCell(Text(dragDropImageTest.pictures[j].description))
           ]
       ));

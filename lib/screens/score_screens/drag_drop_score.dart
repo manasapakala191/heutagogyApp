@@ -2,52 +2,58 @@ import 'package:audioplayers/audio_cache.dart';
 import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:heutagogy/hex_color.dart';
+import 'package:heutagogy/models/progress.dart';
 import 'package:heutagogy/models/test_type_models/match_audio.dart';
 import 'package:heutagogy/models/test_type_models/option_class.dart';
 import 'package:heutagogy/screens/score_screens/pie_chart_widget.dart';
 
 class DragDropScoreWidget extends StatefulWidget {
-  final Map<String,dynamic> responseMap;
+  final Progress progress;
   final DragDropAudioTest questionTest;
 
-  DragDropScoreWidget({this.responseMap, this.questionTest});
+  DragDropScoreWidget({this.progress, this.questionTest});
 
   @override
   _DragDropScoreWidgetState createState() => _DragDropScoreWidgetState();
 }
 
 class _DragDropScoreWidgetState extends State<DragDropScoreWidget> {
-  int wrong = 0, right = 0;
 
-  void evaluateAnswers(){
-    for(var key in widget.responseMap.keys){
-      if(key == widget.responseMap[key]){
-        right++;
-      }
-      else{
-        wrong++;
-      }
+  List<Widget> _buildChildren(){
+    List<Widget> children = List<Widget>();
+    for(int i = 0; i < widget.questionTest.audios.length; i ++){
+      children.add(
+        SizedBox(
+          width: MediaQuery.of(context).size.width,
+          child: AudioQuestionResponseViewer(
+            response: widget.progress.responses[i],
+            questionData: widget.questionTest.audios[i],
+          ),
+        )
+      );
     }
-  }
-  @override
-  void initState(){
-    super.initState();
-    evaluateAnswers();
+
+    return children;
   }
 
   @override
   Widget build(BuildContext context) {
 
     return Scaffold(
+
       appBar: AppBar(
-        title: Text("Your score in " + widget.questionTest.testName),
+        title: Text("Your score in " + widget.questionTest.testName,
+          style: TextStyle(color: Colors.white),
+        ),
         leading: IconButton(
-          icon: Icon(Icons.arrow_back),
+          icon: Icon(Icons.arrow_back,color: Colors.white,),
           onPressed: (){
             Navigator.of(context).pop();
             Navigator.of(context).pop();
           },
         ),
+        backgroundColor: HexColor("#ed2a26"),
       ),
       body: SizedBox(
         height: MediaQuery.of(context).size.height,
@@ -62,8 +68,8 @@ class _DragDropScoreWidgetState extends State<DragDropScoreWidget> {
             Padding(
               padding: const EdgeInsets.all(8.0),
               child: PieChartWidget(
-                wrong: wrong,
-                right: right,
+                wrong: widget.progress.total - widget.progress.partsDone,
+                right: widget.progress.partsDone,
               ),
             ),
             ListTile(
@@ -89,13 +95,7 @@ class _DragDropScoreWidgetState extends State<DragDropScoreWidget> {
               ),
             ),
             Column(
-              children: widget.questionTest.audios.map((e) => SizedBox(
-                width: MediaQuery.of(context).size.width,
-                child: AudioQuestionResponseViewer(
-                  responseMap: widget.responseMap,
-                  questionData: e,
-                ),
-              )).toList(),
+              children: _buildChildren(),
             )
           ],
         ),
@@ -106,24 +106,24 @@ class _DragDropScoreWidgetState extends State<DragDropScoreWidget> {
 
 class AudioQuestionResponseViewer extends StatelessWidget {
   final AudioPair questionData;
-  final Map<String, dynamic> responseMap;
+  final String response;
 
-  AudioQuestionResponseViewer({this.questionData, this.responseMap});
+  AudioQuestionResponseViewer({this.questionData, this.response});
 
   @override
   Widget build(BuildContext context) {
     print("hhjbfjsbfja--------");
-    print(responseMap);
+    print(response);
     print(questionData.description);
     return Card(
       margin: EdgeInsets.all(10),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
-          responseMap[questionData.description] == questionData.description ? Icon(Icons.check,color:Colors.green): Icon(Icons.clear,color:Colors.red),
+          response == questionData.description ? Icon(Icons.check,color:Colors.green): Icon(Icons.clear,color:Colors.red),
           AudioButton(active: false,audioPath: questionData.description,),
           Text(questionData.description),
-          Text(responseMap[questionData.description] == null ? "-":responseMap[questionData.description])
+          Text(response == null ? "-":response)
         ],
       ),
     );

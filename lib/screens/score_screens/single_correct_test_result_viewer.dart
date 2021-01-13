@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:heutagogy/hex_color.dart';
 import 'package:heutagogy/models/progress.dart';
 import 'package:heutagogy/models/test_type_models/multiple_choice_question_test.dart';
 import 'package:heutagogy/models/test_type_models/option_class.dart';
@@ -16,12 +17,19 @@ class SingleCorrectResultViewer extends StatelessWidget {
     // var correct = responseMap['correctAnswers'];
     return Scaffold(
       appBar: AppBar(
+        title: Text(
+          "Your progress in Vocabulary",
+          style: TextStyle(
+            color: Colors.white
+          )
+        ),
         leading:IconButton(
-          icon: Icon(Icons.arrow_back),
+          icon: Icon(Icons.arrow_back,color: Colors.white,),
           onPressed: (){
             Navigator.of(context).pop();
           },
         ),
+        backgroundColor: HexColor("#ed2a26"),
       ),
       body: SizedBox(
         height: MediaQuery.of(context).size.height,
@@ -31,6 +39,11 @@ class SingleCorrectResultViewer extends StatelessWidget {
             Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children:[
+                  ListTile(
+                    title: Text(singleCorrectTest.testName, style: TextStyle(color: Colors.red),),
+                    subtitle: Text(singleCorrectTest.testDescription),
+                    trailing: Text(singleCorrectTest.subject),
+                  ),
                   SizedBox(
                     width: MediaQuery.of(context).size.width,
                     child: Padding(
@@ -43,11 +56,6 @@ class SingleCorrectResultViewer extends StatelessWidget {
                   ),
                   ListTile(
                     title: Text('Responses',style: GoogleFonts.varelaRound(fontSize: 20),),
-                  ),
-                  ListTile(
-                    title: Text(singleCorrectTest.testName),
-                    subtitle: Text(singleCorrectTest.testDescription),
-                    trailing: Text(singleCorrectTest.subject),
                   ),
                   ListView.builder(
                     shrinkWrap: true,

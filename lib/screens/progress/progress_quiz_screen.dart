@@ -111,10 +111,10 @@ class ProgressQuizScreen extends StatelessWidget {
       case 'q4':
         {
           //done
-          // return DragDropScoreWidget(
-          //   questionTest: DragDropAudioTest.fromJSON(data),
-          //   // responseMap: progress,
-          // );
+          return DragDropScoreWidget(
+            questionTest: DragDropAudioTest.fromJSON(data),
+            progress: progress,
+          );
         }
         break;
       case 'q5':

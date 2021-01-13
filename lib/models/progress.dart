@@ -16,7 +16,7 @@ class Progress{
         name: json["name"],
         description:json["description"],
         partsDone: json["partsDone"],
-        total: json["partsDone"],
+        total: json["total"],
         responses: json["responses"] is List<Object> ?json["responses"]:List.from(Map.from(json["responses"]).values)
     );
   }

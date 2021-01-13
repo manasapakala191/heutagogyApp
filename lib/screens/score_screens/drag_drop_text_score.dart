@@ -15,8 +15,16 @@ class DragDropTextScore extends StatelessWidget {
   DragDropTextScore({this.mathMatchTest,this.progress});
   @override
   Widget build(BuildContext context) {
+    // print(progress.partsDone);
+    // print(progress.total.toString()+"fjsjkgjk");
     return Scaffold(
         appBar: AppBar(
+          title: Text(
+            "Your progress in Sum",
+            style: TextStyle(
+              color: Colors.white
+            )
+          ),
           leading: IconButton(
             icon: Icon(Icons.arrow_back, color: Colors.white,),
             onPressed: (){
@@ -31,6 +39,12 @@ class DragDropTextScore extends StatelessWidget {
           height: MediaQuery.of(context).size.height,
           child: ListView(
             children: [
+              ListTile(
+                title: Text(mathMatchTest.testName, style: TextStyle(color: Colors.red),),
+                subtitle: Text(mathMatchTest.testDescription),
+                trailing: Text(mathMatchTest.subject),
+              ),
+              
               Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: PieChartWidget(
@@ -40,11 +54,6 @@ class DragDropTextScore extends StatelessWidget {
               ),
               ListTile(
                 title: Text('Responses',style: GoogleFonts.varelaRound(fontSize: 20),),
-              ),
-              ListTile(
-                title: Text(mathMatchTest.testName),
-                subtitle: Text(mathMatchTest.testDescription),
-                trailing: Text(mathMatchTest.subject),
               ),
               SizedBox(
                 width: MediaQuery.of(context).size.width,
@@ -87,7 +96,7 @@ class DragDropTextResponseViewer extends StatelessWidget {
             // DataCell(checkList[j] ? Icon(Icons.check, color: Colors.green,) : Icon(Icons.close, color: Colors.red,)),
             DataCell(Text(mathMatchTest.questions[j].first)),
             DataCell(
-                Text(responseList[j],style: TextStyle(color: checkList[j] ? Colors.green : Colors.red),)),
+                Text(responseList[j] == null?"-":responseList[j],style: TextStyle(color: checkList[j] ? Colors.green : Colors.red),)),
             DataCell(Text(mathMatchTest.questions[j].second))
           ]
       ));

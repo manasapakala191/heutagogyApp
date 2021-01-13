@@ -16,18 +16,31 @@ class SingleCorrectImageResponseViewer extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        title: Text(
+          "Your progress in ",
+          style: TextStyle(
+            color: Colors.white
+          )
+        ),
         leading: IconButton(
           icon: Icon(Icons.arrow_back),
           onPressed: (){
             Navigator.of(context).pop();
           },
         ),
+        backgroundColor: HexColor("#ed2a26"),
       ),
       body: SizedBox(
         height: MediaQuery.of(context).size.height,
         width: MediaQuery.of(context).size.width,
         child: ListView(
           children: [
+            ListTile(
+              title: Text(imageQuestionTest.testName),
+              subtitle: Text(imageQuestionTest.testDescription),
+              trailing: Text(imageQuestionTest.subject),
+            ),
+            
             Padding(
               padding: const EdgeInsets.all(8.0),
               child: PieChartWidget(
@@ -37,11 +50,6 @@ class SingleCorrectImageResponseViewer extends StatelessWidget {
             ),
             ListTile(
               title: Text('Responses',style: GoogleFonts.varelaRound(fontSize: 20),),
-            ),
-            ListTile(
-              title: Text(imageQuestionTest.testName),
-              subtitle: Text(imageQuestionTest.testDescription),
-              trailing: Text(imageQuestionTest.subject),
             ),
             ListView.builder(
               itemCount: imageQuestionTest.questions.length,
