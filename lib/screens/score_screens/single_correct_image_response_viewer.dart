@@ -17,13 +17,13 @@ class SingleCorrectImageResponseViewer extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          "Your progress in ",
+          "Your progress in Verbs/Actions words",
           style: TextStyle(
             color: Colors.white
           )
         ),
         leading: IconButton(
-          icon: Icon(Icons.arrow_back),
+          icon: Icon(Icons.arrow_back,color: Colors.white),
           onPressed: (){
             Navigator.of(context).pop();
           },
@@ -36,7 +36,7 @@ class SingleCorrectImageResponseViewer extends StatelessWidget {
         child: ListView(
           children: [
             ListTile(
-              title: Text(imageQuestionTest.testName),
+              title: Text(imageQuestionTest.testName, style: TextStyle(color: Colors.red),),
               subtitle: Text(imageQuestionTest.testDescription),
               trailing: Text(imageQuestionTest.subject),
             ),

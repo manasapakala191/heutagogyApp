@@ -227,7 +227,7 @@ class _MatchTextState extends State<MatchText> {
     //_buildImageInput();
     return Scaffold(
       appBar: AppBar(
-        title: Text('testName'),
+        title: Text(widget.matchPicWithText.testName),
         backgroundColor: Colors.white,
         actionsIconTheme: IconThemeData(
           color: HexColor("#ed2a26"),

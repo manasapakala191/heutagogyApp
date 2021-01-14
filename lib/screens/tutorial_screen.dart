@@ -76,11 +76,13 @@ class _LessonViewerState extends State<LessonViewer> {
                       future: _initializeVideoPlayerFuture,
                       builder: (context, snapshot) {
                         if (snapshot.connectionState == ConnectionState.done) {
+                          print("Connection established!");
                           return AspectRatio(
                             aspectRatio: _controller.value.aspectRatio,
                             child: VideoPlayer(_controller),
                           );
                         }
+                        print("After if block");
                         return Center(
                           child: CircularProgressIndicator(),
                         );
