@@ -75,12 +75,9 @@ class _DragDropImageScreenState extends State<DragDropImageScreen> {
       appBar: AppBar(
         title: Text(
           dragDropImageTest.testName,
-          style: TextStyle(color: HexColor("#ed2a26")),
         ),
-        backgroundColor: Colors.white,
         leading: IconButton(
-          icon: Icon(Icons.keyboard_backspace_rounded,
-              color: HexColor("#ed2a26")),
+          icon: Icon(Icons.keyboard_backspace_rounded,),
           onPressed: () {
             Navigator.pop(context);
           },
@@ -229,7 +226,7 @@ class _DragDropImageScreenState extends State<DragDropImageScreen> {
         minWidth: 75,
         height: 75,
         elevation: 8,
-        child: Text("Submit"),
+        child: Text("Submit", style: TextStyle(color:Colors.white),),
         color: HexColor("#ed2a26"),
         padding: const EdgeInsets.all(5),
         onPressed: () {

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:heutagogy/hex_color.dart';
 import 'package:heutagogy/models/course_model.dart';
 import 'package:heutagogy/models/userModel.dart';
@@ -32,14 +33,20 @@ class _CoursesHomeScreenState extends State<CoursesHomeScreen> {
         centerTitle: true,
         title: Text(
           'Heutagogy',
-          style: TextStyle(color: HexColor("#ed2a26")),
+          style: GoogleFonts.droidSerif(
+            fontWeight: FontWeight.w400
+          ),
         ),
       ),
       drawer: Drawer(
         child: ListView(
           children: [
             DrawerHeader(
-              child: Center(child: Text("Hi")),
+              child: Center(child: Text("Heutagogy", style: GoogleFonts.droidSerif(
+                fontSize: 25,
+                color: Colors.white,
+                fontWeight: FontWeight.w500
+              ),)),
               decoration: BoxDecoration(
                 color: HexColor("#ed2a26"),
               ),
@@ -198,9 +205,9 @@ class _CoursesHomeScreenState extends State<CoursesHomeScreen> {
                                               color: Colors.transparent,
                                               child: Text(
                                                 course[idx].courseName,
-                                                style: TextStyle(
+                                                style: GoogleFonts.roboto(
                                                   fontSize: 20,
-                                                  fontFamily: 'Nunito',
+                                                  fontWeight: FontWeight.w500
                                                 ),
                                               ),
                                             ),

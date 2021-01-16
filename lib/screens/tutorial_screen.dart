@@ -29,7 +29,7 @@ class _LessonViewerState extends State<LessonViewer> {
     lesson = widget.lesson;
     timeObject.setStartTime(DateTime.now());
     _controller = VideoPlayerController.network(
-      lesson.videoUrl,
+      'https://www.sample-videos.com/video123/mp4/720/big_buck_bunny_720p_20mb.mp4',
     );
 
     _initializeVideoPlayerFuture = _controller.initialize();
@@ -51,7 +51,6 @@ class _LessonViewerState extends State<LessonViewer> {
     return Scaffold(
       appBar: AppBar(
         title: Text(lesson.subject),
-        backgroundColor: Colors.white,
       ),
       body: SizedBox(
         height: MediaQuery.of(context).size.height,

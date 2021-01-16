@@ -94,7 +94,6 @@ class _MultipleChoiceImageQuestionScreenState
     return Scaffold(
       appBar: AppBar(
         title: Text(imageQuestionTest.subject),
-        backgroundColor: Colors.white,
       ),
       backgroundColor: HexColor('#f7f7f7'),
       body: SizedBox(
@@ -139,7 +138,8 @@ class _MultipleChoiceImageQuestionScreenState
             SizedBox(
               height: 10,
             ),
-            SizedBox(
+            Container(
+              margin: EdgeInsets.all(7),
               width: 50,
               height: 50,
               child: RaisedButton(
@@ -164,8 +164,8 @@ class _MultipleChoiceImageQuestionScreenState
                   }
                 );
                 },
-                elevation: 8,
-                child: Text("Submit"),
+                elevation: 10,
+                child: Text("Submit", style: TextStyle(color: Colors.white),),
                 color: HexColor("#ed2a26"),
               ),
             )

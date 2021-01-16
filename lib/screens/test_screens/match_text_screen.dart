@@ -228,13 +228,6 @@ class _MatchTextState extends State<MatchText> {
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.matchPicWithText.testName),
-        backgroundColor: Colors.white,
-        actionsIconTheme: IconThemeData(
-          color: HexColor("#ed2a26"),
-        ),
-        iconTheme: IconThemeData(
-          color: HexColor("#ed2a26"),
-        ),
       ),
       body: Center(
         child: ListView(

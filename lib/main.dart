@@ -2,6 +2,7 @@ import 'dart:async';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:heutagogy/hex_color.dart';
 import 'package:heutagogy/models/studentProgress.dart';
 import 'package:heutagogy/models/userModel.dart';
@@ -105,19 +106,10 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         // Gambol Themes:  https://coolors.co/fdcc0d-ab4e68-ed2a26-e5e0e5-fba346-ffecec
         backgroundColor: Colors.white,
-        primaryColor: Color(0xFFED2A26),
+        primaryColor: HexColor('#ed2a26'),
         fontFamily: 'Monsterrat',
         appBarTheme: AppBarTheme(
-          color: Colors.white,
-          textTheme: TextTheme(
-            headline6: TextStyle(color: HexColor("#ed2a26"),fontSize: 20),
-          ),
-          actionsIconTheme: IconThemeData(
-            color: HexColor("#ed2a26"),
-          ),
-          iconTheme: IconThemeData(
-            color: HexColor("#ed2a26"),
-          ),
+          color: HexColor('#ed2a26'),
         )
       ),
       home: MyHomePage(),

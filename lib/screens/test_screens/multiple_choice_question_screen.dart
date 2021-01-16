@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:heutagogy/hex_color.dart';
 import 'package:heutagogy/models/progress.dart';
 import 'package:heutagogy/models/studentProgress.dart';
@@ -100,7 +101,6 @@ class _MultipleChoiceQuestionScreenState
     return Scaffold(
       appBar: AppBar(
         title: Text('${singleCorrectTest.subject}'),
-        backgroundColor: Colors.white,
       ),
       backgroundColor: HexColor('#f7f7f7'),
       body: SizedBox(
@@ -143,7 +143,8 @@ class _MultipleChoiceQuestionScreenState
               SizedBox(
                 height: 10,
               ),
-              SizedBox(
+              Container(
+                margin: EdgeInsets.all(7),
                 width: 50,
                 height: 50,
                 child: RaisedButton(
@@ -168,9 +169,8 @@ class _MultipleChoiceQuestionScreenState
                       }
                     );
                   },
-                  elevation: 8,
-                  child: Text("Submit"),
-                  color: HexColor("#ed2a26"),
+                  elevation: 10,
+                  child: Text("Submit",),
                 ),
               )
             ],
@@ -198,7 +198,10 @@ class QuestionWidget extends StatelessWidget {
         children: <Widget>[
           Padding(
             padding: EdgeInsets.all(7),
-            child: Text(question.text),
+            child: Text(question.text, style: TextStyle(
+              fontSize: 17,
+              fontWeight: FontWeight.w600
+            ),),
           ),
           OptionBuilder(
               question.options, this.answers, this.choices, question.text)

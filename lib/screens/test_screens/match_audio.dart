@@ -70,12 +70,9 @@ class _DragDropAudioScreenState extends State<DragDropAudioScreen> {
       appBar: AppBar(
         title: Text(
           audiodata.testName,
-          style: TextStyle(color: HexColor("#ed2a26")),
         ),
-        backgroundColor: Colors.white,
         leading: IconButton(
-          icon: Icon(Icons.keyboard_backspace_rounded,
-              color: HexColor("#ed2a26")),
+          icon: Icon(Icons.keyboard_backspace_rounded,),
           onPressed: () {
             Navigator.pop(context);
           },
