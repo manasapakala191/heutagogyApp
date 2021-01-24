@@ -5,6 +5,7 @@ import 'package:heutagogy/hex_color.dart';
 import 'package:heutagogy/models/course_model.dart';
 import 'package:heutagogy/models/userModel.dart';
 import 'package:heutagogy/screens/course_screen.dart';
+import 'package:heutagogy/screens/jsonReadScreen.dart';
 import 'package:heutagogy/screens/login-resources/login.dart';
 import 'package:heutagogy/screens/misc-screens/profile.dart';
 import 'package:heutagogy/screens/progress/progress_screen.dart';
@@ -253,11 +254,15 @@ class _CoursesHomeScreenState extends State<CoursesHomeScreen> {
                                           child: IconButton(
                                               icon: Icon(Icons
                                                   .download_rounded),
-                                              onPressed: () async {
-                                                await DownloadService
+                                              onPressed: () {
+                                                DownloadService
                                                     .downloadEntireCourse(
                                                     course[idx]
-                                                        .courseID);
+                                                        .courseID).then((value) {
+                                                          Navigator.push(context, MaterialPageRoute(
+                                                              builder: (context) =>
+                                                                  DisplayJsonScreen(course[idx].courseID)));
+                                                });
                                               }),
                                         )
                                       ],
