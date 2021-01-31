@@ -141,6 +141,10 @@ class DownloadService{
     return null;
   }
 
+  static void create(Map json){
+    print(json);
+  }
+
   static Future<void> downloadEntireCourse(String cid) async {
     DocumentSnapshot courseDoc = await DatabaseService.getCourseDoc(cid);
     Map<String, dynamic> courseJson= courseDoc.data();

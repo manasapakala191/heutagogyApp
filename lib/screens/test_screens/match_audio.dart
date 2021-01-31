@@ -271,12 +271,12 @@ class _DraggableAudioButtonState extends State<DraggableAudioButton>
   @override
   void initState() {
     super.initState();
-    audioCache = AudioCache(prefix: 'assets/audios/');
+    audioCache = AudioCache(prefix: '');
     // try {
       print("\n\nFind the audio Path here ");
       print(audioPath);
       print("Audio path is above here!!");
-    audioCache.load("$audioPath.mp3"); 
+    audioCache.load(audioPath); 
     // } catch (e) {
     //   print("There has been an error loading the audio file");
     // }
@@ -317,7 +317,7 @@ class _DraggableAudioButtonState extends State<DraggableAudioButton>
                   );
                   _controller.forward();
                   AudioPlayer audioPlayer =
-                      await audioCache.play("$audioPath.mp3");
+                      await audioCache.play(audioPath);
                   audioPlayer.onPlayerCompletion.listen(
                     (event) {
                       setState(

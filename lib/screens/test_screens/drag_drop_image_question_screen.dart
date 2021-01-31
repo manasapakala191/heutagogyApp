@@ -1,3 +1,6 @@
+import 'dart:io';
+
+import 'package:connectivity/connectivity.dart';
 import 'package:flutter/material.dart';
 import 'dart:math';
 import 'package:cached_network_image/cached_network_image.dart';
@@ -275,24 +278,26 @@ class DraggableImage extends StatelessWidget {
           data: image.description,
           child: ClipRRect(
             borderRadius: BorderRadius.circular(15),
-            child: CachedNetworkImage(
-              imageUrl: image.picture,
-              width: 128,
-              height: 128,
-              placeholder: (context, data) => CircularProgressIndicator(),
-              placeholderFadeInDuration: Duration(milliseconds: 500),
-            ),
+            // child: (Connectivity().checkConnectivity() == ConnectivityResult.none)?Image(image: FileImage(File(image.picture))):CachedNetworkImage(
+            //   imageUrl: image.picture,
+            //   width: 128,
+            //   height: 128,
+            //   placeholder: (context, data) => CircularProgressIndicator(),
+            //   placeholderFadeInDuration: Duration(milliseconds: 500),
+            // ),
+            child: Image(image: FileImage(File(image.picture)),height: 125,width: 125,),
             clipBehavior: Clip.hardEdge,
           ),
           feedback: ClipRRect(
             borderRadius: BorderRadius.circular(15),
-            child: CachedNetworkImage(
-              placeholder: (context, url) => CircularProgressIndicator(),
-              placeholderFadeInDuration: Duration(milliseconds: 100),
-              imageUrl: image.picture,
-              width: 128,
-              height: 128,
-            ),
+            // child: (Connectivity().checkConnectivity() == ConnectivityResult.none)?Image(image: FileImage(File(image.picture))):CachedNetworkImage(
+            //   placeholder: (context, url) => CircularProgressIndicator(),
+            //   placeholderFadeInDuration: Duration(milliseconds: 100),
+            //   imageUrl: image.picture,
+            //   width: 128,
+            //   height: 128,
+            // ),
+            child: Image(image: FileImage(File(image.picture)),height: 125,width: 125,),
             clipBehavior: Clip.hardEdge,
           ),
           childWhenDragging: Container(

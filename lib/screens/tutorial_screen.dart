@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:heutagogy/hex_color.dart';
 import 'package:heutagogy/models/lessons_models.dart';
@@ -31,7 +33,9 @@ class _LessonViewerState extends State<LessonViewer> {
     _controller = VideoPlayerController.network(
       'https://www.sample-videos.com/video123/mp4/720/big_buck_bunny_720p_20mb.mp4',
     );
-
+    // _controller = (lesson.videoUrl == null)?null:VideoPlayerController.file(File(lesson.videoUrl));
+    print(lesson.videoUrl);
+    print("This is the video url");
     _initializeVideoPlayerFuture = _controller.initialize();
     _controller.setLooping(true);
     super.initState();

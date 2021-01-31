@@ -1,15 +1,29 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:heutagogy/hex_color.dart';
+import 'package:heutagogy/models/course_model.dart';
+import 'package:heutagogy/models/userModel.dart';
+import 'package:heutagogy/screens/course_screen.dart';
+import 'package:heutagogy/screens/offline-screens/offline_course_screen.dart';
+import 'package:heutagogy/services/localFileService.dart';
+import 'package:provider/provider.dart';
 
 class OfflineMainScreen extends StatelessWidget {
+
   @override
   Widget build(BuildContext context) {
+    print("Built!");
+    final userModel = Provider.of<UserModel>(context);
+    final _screenSize = MediaQuery.of(context).size;
+    // List<Future<CourseData>> courses = LocalFileService.fetchCourses(userModel.courses_enrolled);
     return Center(
         child: Container(
           // child: Text(courses.length.toString()),
           child: (userModel.courses_enrolled != null &&
                   userModel.courses_enrolled.isNotEmpty)
-              ? StreamBuilder<List<CourseData>>(
-                  stream: DatabaseService.populateCourse(
+              ? 
+              FutureBuilder<List<CourseData>>(
+                  future: LocalFileService.fetchCourses(
                       userModel.courses_enrolled),
                   builder: (context, snapshot) {
                     if (snapshot.hasError) {
@@ -25,7 +39,7 @@ class OfflineMainScreen extends StatelessWidget {
                             itemCount: course.length,
                             physics: ClampingScrollPhysics(),
                             itemBuilder: (BuildContext context, int idx) {
-                              return Padding(
+                              return course[idx] == null? Container():Padding(
                                 padding: EdgeInsets.all(20),
                                 child: Card(
                                   clipBehavior: Clip.antiAlias,
@@ -44,7 +58,7 @@ class OfflineMainScreen extends StatelessWidget {
                                           context,
                                           MaterialPageRoute(
                                               builder: (context) =>
-                                                  CourseScreen(course[idx])));
+                                                  OfflineCourseScreen(course[idx])));
                                     },
                                     child: Row(
                                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -93,26 +107,7 @@ class OfflineMainScreen extends StatelessWidget {
                                             ],
                                           ),
                                         ),
-                                        Container(
-                                          decoration: BoxDecoration(
-                                            borderRadius: BorderRadius.circular(100),
-                                            border: Border.all(color: Colors.black87)
-                                          ),
-                                          margin: EdgeInsets.only(right: 5),
-                                          child: IconButton(
-                                              icon: Icon(Icons
-                                                  .download_rounded),
-                                              onPressed: () {
-                                                DownloadService
-                                                    .downloadEntireCourse(
-                                                    course[idx]
-                                                        .courseID).then((value) {
-                                                          Navigator.push(context, MaterialPageRoute(
-                                                              builder: (context) =>
-                                                                  DisplayJsonScreen(course[idx].courseID)));
-                                                });
-                                              }),
-                                        )
+                                        
                                       ],
                                     ),
                                   ),
@@ -122,20 +117,22 @@ class OfflineMainScreen extends StatelessWidget {
                           );
                         }
                       }
-                      // return CircularProgressIndicator();
-                      return OfflineMainScreen();
+                      return CircularProgressIndicator();
+                      // return OfflineMainScreen();
                     }
                   },
                 )
               : Container(
                   child: Text(
                     "No courses yet. \n"
-                    "Tap + to add a course",
+                    "Download when online",
                     style: TextStyle(
                       fontSize: 40,
                     ),
                     textAlign: TextAlign.center,
                   ),
                 ),
+        ),
+        );
   }
 }

@@ -1,5 +1,7 @@
+import 'dart:io';
 import 'dart:ui';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:connectivity/connectivity.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:heutagogy/hex_color.dart';
@@ -119,12 +121,15 @@ class _MatchTextState extends State<MatchText> {
           key: ObjectKey(x),
           children: <Widget>[
             SizedBox(height: 20.0),
-            CachedNetworkImage(
-              imageUrl: x.picture,
-              width: 250,
-              height: 250,
-              fit: BoxFit.cover,
-            ),
+            // (Connectivity().checkConnectivity() == ConnectivityResult.none)?
+            Image(image: FileImage(File(x.picture)),),
+            // :
+            // CachedNetworkImage(
+            //   imageUrl: x.picture,
+            //   width: 250,
+            //   height: 250,
+            //   fit: BoxFit.cover,
+            // ),
             SizedBox(height: 20.0),
             // (!data[x.correctText])?
             Container(
