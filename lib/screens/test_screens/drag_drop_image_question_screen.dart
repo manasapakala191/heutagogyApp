@@ -1,5 +1,5 @@
+import 'dart:async';
 import 'dart:io';
-
 import 'package:connectivity/connectivity.dart';
 import 'package:flutter/material.dart';
 import 'dart:math';
@@ -35,6 +35,25 @@ class _DragDropImageScreenState extends State<DragDropImageScreen> {
   Map<String, bool> leftMarked;
   Map<String,bool> rightMarked;
   Map<String,dynamic> choices;
+  bool isConnected = true;
+  var connectivity;
+  StreamSubscription<ConnectivityResult> subscription;
+  @override
+  void initState(){
+    super.initState();
+    connectivity = new Connectivity();
+    subscription = connectivity.onConnectivityChanged.listen((ConnectivityResult result){
+      print(result);
+      isConnected = (result != ConnectivityResult.none);
+      setState((){});
+    });
+  }
+
+  @override
+  void dispose(){
+    subscription.cancel();
+    super.dispose();
+  }
 
   _DragDropImageScreenState(DragDropImageTest dragDropImageTest) {
     this.dragDropImageTest = dragDropImageTest;
@@ -73,7 +92,11 @@ class _DragDropImageScreenState extends State<DragDropImageScreen> {
 
   @override
   Widget build(BuildContext context) {
-
+    // subscription = connectivity.onConnectivityChanged.listen((ConnectivityResult result){
+    //   print(result);
+    //   isConnected = (result != ConnectivityResult.none);
+    //   setState((){});
+    // });
     return Scaffold(
       appBar: AppBar(
         title: Text(
@@ -135,7 +158,7 @@ class _DragDropImageScreenState extends State<DragDropImageScreen> {
             )));
       } else {
         drops.add(
-            DraggableImage(image: image, active: correct[image.description]));
+            DraggableImage(image: image, active: correct[image.description], isConnected: isConnected,));
       }
       targets.add(
         DragTarget(
@@ -233,30 +256,57 @@ class _DragDropImageScreenState extends State<DragDropImageScreen> {
         color: HexColor("#ed2a26"),
         padding: const EdgeInsets.all(5),
         onPressed: () {
-          _updateProgress();
-          showDialog(
-              context: context,
-              builder: (BuildContext context) {
-                return AlertDialog(
-                  title: Text("Quiz submitted!"),
-                  content: Text("The Quiz is submitted successfully"),
-                  actions: [
-                    FlatButton(
-                      child: Text("Stay"),
-                      onPressed: () {
-                        Navigator.pop(context);
-                      },
-                    ),
-                    FlatButton(
-                      child: Text("Leave"),
-                      onPressed: () {
-                        Navigator.pop(context);
-                        Navigator.pop(context);
-                      },
-                    )
-                  ],
-                );
-              });
+          if(isConnected == true){
+              _updateProgress();
+              showDialog(
+                  context: context,
+                  builder: (BuildContext context) {
+                    return AlertDialog(
+                      title: Text("Quiz submitted!"),
+                      content: Text("The Quiz is submitted successfully"),
+                      actions: [
+                        FlatButton(
+                          child: Text("Stay"),
+                          onPressed: () {
+                            Navigator.pop(context);
+                          },
+                        ),
+                        FlatButton(
+                          child: Text("Leave"),
+                          onPressed: () {
+                            Navigator.pop(context);
+                            Navigator.pop(context);
+                          },
+                        )
+                      ],
+                    );
+                  });
+          }
+          else{
+            showDialog(
+                  context: context,
+                  builder: (BuildContext context) {
+                    return AlertDialog(
+                      title: Text("Quiz not submitted!"),
+                      content: Text("You are offline. Connect to a network or read offline course content."),
+                      actions: [
+                        FlatButton(
+                          child: Text("Stay"),
+                          onPressed: () {
+                            Navigator.pop(context);
+                          },
+                        ),
+                        FlatButton(
+                          child: Text("Leave"),
+                          onPressed: () {
+                            Navigator.pop(context);
+                            Navigator.pop(context);
+                          },
+                        )
+                      ],
+                    );
+                  });
+          }
           // Update progress and write to database
         },
       ),
@@ -268,8 +318,9 @@ class _DragDropImageScreenState extends State<DragDropImageScreen> {
 class DraggableImage extends StatelessWidget {
   final PicturePair image;
   final bool active;
+  final bool isConnected;
 
-  DraggableImage({this.image, this.active});
+  DraggableImage({this.image, this.active, this.isConnected});
 
   @override
   Widget build(BuildContext context) {
@@ -278,14 +329,13 @@ class DraggableImage extends StatelessWidget {
           data: image.description,
           child: ClipRRect(
             borderRadius: BorderRadius.circular(15),
-            // child: (Connectivity().checkConnectivity() == ConnectivityResult.none)?Image(image: FileImage(File(image.picture))):CachedNetworkImage(
-            //   imageUrl: image.picture,
-            //   width: 128,
-            //   height: 128,
-            //   placeholder: (context, data) => CircularProgressIndicator(),
-            //   placeholderFadeInDuration: Duration(milliseconds: 500),
-            // ),
-            child: Image(image: FileImage(File(image.picture)),height: 125,width: 125,),
+            child: isConnected ? CachedNetworkImage(
+              imageUrl: image.picture,
+              width: 128,
+              height: 128,
+              placeholder: (context, data) => CircularProgressIndicator(),
+              placeholderFadeInDuration: Duration(milliseconds: 500),
+            ): Image(image: FileImage(File(image.picture)),height: 125,width: 125,),
             clipBehavior: Clip.hardEdge,
           ),
           feedback: ClipRRect(

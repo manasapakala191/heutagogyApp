@@ -1,6 +1,8 @@
+import 'dart:async';
 import 'dart:math';
 import 'package:audioplayers/audio_cache.dart';
 import 'package:audioplayers/audioplayers.dart';
+import 'package:connectivity/connectivity.dart';
 import 'package:flutter/material.dart';
 import 'package:heutagogy/models/progress.dart';
 import 'package:heutagogy/models/studentProgress.dart';
@@ -29,7 +31,24 @@ class _DragDropAudioScreenState extends State<DragDropAudioScreen> {
   var leftMarked;
   var rightMarked;
   StudentProgress progress;
-
+  bool isConnected = true;
+  var connectivity;
+  StreamSubscription<ConnectivityResult> subscription;
+  @override
+  void initState(){
+    super.initState();
+    connectivity = new Connectivity();
+    subscription = connectivity.onConnectivityChanged.listen((ConnectivityResult result){
+      print(result);
+      isConnected = (result != ConnectivityResult.none);
+      setState((){});
+    });
+  }
+  @override
+  void dispose(){
+    subscription.cancel();
+    super.dispose();
+  }
   _DragDropAudioScreenState(DragDropAudioTest data) {
     seed = Random().nextInt(100);
     this.audiodata = data;
@@ -220,25 +239,57 @@ class _DragDropAudioScreenState extends State<DragDropAudioScreen> {
         color: HexColor("#ed2a26"),
         padding: const EdgeInsets.all(5),
         onPressed: () {
-          _updateProgress();
-          showDialog(
-            context: context,
-            builder: (BuildContext context){
-              return AlertDialog(
-                title: Text("Quiz submitted!"),
-                content: Text("The Quiz is submitted successfully"),
-                actions: [
-                  FlatButton(child: Text("Stay"),onPressed: (){
-                    Navigator.pop(context);
-                  },),
-                  FlatButton(child: Text("Leave"),onPressed: (){
-                    Navigator.pop(context);
-                    Navigator.pop(context);
-                  },)
-                ],
-              );
-            }
-          );
+          if(isConnected == true){
+              _updateProgress();
+              showDialog(
+                  context: context,
+                  builder: (BuildContext context) {
+                    return AlertDialog(
+                      title: Text("Quiz submitted!"),
+                      content: Text("The Quiz is submitted successfully"),
+                      actions: [
+                        FlatButton(
+                          child: Text("Stay"),
+                          onPressed: () {
+                            Navigator.pop(context);
+                          },
+                        ),
+                        FlatButton(
+                          child: Text("Leave"),
+                          onPressed: () {
+                            Navigator.pop(context);
+                            Navigator.pop(context);
+                          },
+                        )
+                      ],
+                    );
+                  });
+          }
+          else{
+            showDialog(
+                  context: context,
+                  builder: (BuildContext context) {
+                    return AlertDialog(
+                      title: Text("Quiz not submitted!"),
+                      content: Text("You are offline. Connect to a network or read offline course content."),
+                      actions: [
+                        FlatButton(
+                          child: Text("Stay"),
+                          onPressed: () {
+                            Navigator.pop(context);
+                          },
+                        ),
+                        FlatButton(
+                          child: Text("Leave"),
+                          onPressed: () {
+                            Navigator.pop(context);
+                            Navigator.pop(context);
+                          },
+                        )
+                      ],
+                    );
+                  });
+          }
          },
       ),
     );
@@ -271,12 +322,11 @@ class _DraggableAudioButtonState extends State<DraggableAudioButton>
   @override
   void initState() {
     super.initState();
-    audioCache = AudioCache(prefix: '');
+    audioCache = AudioCache(prefix: 'assets/audios/');
     // try {
-      print("\n\nFind the audio Path here ");
+      // print("\n\nFind the audio Path here ");
       print(audioPath);
-      print("Audio path is above here!!");
-    audioCache.load(audioPath); 
+    audioCache.load("$audioPath.mp3"); 
     // } catch (e) {
     //   print("There has been an error loading the audio file");
     // }
@@ -317,7 +367,7 @@ class _DraggableAudioButtonState extends State<DraggableAudioButton>
                   );
                   _controller.forward();
                   AudioPlayer audioPlayer =
-                      await audioCache.play(audioPath);
+                      await audioCache.play("$audioPath.mp3");
                   audioPlayer.onPlayerCompletion.listen(
                     (event) {
                       setState(

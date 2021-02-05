@@ -1,6 +1,8 @@
+import 'dart:async';
 import 'dart:io';
 
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:connectivity/connectivity.dart';
 import 'package:flutter/material.dart';
 import 'package:heutagogy/hex_color.dart';
 import 'package:heutagogy/models/progress.dart';
@@ -40,6 +42,9 @@ class _MultipleChoiceImageQuestionScreenState
   int total = 0;
 
   List<String> responses = List<String>();
+  bool isConnected = true;
+  var connectivity;
+  StreamSubscription<ConnectivityResult> subscription;
 
   Map<String, dynamic> getResponseMap() {
     Map<String, dynamic> responseMap = Map<String, dynamic>();
@@ -81,18 +86,30 @@ class _MultipleChoiceImageQuestionScreenState
     print(answers);
     timeObject.setStartTime(DateTime.now());
     super.initState();
+    connectivity = new Connectivity();
+    subscription = connectivity.onConnectivityChanged.listen((ConnectivityResult result){
+      print(result);
+      isConnected = (result != ConnectivityResult.none);
+      setState((){});
+    });
   }
 
   @override
   void dispose() {
     timeObject.setEndTime(DateTime.now());
     timeObject.addTimeObjectToStudentPerformance();
+    subscription.cancel();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     timeObject.getStudent(context);
+    subscription = connectivity.onConnectivityChanged.listen((ConnectivityResult result){
+      print(result);
+      isConnected = (result != ConnectivityResult.none);
+      setState((){});
+    });
     return Scaffold(
       appBar: AppBar(
         title: Text(imageQuestionTest.subject),
@@ -134,7 +151,7 @@ class _MultipleChoiceImageQuestionScreenState
             ),
             Column(
               children: imageQuestionTest.questions
-                  .map((e) => QuestionWidget(e, this.choices, this.answers))
+                  .map((e) => QuestionWidget(e, this.choices, this.answers, isConnected))
                   .toList(),
             ),
             SizedBox(
@@ -146,25 +163,57 @@ class _MultipleChoiceImageQuestionScreenState
               height: 50,
               child: RaisedButton(
                 onPressed: () {
-                  _updateProgress();
-                  showDialog(
+                 if(isConnected){
+              _updateProgress();
+              showDialog(
                   context: context,
-                  builder: (BuildContext context){
+                  builder: (BuildContext context) {
                     return AlertDialog(
                       title: Text("Quiz submitted!"),
                       content: Text("The Quiz is submitted successfully"),
                       actions: [
-                        FlatButton(child: Text("Stay"),onPressed: (){
-                          Navigator.pop(context);
-                        },),
-                        FlatButton(child: Text("Leave"),onPressed: (){
-                          Navigator.pop(context);
-                          Navigator.pop(context);
-                        },)
+                        FlatButton(
+                          child: Text("Stay"),
+                          onPressed: () {
+                            Navigator.pop(context);
+                          },
+                        ),
+                        FlatButton(
+                          child: Text("Leave"),
+                          onPressed: () {
+                            Navigator.pop(context);
+                            Navigator.pop(context);
+                          },
+                        )
                       ],
                     );
-                  }
-                );
+                  });
+          }
+          else{
+            showDialog(
+                  context: context,
+                  builder: (BuildContext context) {
+                    return AlertDialog(
+                      title: Text("Quiz not submitted!"),
+                      content: Text("You are offline. Connect to a network or read offline course content."),
+                      actions: [
+                        FlatButton(
+                          child: Text("Stay"),
+                          onPressed: () {
+                            Navigator.pop(context);
+                          },
+                        ),
+                        FlatButton(
+                          child: Text("Leave"),
+                          onPressed: () {
+                            Navigator.pop(context);
+                            Navigator.pop(context);
+                          },
+                        )
+                      ],
+                    );
+                  });
+          }
                 },
                 elevation: 10,
                 child: Text("Submit", style: TextStyle(color: Colors.white),),
@@ -181,7 +230,8 @@ class _MultipleChoiceImageQuestionScreenState
 class QuestionWidget extends StatelessWidget {
   final ImageQuestionData question;
   final Map choices, answers;
-  QuestionWidget(this.question, this.choices, this.answers);
+  bool isConnected;
+  QuestionWidget(this.question, this.choices, this.answers, this.isConnected);
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -200,7 +250,7 @@ class QuestionWidget extends StatelessWidget {
             child: Text(question.question),
           ),
           ImageOptionBuilder(
-              question.options, this.choices, this.answers, question.question),
+              question.options, this.choices, this.answers, question.question, this.isConnected),
         ],
       ),
     );
@@ -211,7 +261,8 @@ class ImageOptionBuilder extends StatefulWidget {
   final List<ImageChoice> options;
   final Map choices, answers;
   final String question;
-  ImageOptionBuilder(this.options, this.choices, this.answers, this.question);
+  bool isConnected;
+  ImageOptionBuilder(this.options, this.choices, this.answers, this.question, this.isConnected);
   @override
   _ImageOptionBuilderState createState() =>
       _ImageOptionBuilderState(this.choices, this.answers, this.question);
@@ -263,14 +314,13 @@ class _ImageOptionBuilderState extends State<ImageOptionBuilder> {
           //   //   return CircularProgressIndicator();
           //   // },
           // ),
-          title: Image(image: FileImage(File(widget.options[index].picture))),
-          // title: widget.options[index].picture!=null && widget.options[index].picture.isNotEmpty
-          //             ? FadeInImage.assetNetwork(
-          //                 placeholder: "assets/images/loading.gif",
-          //                 image: widget.options[index].picture != null ? widget.options[index].picture : "No image")
-          //             : Image.asset(
-          //                 "assets/images/loading.gif",
-          //               )
+          title: widget.isConnected ?widget.options[index].picture!=null && widget.options[index].picture.isNotEmpty
+                      ? FadeInImage.assetNetwork(
+                          placeholder: "assets/images/loading.gif",
+                          image: widget.options[index].picture != null ? widget.options[index].picture : "No image")
+                      : Image.asset(
+                          "assets/images/loading.gif",
+                        ): Image(image: FileImage(File(widget.options[index].picture))),
         ),
       ),
     );

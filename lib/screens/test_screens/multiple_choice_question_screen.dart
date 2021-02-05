@@ -1,3 +1,6 @@
+import 'dart:async';
+
+import 'package:connectivity/connectivity.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -37,6 +40,9 @@ class _MultipleChoiceQuestionScreenState
   int total = 0;
 
   List<String> responses = List<String>();
+  bool isConnected;
+  var connectivity;
+  StreamSubscription<ConnectivityResult> subscription;
 
   Map<String, dynamic> getResponseMap() {
     Map<String, dynamic> responseMap = Map<String, dynamic>();
@@ -86,18 +92,30 @@ class _MultipleChoiceQuestionScreenState
     }
     timeObject.setStartTime(DateTime.now());
     super.initState();
+    connectivity = new Connectivity();
+    subscription = connectivity.onConnectivityChanged.listen((ConnectivityResult result){
+      print(result);
+      isConnected = (result != ConnectivityResult.none);
+      setState((){});
+    });
   }
 
   @override
   void dispose() {
     timeObject.setEndTime(DateTime.now());
     timeObject.addTimeObjectToStudentPerformance();
+    subscription.cancel();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     timeObject.getStudent(context);
+    subscription = connectivity.onConnectivityChanged.listen((ConnectivityResult result){
+      print(result);
+      isConnected = (result != ConnectivityResult.none);
+      setState((){});
+    });
     return Scaffold(
       appBar: AppBar(
         title: Text('${singleCorrectTest.subject}'),
@@ -149,25 +167,57 @@ class _MultipleChoiceQuestionScreenState
                 height: 50,
                 child: RaisedButton(
                   onPressed: () {
-                    _updateProgress();
-                     showDialog(
-                      context: context,
-                      builder: (BuildContext context){
-                        return AlertDialog(
-                          title: Text("Quiz submitted!"),
-                          content: Text("The Quiz is submitted successfully"),
-                          actions: [
-                            FlatButton(child: Text("Stay"),onPressed: (){
-                              Navigator.pop(context);
-                            },),
-                            FlatButton(child: Text("Leave"),onPressed: (){
-                              Navigator.pop(context);
-                              Navigator.pop(context);
-                            },)
-                          ],
-                        );
-                      }
+                    if(isConnected){
+              _updateProgress();
+              showDialog(
+                  context: context,
+                  builder: (BuildContext context) {
+                    return AlertDialog(
+                      title: Text("Quiz submitted!"),
+                      content: Text("The Quiz is submitted successfully"),
+                      actions: [
+                        FlatButton(
+                          child: Text("Stay"),
+                          onPressed: () {
+                            Navigator.pop(context);
+                          },
+                        ),
+                        FlatButton(
+                          child: Text("Leave"),
+                          onPressed: () {
+                            Navigator.pop(context);
+                            Navigator.pop(context);
+                          },
+                        )
+                      ],
                     );
+                  });
+          }
+          else{
+            showDialog(
+                  context: context,
+                  builder: (BuildContext context) {
+                    return AlertDialog(
+                      title: Text("Quiz not submitted!"),
+                      content: Text("You are offline. Connect to a network or read offline course content."),
+                      actions: [
+                        FlatButton(
+                          child: Text("Stay"),
+                          onPressed: () {
+                            Navigator.pop(context);
+                          },
+                        ),
+                        FlatButton(
+                          child: Text("Leave"),
+                          onPressed: () {
+                            Navigator.pop(context);
+                            Navigator.pop(context);
+                          },
+                        )
+                      ],
+                    );
+                  });
+          }
                   },
                   elevation: 10,
                   child: Text("Submit",),

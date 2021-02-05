@@ -1,3 +1,6 @@
+import 'dart:async';
+
+import 'package:connectivity/connectivity.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:heutagogy/hex_color.dart';
@@ -8,14 +11,45 @@ import 'package:heutagogy/screens/offline-screens/offline_course_screen.dart';
 import 'package:heutagogy/services/localFileService.dart';
 import 'package:provider/provider.dart';
 
-class OfflineMainScreen extends StatelessWidget {
+class OfflineMainScreen extends StatefulWidget {
 
+  @override
+  _OfflineMainScreenState createState() => _OfflineMainScreenState();
+}
+
+class _OfflineMainScreenState extends State<OfflineMainScreen> {
+    var connectivity;
+    bool isConnected = true;
+    StreamSubscription<ConnectivityResult> subscription;
+    @override
+    void initState(){
+      super.initState();
+      connectivity = new Connectivity();
+      subscription = connectivity.onConnectivityChanged.listen(
+        (ConnectivityResult result){
+          print(result);
+          isConnected = (result != ConnectivityResult.none);
+        }
+      );
+      setState((){});
+    }
+    @override
+    void dispose(){
+      subscription.cancel();
+      super.dispose();
+    }
   @override
   Widget build(BuildContext context) {
     print("Built!");
     final userModel = Provider.of<UserModel>(context);
     final _screenSize = MediaQuery.of(context).size;
     // List<Future<CourseData>> courses = LocalFileService.fetchCourses(userModel.courses_enrolled);
+    // subscription = connectivity.onConnectivityChanged.listen(
+    //     (ConnectivityResult result){
+    //       print(result);
+    //       isConnected = (result != ConnectivityResult.none);
+    //     }
+    //   );
     return Center(
         child: Container(
           // child: Text(courses.length.toString()),
@@ -59,6 +93,7 @@ class OfflineMainScreen extends StatelessWidget {
                                           MaterialPageRoute(
                                               builder: (context) =>
                                                   OfflineCourseScreen(course[idx])));
+                                                  // (isConnected == true)?CourseScreen(course[idx]):
                                     },
                                     child: Row(
                                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,

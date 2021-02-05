@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:io';
 import 'dart:ui';
 import 'package:cached_network_image/cached_network_image.dart';
@@ -31,6 +32,9 @@ class _MatchTextState extends State<MatchText> {
   int count = 0;
 
   List<String> responses = [];
+  bool isConnected = true;
+  var connectivity;
+  StreamSubscription<ConnectivityResult> subscription;
 
   void _updateProgress(){
     var user = Provider.of<UserModel>(context,listen: false);
@@ -89,12 +93,19 @@ class _MatchTextState extends State<MatchText> {
       choices[choice.correctText] = null;
     }
     super.initState();
+    connectivity = new Connectivity();
+    subscription = connectivity.onConnectivityChanged.listen((ConnectivityResult result){
+      print(result);
+      isConnected = (result != ConnectivityResult.none);
+      setState((){});
+    });
   }
 
   @override
   void dispose(){
     timeObject.setEndTime(DateTime.now());
     timeObject.addTimeObjectToStudentPerformance();
+    subscription.cancel();
     super.dispose();
   }
 
@@ -121,15 +132,13 @@ class _MatchTextState extends State<MatchText> {
           key: ObjectKey(x),
           children: <Widget>[
             SizedBox(height: 20.0),
-            // (Connectivity().checkConnectivity() == ConnectivityResult.none)?
-            Image(image: FileImage(File(x.picture)),),
-            // :
-            // CachedNetworkImage(
+            // (isConnected == true)?CachedNetworkImage(
             //   imageUrl: x.picture,
             //   width: 250,
             //   height: 250,
             //   fit: BoxFit.cover,
-            // ),
+            // ):
+            Image(image: FileImage(File(x.picture)),),
             SizedBox(height: 20.0),
             // (!data[x.correctText])?
             Container(
@@ -201,35 +210,72 @@ class _MatchTextState extends State<MatchText> {
         color: HexColor("#ed2a26"),
         padding: const EdgeInsets.all(5),
         onPressed: (){
-          _updateProgress();
-           showDialog(
-            context: context,
-            builder: (BuildContext context){
-              return AlertDialog(
-                title: Text("Quiz submitted!"),
-                content: Text("The Quiz is submitted successfully"),
-                actions: [
-                  FlatButton(child: Text("Stay"),onPressed: (){
-                    Navigator.pop(context);
-                  },),
-                  FlatButton(child: Text("Leave"),onPressed: (){
-                    Navigator.pop(context);
-                    Navigator.pop(context);
-                  },)
-                ],
-              );
-            }
-          );
+          if(isConnected){
+              _updateProgress();
+              showDialog(
+                  context: context,
+                  builder: (BuildContext context) {
+                    return AlertDialog(
+                      title: Text("Quiz submitted!"),
+                      content: Text("The Quiz is submitted successfully"),
+                      actions: [
+                        FlatButton(
+                          child: Text("Stay"),
+                          onPressed: () {
+                            Navigator.pop(context);
+                          },
+                        ),
+                        FlatButton(
+                          child: Text("Leave"),
+                          onPressed: () {
+                            Navigator.pop(context);
+                            Navigator.pop(context);
+                          },
+                        )
+                      ],
+                    );
+                  });
+          }
+          else{
+            showDialog(
+                  context: context,
+                  builder: (BuildContext context) {
+                    return AlertDialog(
+                      title: Text("Quiz not submitted!"),
+                      content: Text("You are offline. Connect to a network or read offline course content."),
+                      actions: [
+                        FlatButton(
+                          child: Text("Stay"),
+                          onPressed: () {
+                            Navigator.pop(context);
+                          },
+                        ),
+                        FlatButton(
+                          child: Text("Leave"),
+                          onPressed: () {
+                            Navigator.pop(context);
+                            Navigator.pop(context);
+                          },
+                        )
+                      ],
+                    );
+                  });
+          }
         },
       ),
     );
     return items;
   }
-
+ 
   @override
   Widget build(BuildContext context) {
     timeObject.getStudent(context);
     //_buildImageInput();
+     subscription = connectivity.onConnectivityChanged.listen((ConnectivityResult result){
+      print(result);
+      isConnected = (result != ConnectivityResult.none);
+      setState((){});
+    });
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.matchPicWithText.testName),
