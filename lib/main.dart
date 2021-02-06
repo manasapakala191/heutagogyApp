@@ -2,12 +2,10 @@ import 'dart:async';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:heutagogy/hex_color.dart';
 import 'package:heutagogy/models/studentProgress.dart';
 import 'package:heutagogy/models/userModel.dart';
 import 'package:heutagogy/screens/login-resources/login.dart';
-import 'package:heutagogy/services/database.dart';
 import 'package:provider/provider.dart';
 
 void main() {
