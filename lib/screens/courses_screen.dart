@@ -1,13 +1,16 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:heutagogy/hex_color.dart';
 import 'package:heutagogy/models/course_model.dart';
 import 'package:heutagogy/models/userModel.dart';
 import 'package:heutagogy/screens/course_screen.dart';
+import 'package:heutagogy/screens/jsonReadScreen.dart';
 import 'package:heutagogy/screens/login-resources/login.dart';
 import 'package:heutagogy/screens/misc-screens/profile.dart';
 import 'package:heutagogy/screens/progress/progress_screen.dart';
 import 'package:heutagogy/services/database.dart';
+import 'package:heutagogy/services/downloadFunctions.dart';
 import 'package:provider/provider.dart';
 
 // courses with (+) for adding a new course
@@ -33,20 +36,21 @@ class _CoursesHomeScreenState extends State<CoursesHomeScreen> {
         centerTitle: true,
         title: Text(
           'Heutagogy',
-          style: GoogleFonts.droidSerif(
-            fontWeight: FontWeight.w400
-          ),
+          style: GoogleFonts.droidSerif(fontWeight: FontWeight.w400),
         ),
       ),
       drawer: Drawer(
         child: ListView(
           children: [
             DrawerHeader(
-              child: Center(child: Text("Heutagogy", style: GoogleFonts.droidSerif(
-                fontSize: 25,
-                color: Colors.white,
-                fontWeight: FontWeight.w500
-              ),)),
+              child: Center(
+                  child: Text(
+                "Heutagogy",
+                style: GoogleFonts.droidSerif(
+                    fontSize: 25,
+                    color: Colors.white,
+                    fontWeight: FontWeight.w500),
+              )),
               decoration: BoxDecoration(
                 color: HexColor("#ed2a26"),
               ),
@@ -194,41 +198,73 @@ class _CoursesHomeScreenState extends State<CoursesHomeScreen> {
                                               builder: (context) =>
                                                   CourseScreen(course[idx])));
                                     },
-                                    child: Column(
-                                      mainAxisSize: MainAxisSize.max,
-                                      children: <Widget>[
-                                        Padding(
-                                          padding: EdgeInsets.only(top: 16),
-                                          child: Hero(
-                                            tag: course[idx].courseID,
-                                            child: Material(
-                                              color: Colors.transparent,
-                                              child: Text(
-                                                course[idx].courseName,
-                                                style: GoogleFonts.roboto(
-                                                  fontSize: 20,
-                                                  fontWeight: FontWeight.w500
+                                    child: Row(
+                                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                      children: [
+                                        Container(
+                                          width: _screenSize.width*0.7,
+                                          child: Column(
+                                            mainAxisSize: MainAxisSize.max,
+                                            children: <Widget>[
+                                              Container(
+                                                padding: EdgeInsets.only(top: 16),
+                                                child: Hero(
+                                                  tag: course[idx].courseID,
+                                                  child: Material(
+                                                    color: Colors.transparent,
+                                                    child: Text(
+                                                      course[idx].courseName,
+                                                      style:
+                                                          GoogleFonts.roboto(
+                                                              fontSize: 20,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .w500),
+                                                    ),
+                                                  ),
                                                 ),
                                               ),
-                                            ),
+                                              Divider(
+                                                color: Colors.black87,
+                                              ),
+                                              Container(
+                                                  padding: EdgeInsets.only(
+                                                      top: 10,
+                                                      left: 20,
+                                                      right: 20,
+                                                      bottom: 20),
+                                                  child: Text(
+                                                    course[idx].description,
+                                                    style: TextStyle(
+                                                      fontSize: 16,
+                                                      fontFamily: 'Nunito',
+                                                    ),
+                                                    overflow:
+                                                        TextOverflow.clip,
+                                                  ))
+                                            ],
                                           ),
                                         ),
-                                        Divider(
-                                          color: Colors.black87,
-                                        ),
-                                        Padding(
-                                            padding: EdgeInsets.only(
-                                                top: 10,
-                                                left: 20,
-                                                right: 20,
-                                                bottom: 20),
-                                            child: Text(
-                                              course[idx].description,
-                                              style: TextStyle(
-                                                fontSize: 16,
-                                                fontFamily: 'Nunito',
-                                              ),
-                                            ))
+                                        Container(
+                                          decoration: BoxDecoration(
+                                            borderRadius: BorderRadius.circular(100),
+                                            border: Border.all(color: Colors.black87)
+                                          ),
+                                          margin: EdgeInsets.only(right: 5),
+                                          child: IconButton(
+                                              icon: Icon(Icons
+                                                  .download_rounded),
+                                              onPressed: () {
+                                                DownloadService
+                                                    .downloadEntireCourse(
+                                                    course[idx]
+                                                        .courseID).then((value) {
+                                                          Navigator.push(context, MaterialPageRoute(
+                                                              builder: (context) =>
+                                                                  DisplayJsonScreen(course[idx].courseID)));
+                                                });
+                                              }),
+                                        )
                                       ],
                                     ),
                                   ),
