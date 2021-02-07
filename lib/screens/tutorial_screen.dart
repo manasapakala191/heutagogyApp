@@ -5,6 +5,7 @@ import 'package:heutagogy/models/time_object_model.dart';
 import 'package:heutagogy/screens/handyWidgets/customAppBar.dart';
 import 'package:heutagogy/screens/handyWidgets/slideHeading.dart';
 import 'package:video_player/video_player.dart';
+import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 
 class LessonViewer extends StatefulWidget {
   final Lesson lesson;
@@ -27,30 +28,76 @@ class _LessonViewerState extends State<LessonViewer> {
   Future<void> _initializeVideoPlayerFuture;
   bool showControllerButtons = true;
 
+
+  YoutubePlayerController _controller1;
+  PlayerState _playerState;
+  YoutubeMetaData _videoMetaData;
+  double _volume = 100;
+  bool _muted = false;
+  bool _isPlayerReady = false;
+  bool _isYoutube=false;
   @override
   void initState() {
     lesson = widget.lesson;
     timeObject.setStartTime(DateTime.now());
     videoUrl=widget.videoURL;
-    print(widget.videoURL);
+    _isYoutube = videoUrl.contains("youtube");
+    print("me"+videoUrl);
+    print("boolYT"+_isYoutube.toString());
+    if(_isYoutube){
+      youTubePlayerInitializer();
+    } else {
+      playerInitializer();
+    }
+    super.initState();
+  }
+
+  playerInitializer(){
     _controller = VideoPlayerController.network(
       videoUrl,
     );
-
     _initializeVideoPlayerFuture = _controller.initialize();
     _controller.setLooping(true);
-    super.initState();
   }
-  //
-  // _initializeVideoPlayerFuture(){
-  //
-  // }
+
+  youTubePlayerInitializer(){
+    var id = YoutubePlayer.convertUrlToId(
+        videoUrl
+    );
+    _controller1 = YoutubePlayerController(
+      initialVideoId: id,
+      flags: const YoutubePlayerFlags(
+        mute: false,
+        autoPlay: true,
+        disableDragSeek: false,
+        loop: false,
+        isLive: false,
+        forceHD: false,
+        enableCaption: true,
+      ),
+    )..addListener(listener);
+
+    _videoMetaData = const YoutubeMetaData();
+    _playerState = PlayerState.unknown;
+  }
+
+  void listener() {
+    if (_isPlayerReady && mounted && !_controller1.value.isFullScreen) {
+      setState(() {
+        _playerState = _controller1.value.playerState;
+        _videoMetaData = _controller1.metadata;
+      });
+    }
+  }
 
   @override
   void dispose() {
     timeObject.setEndTime(DateTime.now());
     timeObject.addTimeObjectToStudentPerformance();
-    _controller.dispose();
+    if(_isYoutube){
+    _controller.dispose();}
+    else{
+    _controller1.dispose();}
     super.dispose();
   }
 
@@ -68,6 +115,19 @@ class _LessonViewerState extends State<LessonViewer> {
               testName: lesson.lessonName,
               testDescription: lesson.description,
             ),
+            Padding(padding: EdgeInsets.all(10)),
+            _isYoutube? YoutubePlayerBuilder(
+                player: YoutubePlayer(
+                  controller: _controller1,
+                  showVideoProgressIndicator: true,
+                  onReady: () {
+            _isPlayerReady = true;
+            },
+                ),
+              builder: (context,player) => Container(
+                child: player,
+              ),
+            ):
             videoUrl!=null? videoUrl.isNotEmpty? InkWell(
               onTap: () {
                 setState(
@@ -89,7 +149,7 @@ class _LessonViewerState extends State<LessonViewer> {
                           print("Connection established!");
                           return AspectRatio(
                             aspectRatio: _controller.value.aspectRatio,
-                            child: VideoPlayer(_controller),
+                            child: VideoPlayer(_controller,),
                           );
                         }
                         print("After if block");
