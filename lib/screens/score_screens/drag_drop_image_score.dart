@@ -1,10 +1,12 @@
 import 'dart:convert';
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:heutagogy/hex_color.dart';
 import 'package:heutagogy/models/progress.dart';
 import 'package:heutagogy/models/test_type_models/drag_drop_test.dart';
+import 'package:heutagogy/screens/handyWidgets/slideHeading.dart';
 import 'package:heutagogy/screens/score_screens/pie_chart_widget.dart';
 
 
@@ -32,15 +34,14 @@ class DragDropImageScore extends StatelessWidget {
           backgroundColor: HexColor('#ed2a26'),
         ),
         backgroundColor: Colors.white,
-        body: SizedBox(
-          width: MediaQuery.of(context).size.width,
-          height: MediaQuery.of(context).size.height,
+        body: Padding(
+          padding: EdgeInsets.all(10),
           child: ListView(
+            shrinkWrap: true,
             children: [
-              ListTile(
-                title: Text(dragDropImageTest.testName, style: TextStyle(color: Colors.red),),
-                subtitle: Text(dragDropImageTest.testDescription),
-                trailing: Text(dragDropImageTest.subject),
+              SlideHeader(
+                testName: dragDropImageTest.testName,
+                testDescription: dragDropImageTest.testDescription,
               ),
               Padding(
                 padding: const EdgeInsets.all(8.0),

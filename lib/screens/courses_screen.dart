@@ -32,11 +32,16 @@ class _CoursesHomeScreenState extends State<CoursesHomeScreen> {
     final _screenSize = MediaQuery.of(context).size;
     return Scaffold(
       key: _scaffoldkey,
+
       appBar: AppBar(
+        iconTheme: IconThemeData(
+          color: HexColor("#ed2a26"),
+        ),
         centerTitle: true,
+        backgroundColor: Colors.white,
         title: Text(
           'Heutagogy',
-          style: GoogleFonts.droidSerif(fontWeight: FontWeight.w400),
+          style: GoogleFonts.droidSerif(fontWeight: FontWeight.w400,color: HexColor("#ed2a26")),
         ),
       ),
       drawer: Drawer(
@@ -259,9 +264,10 @@ class _CoursesHomeScreenState extends State<CoursesHomeScreen> {
                                                     .downloadEntireCourse(
                                                     course[idx]
                                                         .courseID).then((value) {
-                                                          Navigator.push(context, MaterialPageRoute(
-                                                              builder: (context) =>
-                                                                  DisplayJsonScreen(course[idx].courseID)));
+                                                          print("Downloaded"+course[idx].courseID);
+                                                          // Navigator.push(context, MaterialPageRoute(
+                                                          //     builder: (context) =>
+                                                          //         DisplayJsonScreen(course[idx].courseID)));
                                                 });
                                               }),
                                         )

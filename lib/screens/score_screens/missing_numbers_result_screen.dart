@@ -1,30 +1,25 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:heutagogy/models/progress.dart';
+import 'package:heutagogy/models/test_type_models/missing_numbers_test.dart';
+import 'package:heutagogy/screens/handyWidgets/customAppBar.dart';
+import 'package:heutagogy/screens/handyWidgets/slideHeading.dart';
 import 'package:heutagogy/screens/score_screens/pie_chart_widget.dart';
 
 class MissingNumbersResultScreen extends StatelessWidget {
-  final answers;
-  final responses;
+  final MissingNumbersTest missingNumbersTest;
+  final Progress progress;
 
-  MissingNumbersResultScreen({this.answers, this.responses});
+  MissingNumbersResultScreen({this.missingNumbersTest, this.progress});
 
-  final evaluationMap = {'correct': 0, 'total': 0};
-
-  void evaluate() {
-    evaluationMap['total'] = answers.length;
-    for (int i = 0; i < responses.length; i++) {
-      if (responses[i] == answers[i]) {
-        evaluationMap['correct'] = evaluationMap['correct'] + 1;
-      }
-    }
-  }
 
   List<DataRow> getDataRows() {
     List<DataRow> dataRows = [];
-    for (int i = 0; i < answers.length; i++) {
+    for (int i = 0; i < progress.responses.length; i++) {
       dataRows.add(DataRow(cells: [
-        DataCell(Text(answers[i].toString())),
-        DataCell(Text(responses[i].toString())),
-        DataCell(answers[i] == responses[i]
+        DataCell(Text(missingNumbersTest.missingList[i].toString(),style: TextStyle(fontSize: 17))),
+        DataCell(Text(progress.responses[i].toString(),style: TextStyle(fontSize: 17))),
+        DataCell(missingNumbersTest.missingList[i] == progress.responses[i]
             ? Icon(
                 Icons.check,
                 color: Colors.green,
@@ -37,29 +32,31 @@ class MissingNumbersResultScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    evaluate();
     return Scaffold(
-      appBar: AppBar(),
+      appBar: CustomAppBar(title: "Your Progress",),
       body: SafeArea(
-        child: SingleChildScrollView(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: PieChartWidget(
-                right: evaluationMap['correct'],
-                wrong: evaluationMap['total'] - evaluationMap['correct']),
-          ),
-          DataTable(
-            columns: [
-              DataColumn(label: Text('Answer')),
-              DataColumn(label: Text('Response')),
-              DataColumn(label: Text('Status'))
-            ],
-            rows: getDataRows(),
-          )
-        ])),
+        child: Padding(
+          padding: const EdgeInsets.all(10.0),
+          child: ListView(
+            shrinkWrap: true,
+            children: [
+              SlideHeader(testName: missingNumbersTest.testName,testDescription: missingNumbersTest.testDescription,),
+            Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: PieChartWidget(
+              right: progress.partsDone,
+              wrong: progress.total - progress.partsDone),
+            ),
+            DataTable(
+          columns: [
+            DataColumn(label: Text('Answer',style: TextStyle(fontSize: 17))),
+            DataColumn(label: Text('Response',style: TextStyle(fontSize: 17))),
+            DataColumn(label: Text('Status',style: TextStyle(fontSize: 17)))
+          ],
+          rows: getDataRows(),
+            )
+          ]),
+        ),
       ),
     );
   }

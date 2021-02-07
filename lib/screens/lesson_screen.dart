@@ -4,11 +4,20 @@ import 'package:heutagogy/hex_color.dart';
 import 'package:heutagogy/models/course_model.dart';
 import 'package:heutagogy/models/lessonModel.dart';
 import 'package:heutagogy/models/lessons_models.dart';
+import 'package:heutagogy/models/test_type_models/drag_drop_multiple_test.dart';
+import 'package:heutagogy/models/test_type_models/drag_drop_order_test.dart';
 import 'package:heutagogy/models/test_type_models/drag_drop_test.dart';
+import 'package:heutagogy/models/test_type_models/fill_the_blank_test.dart';
 import 'package:heutagogy/models/test_type_models/match_text_test.dart';
 import 'package:heutagogy/models/test_type_models/math_match.dart';
+import 'package:heutagogy/models/test_type_models/missing_numbers_test.dart';
 import 'package:heutagogy/models/test_type_models/multiple_choice_question_test.dart';
 import 'package:heutagogy/models/userModel.dart';
+import 'package:heutagogy/screens/handyWidgets/customAppBar.dart';
+import 'package:heutagogy/screens/test_screens/drag_drop_multiple.dart';
+import 'package:heutagogy/screens/test_screens/drag_drop_order_screen.dart';
+import 'package:heutagogy/screens/test_screens/fill_in_the_blanks_type.dart';
+import 'package:heutagogy/screens/test_screens/missing_numbers_type.dart';
 import 'package:heutagogy/screens/tutorial_screen.dart';
 import 'package:heutagogy/screens/test_screens/drag_drop_image_question_screen.dart';
 import 'package:heutagogy/screens/test_screens/match_audio.dart';
@@ -29,9 +38,7 @@ class LessonScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     UserModel userModel=Provider.of<UserModel>(context);
     return Scaffold(
-      appBar: AppBar(
-        title: Text(lessonData.lname,),
-      ),
+      appBar: CustomAppBar(title: lessonData.lname,),
       body: FutureBuilder<List<QueryDocumentSnapshot>>(
         future: DatabaseService.getSlidesForLessons(courseData.courseID, lessonData.lID),
         builder: (context,snapshot) {
@@ -59,7 +66,8 @@ class LessonScreen extends StatelessWidget {
       case 'l0':
         {
           //done
-          return LessonViewer(lesson: Lesson.fromJson(data),type: sid, courseID: cid,lessonID: lid);
+          print("a video url"+ data["videoURL"]);
+          return LessonViewer(lesson: Lesson.fromJson(data),type: sid, courseID: cid,lessonID: lid,videoURL: data["videoURL"]);
         }
         break;
       case 'q0':
@@ -99,6 +107,26 @@ class LessonScreen extends StatelessWidget {
           return MathMatchScreen(MathMatchTest.fromJSON(data),sid,cid,lid);
         }
         break;
+      case 'q6':
+        {
+          return FillInTheBlankType(FillInBlankTest.fromJSON(data), sid, cid, lid);
+        }
+        break;
+      case 'q7':
+        {
+          return MissingNumbersTestType(MissingNumbersTest.fromJSON(data),sid,cid,lid);
+        }
+        break;
+      case 'q8':
+        {
+          return DragDropMultipleScreen(DragDropMultipleTest.fromJSON(data), sid, cid, lid);
+        }
+        break;
+      case 'q9':
+        {
+        return DragDropOrderScreen(DragDropOrderTest.fromJSON(data), sid, cid, lid);
+      }
+      break;
       default:
         {
           return Container(
@@ -110,7 +138,7 @@ class LessonScreen extends StatelessWidget {
   }
 
   _buildSlides(List<QueryDocumentSnapshot> data,String cid) {
-    List types = ['l0', 'q0', 'q1', 'q2', 'q3', 'q4', 'q5'];
+    // List types = ['l0', 'q0', 'q1', 'q2', 'q3', 'q4', 'q5'];
     print(data);
     return Consumer<UserModel>(
         builder: (context, userModel, child) {
@@ -154,7 +182,7 @@ class LessonScreen extends StatelessWidget {
                                 Padding(
                                   padding: EdgeInsets.only(top: 16),
                                   child: Hero(
-                                    tag: types[idx],
+                                    tag: slideData["sid"],
                                     child: Material(
                                       color: Colors.transparent,
                                       child: Text(

@@ -257,7 +257,7 @@ class _LoginPageState extends State<LoginPage>
                                               ),
                                               Container(
                                                 child: Text(
-                                                  "R.No not found. Please sign up first !",
+                                                  "Please sign up first !",
                                                   style: TextStyle(
                                                     color: Colors.red,
                                                   ),
@@ -315,7 +315,7 @@ class _LoginPageState extends State<LoginPage>
                                                 ),
                                                 Container(
                                                   child: Text(
-                                                    "Something went wrong, please try again later.",
+                                                    "Something went wrong, try again later.",
                                                     style: TextStyle(
                                                       color: Colors.red,
                                                     ),

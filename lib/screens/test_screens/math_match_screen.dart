@@ -5,6 +5,8 @@ import 'package:heutagogy/hex_color.dart';
 import 'package:heutagogy/models/progress.dart';
 import 'package:heutagogy/models/test_type_models/math_match.dart';
 import 'package:heutagogy/models/userModel.dart';
+import 'package:heutagogy/screens/handyWidgets/customAppBar.dart';
+import 'package:heutagogy/screens/handyWidgets/slideHeading.dart';
 import 'package:provider/provider.dart';
 import 'package:heutagogy/services/database.dart';
 import 'package:heutagogy/models/studentProgress.dart';
@@ -65,7 +67,7 @@ class _MathMatchScreenState extends State<MathMatchScreen> {
     dragTargets..shuffle(Random(2));
     List<Widget> rows = [];
     rows.add(
-      Text(testdata.testName, style: TextStyle(fontSize: 20)),
+      SlideHeader(testName: testdata.testName,testDescription: testdata.testDescription,)
     );
     for (int i = 0; i < drags.length; i++) {
       rows.add(Padding(
@@ -80,50 +82,48 @@ class _MathMatchScreenState extends State<MathMatchScreen> {
       SizedBox(height: 20),
     );
     rows.add(
-      MaterialButton(
-        minWidth: 75,
-        height: 75,
-        elevation: 8,
-        child: Text("Submit"),
-        color: HexColor("#ed2a26"),
-        padding: const EdgeInsets.all(5),
-        onPressed: () {
-          _updateProgress();
-          showDialog(
-            context: context,
-            builder: (BuildContext context){
-              return AlertDialog(
-                title: Text("Quiz submitted!"),
-                content: Text("The Quiz is submitted successfully"),
-                actions: [
-                  FlatButton(child: Text("Stay"),onPressed: (){
-                    Navigator.pop(context);
-                  },),
-                  FlatButton(child: Text("Leave"),onPressed: (){
-                    Navigator.pop(context);
-                    Navigator.pop(context);
-                  },)
-                ],
-              );
-            }
-          );
-        },
-      ),
+        MaterialButton(
+          minWidth: 85,
+          height: 65,
+          elevation: 10,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(10),
+          ),
+          child: Text("Submit",style: TextStyle(color: Colors.white),),
+          color: Colors.redAccent,
+          // Colors.white,
+          // HexColor("#ed2a26"),
+          padding: const EdgeInsets.all(5),
+          onPressed: () {
+            _updateProgress();
+            showDialog(
+                context: context,
+                builder: (BuildContext context) {
+                  return AlertDialog(
+                    title: Text("Quiz submitted!"),
+                    content: Text("The Quiz is submitted successfully"),
+                    actions: [
+                      FlatButton(
+                        child: Text("Stay"),
+                        onPressed: () {
+                          Navigator.pop(context);
+                        },
+                      ),
+                      FlatButton(
+                        child: Text("Leave"),
+                        onPressed: () {
+                          Navigator.pop(context);
+                          Navigator.pop(context);
+                        },
+                      )
+                    ],
+                  );
+                });
+          },
+        )
     );
     return Scaffold(
-        appBar: AppBar(
-            title: Text(
-              testdata.testName,
-              style: TextStyle(color: HexColor("#ed2a26")),
-            ),
-            backgroundColor: Colors.white,
-            leading: IconButton(
-              icon: Icon(Icons.keyboard_backspace_rounded,
-                  color: HexColor("#ed2a26")),
-              onPressed: () {
-                Navigator.pop(context);
-              },
-            )),
+        appBar: CustomAppBar(title: testdata.testName,),
         body: Padding(
           padding: const EdgeInsets.all(20.0),
           child: SingleChildScrollView(
@@ -145,11 +145,12 @@ class _MathMatchScreenState extends State<MathMatchScreen> {
             padding: EdgeInsets.all(10),
             margin: EdgeInsets.only(top: 10, left: 40),
             decoration: BoxDecoration(
-                color: HexColor("#ed2a26"),
+                color: HexColor("#6CBAEF"),
                 borderRadius: BorderRadius.circular(10)),
+            alignment: Alignment.center,
             child: leftMarked[x.second] == true
                 ? Icon(
-                    Icons.assignment_turned_in,
+                    Icons.done_outline,
                     color: Colors.white,
                     size: 32,
                   )
@@ -165,7 +166,7 @@ class _MathMatchScreenState extends State<MathMatchScreen> {
             padding: EdgeInsets.all(10),
             margin: EdgeInsets.only(top: 10, left: 40),
             decoration: BoxDecoration(
-                color: HexColor("#ed2a26"),
+                color: HexColor("#6CBAEF"),
                 borderRadius: BorderRadius.circular(10)),
             child: Text(
               x.second,
@@ -180,7 +181,7 @@ class _MathMatchScreenState extends State<MathMatchScreen> {
                 padding: EdgeInsets.all(10),
                 margin: EdgeInsets.only(top: 10, left: 40),
                 decoration: BoxDecoration(
-                    color: HexColor("#ed2a26"),
+                    color: HexColor("#6CBAEF"),
                     borderRadius: BorderRadius.circular(10)),
                 child: Text(
                   x.second,
@@ -200,11 +201,11 @@ class _MathMatchScreenState extends State<MathMatchScreen> {
           Container(
             width: 105,
             height: 80,
+            alignment: Alignment.center,
             padding: EdgeInsets.all(10),
             margin: EdgeInsets.only(top: 10, right: 40),
             decoration: BoxDecoration(
-                color: HexColor("ed2a26"),
-                border: Border.all(color: HexColor("ed2a26")),
+                color: HexColor("7F6A93"),
                 borderRadius: BorderRadius.circular(10)),
             child: Text(
               "Matched",
@@ -223,10 +224,11 @@ class _MathMatchScreenState extends State<MathMatchScreen> {
               return Container(
                 width: 105,
                 height: 80,
+                alignment: Alignment.center,
                 padding: EdgeInsets.all(10),
                 margin: EdgeInsets.only(top: 10, right: 40),
                 decoration: BoxDecoration(
-                    color: HexColor("#ed2a26"),
+                    color: HexColor("#7F6A93"),
                     borderRadius: BorderRadius.circular(10)),
                 child: Text(
                   x.first,
@@ -234,12 +236,13 @@ class _MathMatchScreenState extends State<MathMatchScreen> {
                 ),
               );
             },
-            onWillAccept: (t) => t == x.second,
+            onWillAccept: (t) => true,
             onAccept: (t) {
               print(":)");
               print(x.second);
               setState(
                 () {
+                  if(t == x.second)
                   data[x.second] = true;
                   choices[x.second] = x.second;
                   leftMarked[x.second] = true;
@@ -251,11 +254,11 @@ class _MathMatchScreenState extends State<MathMatchScreen> {
               print(":(");
               print(t);
               print(x.second);
-              setState(() {
-                choices[t] = x.second;
-                leftMarked[t] = true;
-                rightMarked[x.second] = true;
-              });
+              // setState(() {
+              //   choices[t] = x.second;
+              //   leftMarked[t] = true;
+              //   rightMarked[x.second] = true;
+              // });
             },
           ),
         );

@@ -1,11 +1,14 @@
 import 'package:audioplayers/audio_cache.dart';
 import 'package:audioplayers/audioplayers.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:heutagogy/hex_color.dart';
 import 'package:heutagogy/models/progress.dart';
 import 'package:heutagogy/models/test_type_models/match_audio.dart';
 import 'package:heutagogy/models/test_type_models/option_class.dart';
+import 'package:heutagogy/screens/handyWidgets/customAppBar.dart';
+import 'package:heutagogy/screens/handyWidgets/slideHeading.dart';
 import 'package:heutagogy/screens/score_screens/pie_chart_widget.dart';
 
 class DragDropScoreWidget extends StatefulWidget {
@@ -41,29 +44,17 @@ class _DragDropScoreWidgetState extends State<DragDropScoreWidget> {
   Widget build(BuildContext context) {
 
     return Scaffold(
-
-      appBar: AppBar(
-        title: Text("Your score in " + widget.questionTest.testName,
-          style: TextStyle(color: Colors.white),
-        ),
-        leading: IconButton(
-          icon: Icon(Icons.arrow_back,color: Colors.white,),
-          onPressed: (){
-            Navigator.of(context).pop();
-            // Navigator.of(context).pop();
-          },
-        ),
-        backgroundColor: HexColor("#ed2a26"),
+      appBar: CustomAppBar(
+        title: widget.questionTest.subject,
       ),
-      body: SizedBox(
-        height: MediaQuery.of(context).size.height,
-        width: MediaQuery.of(context).size.width,
+      body: Padding(
+        padding: EdgeInsets.all(10),
         child: ListView(
+          shrinkWrap: true,
           children: [
-            ListTile(
-              title: Text(widget.questionTest.testName, style: TextStyle(color: Colors.red),),
-              subtitle: Text(widget.questionTest.testDescription,),
-              trailing: Text(widget.questionTest.subject,),
+            SlideHeader(
+              testName: widget.questionTest.testName,
+              testDescription: widget.questionTest.testDescription,
             ),
             Padding(
               padding: const EdgeInsets.all(8.0),
@@ -88,8 +79,8 @@ class _DragDropScoreWidgetState extends State<DragDropScoreWidget> {
                     children: <Widget>[
                       Text("Acceptance",style: TextStyle(fontWeight: FontWeight.bold,color:Colors.white, ),),
                       Text("Audio",style: TextStyle(color:Colors.white,fontWeight: FontWeight.bold,),),
-                      Text("Correct choice",style: TextStyle(color:Colors.white,fontWeight: FontWeight.bold,),),
-                      Text("Chosen choice",style: TextStyle(color:Colors.white,fontWeight: FontWeight.bold,),)
+                      Text("Correct",style: TextStyle(color:Colors.white,fontWeight: FontWeight.bold,),),
+                      Text("Response",style: TextStyle(color:Colors.white,fontWeight: FontWeight.bold,),)
                     ]
                   ),
               ),

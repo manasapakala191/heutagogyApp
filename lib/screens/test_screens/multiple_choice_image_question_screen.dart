@@ -8,6 +8,8 @@ import 'package:heutagogy/models/test_type_models/option_class.dart';
 import 'package:heutagogy/models/test_type_models/question_class.dart';
 import 'package:heutagogy/models/time_object_model.dart';
 import 'package:heutagogy/models/userModel.dart';
+import 'package:heutagogy/screens/handyWidgets/customAppBar.dart';
+import 'package:heutagogy/screens/handyWidgets/slideHeading.dart';
 import 'package:heutagogy/screens/score_screens/single_correct_image_response_viewer.dart';
 import 'package:heutagogy/services/database.dart';
 import 'package:provider/provider.dart';
@@ -92,44 +94,16 @@ class _MultipleChoiceImageQuestionScreenState
   Widget build(BuildContext context) {
     timeObject.getStudent(context);
     return Scaffold(
-      appBar: AppBar(
-        title: Text(imageQuestionTest.subject),
+      appBar: CustomAppBar(
+        title: imageQuestionTest.subject,
       ),
       backgroundColor: HexColor('#f7f7f7'),
-      body: SizedBox(
-        height: MediaQuery.of(context).size.height,
-        width: MediaQuery.of(context).size.width,
+      body: Padding(
+        padding: const EdgeInsets.all(10.0),
         child: ListView(
+          shrinkWrap: true,
           children: [
-            Container(
-              margin: EdgeInsets.symmetric(horizontal: 7, vertical: 10),
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.only(
-                  topLeft: Radius.circular(7),
-                  topRight: Radius.circular(7),
-                ),
-              ),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Container(
-                    height: 5,
-                    decoration: BoxDecoration(
-                        color: HexColor("#ed2a26"),
-                        borderRadius: BorderRadius.only(
-                            topRight: Radius.circular(7),
-                            topLeft: Radius.circular(7))),
-                  ),
-                  ListTile(
-                    title: Text('${imageQuestionTest.testName}'),
-                    subtitle: Text('${imageQuestionTest.testDescription}'),
-                    isThreeLine: true,
-                  ),
-                ],
-              ),
-            ),
+            SlideHeader(testName: imageQuestionTest.testName,testDescription: imageQuestionTest.testDescription,),
             Column(
               children: imageQuestionTest.questions
                   .map((e) => QuestionWidget(e, this.choices, this.answers))
@@ -138,37 +112,45 @@ class _MultipleChoiceImageQuestionScreenState
             SizedBox(
               height: 10,
             ),
-            Container(
-              margin: EdgeInsets.all(7),
-              width: 50,
-              height: 50,
-              child: RaisedButton(
-                onPressed: () {
-                  _updateProgress();
-                  showDialog(
-                  context: context,
-                  builder: (BuildContext context){
-                    return AlertDialog(
-                      title: Text("Quiz submitted!"),
-                      content: Text("The Quiz is submitted successfully"),
-                      actions: [
-                        FlatButton(child: Text("Stay"),onPressed: (){
-                          Navigator.pop(context);
-                        },),
-                        FlatButton(child: Text("Leave"),onPressed: (){
-                          Navigator.pop(context);
-                          Navigator.pop(context);
-                        },)
-                      ],
-                    );
-                  }
-                );
-                },
-                elevation: 10,
-                child: Text("Submit", style: TextStyle(color: Colors.white),),
-                color: HexColor("#ed2a26"),
+            MaterialButton(
+              minWidth: 75,
+              height: 65,
+              elevation: 10,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10),
               ),
-            )
+              child: Text("Submit",style: TextStyle(color: Colors.white),),
+              color: Colors.redAccent,
+              // Colors.white,
+              // HexColor("#ed2a26"),
+              padding: const EdgeInsets.all(5),
+              onPressed: () {
+                _updateProgress();
+                showDialog(
+                    context: context,
+                    builder: (BuildContext context) {
+                      return AlertDialog(
+                        title: Text("Quiz submitted!"),
+                        content: Text("The Quiz is submitted successfully"),
+                        actions: [
+                          FlatButton(
+                            child: Text("Stay"),
+                            onPressed: () {
+                              Navigator.pop(context);
+                            },
+                          ),
+                          FlatButton(
+                            child: Text("Leave"),
+                            onPressed: () {
+                              Navigator.pop(context);
+                              Navigator.pop(context);
+                            },
+                          )
+                        ],
+                      );
+                    });
+              },
+            ),
           ],
         ),
       ),
@@ -191,11 +173,14 @@ class QuestionWidget extends StatelessWidget {
           boxShadow: [BoxShadow(color: Colors.grey[200], blurRadius: 3)]),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.spaceAround,
-        mainAxisSize: MainAxisSize.max,
+        mainAxisSize: MainAxisSize.min,
         children: [
           Padding(
             padding: EdgeInsets.all(7),
-            child: Text(question.question),
+            child: Text(question.question,style: TextStyle(fontSize: 20),),
+          ),
+          Divider(
+            color: HexColor("#607196"),
           ),
           ImageOptionBuilder(
               question.options, this.choices, this.answers, question.question),
@@ -227,9 +212,10 @@ class _ImageOptionBuilderState extends State<ImageOptionBuilder> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: MediaQuery.of(context).size.height * 3 / 5,
+      // height: MediaQuery.of(context).size.height * 3 / 5,
       width: MediaQuery.of(context).size.width,
       child: GridView.builder(
+        shrinkWrap: true,
         itemCount: widget.options.length,
         physics: ClampingScrollPhysics(),
         gridDelegate:

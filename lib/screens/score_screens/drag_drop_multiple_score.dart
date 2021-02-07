@@ -4,34 +4,31 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:heutagogy/hex_color.dart';
 import 'package:heutagogy/models/progress.dart';
+import 'package:heutagogy/models/test_type_models/drag_drop_multiple_test.dart';
 import 'package:heutagogy/models/test_type_models/math_match.dart';
 import 'package:heutagogy/screens/handyWidgets/customAppBar.dart';
 import 'package:heutagogy/screens/handyWidgets/slideHeading.dart';
 import 'package:heutagogy/screens/score_screens/pie_chart_widget.dart';
 
 
-class DragDropTextScore extends StatelessWidget {
-  final MathMatchTest mathMatchTest;
+class DragDropMultipleScore extends StatelessWidget {
+  final DragDropMultipleTest dragDropMultipleTest;
   final Progress progress;
 
-  DragDropTextScore({this.mathMatchTest,this.progress});
+  DragDropMultipleScore({this.dragDropMultipleTest,this.progress});
   @override
   Widget build(BuildContext context) {
     // print(progress.partsDone);
     // print(progress.total.toString()+"fjsjkgjk");
     return Scaffold(
-        appBar: CustomAppBar(
-          title: "Your Progress",
-        ),
+        appBar: CustomAppBar(title: "Your Progress",),
         backgroundColor: Colors.white,
         body: Padding(
           padding: const EdgeInsets.all(10.0),
           child: ListView(
+            shrinkWrap: true,
             children: [
-              SlideHeader(
-                testName: mathMatchTest.testName,
-                testDescription: mathMatchTest.testDescription,
-              ),
+              SlideHeader(testName: dragDropMultipleTest.testName,testDescription: dragDropMultipleTest.testDescription,),
               Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: PieChartWidget(
@@ -44,8 +41,8 @@ class DragDropTextScore extends StatelessWidget {
               ),
               SizedBox(
                 width: MediaQuery.of(context).size.width,
-                child: DragDropTextResponseViewer(
-                  mathMatchTest: mathMatchTest,
+                child: DragDropMultipleResponseViewer(
+                  dragDropMultipleTest: dragDropMultipleTest,
                   responseList: progress.responses,
                   // List.from(Map.from(responseMap["responses"]).values),
                 ),
@@ -58,16 +55,16 @@ class DragDropTextScore extends StatelessWidget {
 }
 
 
-class DragDropTextResponseViewer extends StatelessWidget {
-  final MathMatchTest mathMatchTest;
+class DragDropMultipleResponseViewer extends StatelessWidget {
+  final DragDropMultipleTest dragDropMultipleTest;
   final List responseList;
-  DragDropTextResponseViewer({this.mathMatchTest, this.responseList});
+  DragDropMultipleResponseViewer({this.dragDropMultipleTest, this.responseList});
 
   final checkList = <bool>[];
 
   void getCheckList(){
-    for(int i=0; i<mathMatchTest.questions.length; i++){
-      if(responseList[i] == mathMatchTest.questions[i].second)
+    for(int i=0; i<dragDropMultipleTest.questions.length; i++){
+      if(responseList[i] == dragDropMultipleTest.questions[i].first)
         checkList.add(true);
       else{
         checkList.add(false);
@@ -77,14 +74,14 @@ class DragDropTextResponseViewer extends StatelessWidget {
 
   List<DataRow> getDataRows(BuildContext context){
     List<DataRow> dataRows = [];
-    for(int j=0; j<mathMatchTest.questions.length; j++){
+    for(int j=0; j<dragDropMultipleTest.questions.length; j++){
       dataRows.add(DataRow(
           cells: [
             // DataCell(checkList[j] ? Icon(Icons.check, color: Colors.green,) : Icon(Icons.close, color: Colors.red,)),
-            DataCell(Text(mathMatchTest.questions[j].first)),
+            DataCell(Text(dragDropMultipleTest.questions[j].second,style: TextStyle(fontSize: 17),)),
             DataCell(
-                Text(responseList[j] == null?"-":responseList[j],style: TextStyle(color: checkList[j] ? Colors.green : Colors.red),)),
-            DataCell(Text(mathMatchTest.questions[j].second))
+                Text(responseList[j] == null?"-":responseList[j],style: TextStyle(color: checkList[j] ? Colors.green : Colors.red,fontSize: 17),)),
+            DataCell(Text(dragDropMultipleTest.questions[j].first,style: TextStyle(fontSize: 17)))
           ]
       ));
     }
@@ -98,19 +95,19 @@ class DragDropTextResponseViewer extends StatelessWidget {
       margin: EdgeInsets.all(10),
       child: DataTable(
         columnSpacing: 10,
-        dataRowHeight: _screensize.height*0.1,
+        dataRowHeight: _screensize.height*0.07,
         columns: [
           // DataColumn(
           //   label: Icon(Icons.stacked_bar_chart)
           // ),
           DataColumn(
-              label: Text('Questions')
+              label: Text('Questions',style: TextStyle(fontSize: 17))
           ),
           DataColumn(
-              label: Text('Responses')
+              label: Text('Responses',style: TextStyle(fontSize: 17))
           ),
           DataColumn(
-              label: Text('Correct')
+              label: Text('Correct',style: TextStyle(fontSize: 17))
           )
         ],
         rows: getDataRows(context),

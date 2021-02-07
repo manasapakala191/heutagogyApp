@@ -7,6 +7,8 @@ import 'package:heutagogy/models/progress.dart';
 import 'package:heutagogy/models/studentProgress.dart';
 import 'package:heutagogy/models/test_type_models/match_text_test.dart';
 import 'package:heutagogy/models/userModel.dart';
+import 'package:heutagogy/screens/handyWidgets/customAppBar.dart';
+import 'package:heutagogy/screens/handyWidgets/slideHeading.dart';
 import 'package:heutagogy/screens/score_screens/result_screen.dart';
 import 'package:heutagogy/services/database.dart';
 import 'package:provider/provider.dart';
@@ -98,21 +100,10 @@ class _MatchTextState extends State<MatchText> {
 
   List<Widget> _buildImageInput() {
     List<Widget> items = [];
-    if (_matchPicWithText.testDescription != null &&
-        _matchPicWithText.testDescription != "") {
-      items.add(
-        Container(
-          padding: EdgeInsets.all(10.0),
-          child: Text(
-            _matchPicWithText.testDescription,
-            style: TextStyle(
-              fontSize: 20,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-        ),
-      );
-    }
+    items.add(SlideHeader(
+      testName: _matchPicWithText.testName,
+      testDescription: _matchPicWithText.testDescription,
+    ));
     for (var x in _matchPicWithText.choices) {
       items.add(
         Column(
@@ -123,7 +114,7 @@ class _MatchTextState extends State<MatchText> {
               imageUrl: x.picture,
               width: 250,
               height: 250,
-              fit: BoxFit.cover,
+              fit: BoxFit.contain,
             ),
             SizedBox(height: 20.0),
             // (!data[x.correctText])?
@@ -133,7 +124,7 @@ class _MatchTextState extends State<MatchText> {
                     // key: UniqueKey(),
                     decoration: BoxDecoration(
                         border:
-                            Border.all(color: HexColor("#ed2a26"), width: 2),
+                            Border.all(color: HexColor("#7F6A93"), width: 2),
                         borderRadius: BorderRadius.circular(20)),
                     child: TextField(
                       textAlign: TextAlign.center,
@@ -188,35 +179,45 @@ class _MatchTextState extends State<MatchText> {
       ),
     );
     items.add(
-      MaterialButton(
-        minWidth: 25,
-        height: 75,
-        elevation: 8,
-        child: Text("Submit"),
-        color: HexColor("#ed2a26"),
-        padding: const EdgeInsets.all(5),
-        onPressed: (){
-          _updateProgress();
-           showDialog(
-            context: context,
-            builder: (BuildContext context){
-              return AlertDialog(
-                title: Text("Quiz submitted!"),
-                content: Text("The Quiz is submitted successfully"),
-                actions: [
-                  FlatButton(child: Text("Stay"),onPressed: (){
-                    Navigator.pop(context);
-                  },),
-                  FlatButton(child: Text("Leave"),onPressed: (){
-                    Navigator.pop(context);
-                    Navigator.pop(context);
-                  },)
-                ],
-              );
-            }
-          );
-        },
-      ),
+        MaterialButton(
+          minWidth: 75,
+          height: 65,
+          elevation: 10,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(10),
+          ),
+          child: Text("Submit",style: TextStyle(color: Colors.white),),
+          color: Colors.redAccent,
+          // Colors.white,
+          // HexColor("#ed2a26"),
+          padding: const EdgeInsets.all(5),
+          onPressed: () {
+            _updateProgress();
+            showDialog(
+                context: context,
+                builder: (BuildContext context) {
+                  return AlertDialog(
+                    title: Text("Quiz submitted!"),
+                    content: Text("The Quiz is submitted successfully"),
+                    actions: [
+                      FlatButton(
+                        child: Text("Stay"),
+                        onPressed: () {
+                          Navigator.pop(context);
+                        },
+                      ),
+                      FlatButton(
+                        child: Text("Leave"),
+                        onPressed: () {
+                          Navigator.pop(context);
+                          Navigator.pop(context);
+                        },
+                      )
+                    ],
+                  );
+                });
+          },
+        )
     );
     return items;
   }
@@ -226,10 +227,11 @@ class _MatchTextState extends State<MatchText> {
     timeObject.getStudent(context);
     //_buildImageInput();
     return Scaffold(
-      appBar: AppBar(
-        title: Text(widget.matchPicWithText.testName),
+      appBar: CustomAppBar(
+        title: _matchPicWithText.subject,
       ),
-      body: Center(
+      body: Padding(
+        padding: EdgeInsets.all(8),
         child: ListView(
           children: _buildImageInput(),
         ),

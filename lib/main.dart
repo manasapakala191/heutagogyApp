@@ -4,9 +4,17 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:heutagogy/hex_color.dart';
 import 'package:heutagogy/models/studentProgress.dart';
+import 'package:heutagogy/models/test_type_models/drag_drop_multiple_test.dart';
+import 'package:heutagogy/models/test_type_models/drag_drop_order_test.dart';
+import 'package:heutagogy/models/test_type_models/fill_the_blank_test.dart';
+import 'package:heutagogy/models/test_type_models/missing_numbers_test.dart';
 import 'package:heutagogy/models/userModel.dart';
 import 'package:heutagogy/screens/login-resources/login.dart';
+import 'package:heutagogy/screens/test_screens/drag_drop_order_screen.dart';
+import 'package:heutagogy/screens/test_screens/fill_in_the_blanks_type.dart';
+import 'package:heutagogy/screens/test_screens/missing_numbers_type.dart';
 import 'package:provider/provider.dart';
+import 'package:heutagogy/screens/test_screens/drag_drop_multiple.dart';
 
 void main() {
   runApp(
@@ -96,6 +104,89 @@ class _MyHomePageState extends State<MyHomePage> {
 }
 
 class MyApp extends StatelessWidget {
+  Map<String,dynamic> json= {
+      "name": "TestName",
+      "description": "Place in ascending order.",
+    "sid": "S23",
+    "subject": "math",
+    "type": "q9",
+    "questions": [{
+        "question": ["2","5","8","11","14"],
+    },
+      {
+        "question": ["6","7","8","13","17"],
+      }
+    ]
+  };
+  Map<String,dynamic> jsonD = {
+    "name": "Game",
+    "description": "Put the words/pictures into appropriate boxes",
+    "sid": "S100",
+    "subject": "English",
+    "type": "q8",
+    "questions": [
+      {
+        "second": "Hari",
+        "first": "Person"
+      },
+      {
+        "second": "cow",
+        "first": "Animal"
+      },
+      {
+        "second": "stone",
+        "first": "Thing"
+      },
+      {
+        "second": "box",
+        "first": "Thing"
+      },
+      {
+        "second": "Vijayawada",
+        "first": "Place"
+      },
+      {
+        "second": "Gita",
+        "first": "Person"
+      },
+      {
+        "second": "fox",
+        "first": "Animal"
+      },
+    ],
+    "categories": ["Person","Place","Animal","Thing"]
+  };
+  Map<String,dynamic> jsonData={
+    "name": "TestName",
+    "description": "Place in ascending order",
+    "sid": "S23",
+    "subject": "math",
+    "type": "q6",
+    "questions": [
+      {
+        "question": "This is a random question",
+        "correctText": "random",
+      },
+      {
+        "question": "This is a randomer question",
+        "correctText": "randomer",
+      },
+      {
+        "question": "This is the randomest question",
+        "correctText": "randomest",
+      }
+    ]
+  };
+  Map<String,dynamic> jsonData0={
+    "name": "TestName",
+    "description": "Fill in the missing number",
+    "sid": "S23",
+    "subject": "math",
+    "type": "q7",
+    "start": 1,
+    "end": 100,
+    "missingList": [33,36,48,50,78,100],
+  };
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -108,9 +199,19 @@ class MyApp extends StatelessWidget {
         fontFamily: 'Monsterrat',
         appBarTheme: AppBarTheme(
           color: HexColor('#ed2a26'),
+          // color: Colors.white,
+
+          // textTheme: TextTheme(
+          //   caption: TextStyle(color: HexColor('#ed2a26'))
+          // )
         )
       ),
-      home: MyHomePage(),
+      home:
+        // MissingNumbersTestType(MissingNumbersTest.fromJSON(jsonData0),"S1","C2","L!"),
+      // FillInTheBlankType(FillInBlankTest.fromJSON(jsonData),"S2","L2","C3")
+      // DragDropMultipleScreen(DragDropMultipleTest.fromJSON(jsonD),"q9","L1","C1")
+      // DragDropOrderScreen(DragDropOrderTest.fromJSON(json),"q11","L1","C1"),
+      MyHomePage(),
     );
   }
 }

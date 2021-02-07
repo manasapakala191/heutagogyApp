@@ -5,14 +5,21 @@ import 'package:heutagogy/models/course_model.dart';
 import 'package:heutagogy/models/lessonModel.dart';
 import 'package:heutagogy/models/lessons_models.dart';
 import 'package:heutagogy/models/progress.dart';
+import 'package:heutagogy/models/test_type_models/drag_drop_multiple_test.dart';
 import 'package:heutagogy/models/test_type_models/drag_drop_test.dart';
+import 'package:heutagogy/models/test_type_models/fill_the_blank_test.dart';
 import 'package:heutagogy/models/test_type_models/match_text_test.dart';
 import 'package:heutagogy/models/test_type_models/math_match.dart';
+import 'package:heutagogy/models/test_type_models/missing_numbers_test.dart';
 import 'package:heutagogy/models/test_type_models/multiple_choice_question_test.dart';
 import 'package:heutagogy/models/userModel.dart';
+import 'package:heutagogy/screens/handyWidgets/customAppBar.dart';
 import 'package:heutagogy/screens/score_screens/drag_drop_image_score.dart';
+import 'package:heutagogy/screens/score_screens/drag_drop_multiple_score.dart';
 import 'package:heutagogy/screens/score_screens/drag_drop_score.dart';
 import 'package:heutagogy/screens/score_screens/drag_drop_text_score.dart';
+import 'package:heutagogy/screens/score_screens/fill_in_the_blanks_result_viewer.dart';
+import 'package:heutagogy/screens/score_screens/missing_numbers_result_screen.dart';
 import 'package:heutagogy/screens/score_screens/result_screen.dart';
 import 'package:heutagogy/screens/score_screens/single_correct_image_response_viewer.dart';
 import 'package:heutagogy/screens/score_screens/single_correct_test_result_viewer.dart';
@@ -36,8 +43,8 @@ class ProgressQuizScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     UserModel userModel=Provider.of<UserModel>(context);
     return Scaffold(
-      appBar: AppBar(
-        title: Text("Progress in "+lessonData.lname,),
+      appBar: CustomAppBar(
+        title: lessonData.lname,
       ),
       body: FutureBuilder<List<QueryDocumentSnapshot>>(
         future: DatabaseService.getSlidesForLessonsFromProgress(userModel.roll,courseData.courseID, lessonData.lID),
@@ -126,6 +133,38 @@ class ProgressQuizScreen extends StatelessWidget {
           );
         }
         break;
+      case 'q6':
+        {
+          return FillInTheBlanksResultViewer(
+            fillInBlankTest: FillInBlankTest.fromJSON(data),
+            progress: progress,
+          );
+        }
+        break;
+      case 'q7':
+        {
+          return MissingNumbersResultScreen(
+            missingNumbersTest: MissingNumbersTest.fromJSON(data),
+            progress: progress,
+          );
+        }
+        break;
+      case 'q8':
+        {
+          return DragDropMultipleScore(
+            dragDropMultipleTest: DragDropMultipleTest.fromJSON(data),
+            progress: progress,
+          );
+        }
+        break;
+      case 'q9':
+        {
+          return DragDropMultipleScore(
+            dragDropMultipleTest: DragDropMultipleTest.fromJSON(data),
+            progress: progress,
+          );
+        }
+        break;
       default:
         {
           return Container(
@@ -147,6 +186,7 @@ class ProgressQuizScreen extends StatelessWidget {
             itemBuilder: (BuildContext context, int idx) {
               Map slideData=data[idx].data();
               print("slideData:"+slideData.toString());
+              print(data[idx].id);
               return FutureBuilder<Object>(
                 future: DatabaseService.getSlide(cid,lid,data[idx].id),
                 builder: (context, snapshot) {
@@ -154,7 +194,7 @@ class ProgressQuizScreen extends StatelessWidget {
                     if(snapshot.hasError){
                       return Container(child: Text("There's an error"),);
                     }
-                    if(snapshot.hasData){
+                    if(snapshot.hasData && snapshot.data!=null){
                       DocumentSnapshot slideDoc=snapshot.data;
                       Map slideContent=slideDoc.data();
                       print(slideContent);
@@ -165,7 +205,7 @@ class ProgressQuizScreen extends StatelessWidget {
                               elevation: 3,
                               shape: RoundedRectangleBorder(
                                 side: BorderSide(
-                                    color: Colors.black,
+                                    color: HexColor("#607196"),
                                     style: BorderStyle.solid,
                                     width: 1.0),
                                 borderRadius: BorderRadius.circular(16.0),

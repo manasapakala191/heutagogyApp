@@ -4,6 +4,7 @@ import 'package:heutagogy/models/course_model.dart';
 import 'package:heutagogy/models/lessonModel.dart';
 import 'package:heutagogy/models/userModel.dart';
 import 'package:heutagogy/screens/course_screen.dart';
+import 'package:heutagogy/screens/handyWidgets/customAppBar.dart';
 import 'package:heutagogy/screens/lesson_screen.dart';
 import 'package:heutagogy/screens/progress/progress_sub_screen.dart';
 import 'package:heutagogy/services/database.dart';
@@ -16,10 +17,8 @@ class ProgressScreen extends StatelessWidget {
     return Consumer<UserModel>(
       builder: (context, userModel, child) {
         return Scaffold(
-          appBar: AppBar(
-            title: Text("My Progress",
-              style: TextStyle(color: HexColor("#ed2a26")),
-            ),
+          appBar: CustomAppBar(
+            title: "Progress",
           ),
           backgroundColor: Colors.white,
           body: Center(
@@ -51,7 +50,7 @@ class ProgressScreen extends StatelessWidget {
                                   elevation: 3,
                                   shape: RoundedRectangleBorder(
                                     side: BorderSide(
-                                        color: HexColor("#ed2a26"),
+                                        color: HexColor("#607196"),
                                         style: BorderStyle.solid,
                                         width: 1.0),
                                     borderRadius: BorderRadius.circular(16.0),

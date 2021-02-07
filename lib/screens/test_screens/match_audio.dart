@@ -6,6 +6,8 @@ import 'package:heutagogy/models/progress.dart';
 import 'package:heutagogy/models/studentProgress.dart';
 import 'package:heutagogy/models/test_type_models/match_audio.dart';
 import 'package:heutagogy/models/userModel.dart';
+import 'package:heutagogy/screens/handyWidgets/customAppBar.dart';
+import 'package:heutagogy/screens/handyWidgets/slideHeading.dart';
 import 'package:provider/provider.dart';
 import 'package:heutagogy/services/database.dart';
 import '../../hex_color.dart';
@@ -67,32 +69,13 @@ class _DragDropAudioScreenState extends State<DragDropAudioScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text(
-          audiodata.testName,
-        ),
-        leading: IconButton(
-          icon: Icon(Icons.keyboard_backspace_rounded,),
-          onPressed: () {
-            Navigator.pop(context);
-          },
-        ),
-      ),
+      appBar: CustomAppBar(title: audiodata.subject ),
       body: Padding(
         padding: const EdgeInsets.all(20.0),
         child: SingleChildScrollView(
           child: Column(
             children: <Widget>[
-              (audiodata.testDescription == "" ||
-                      audiodata.testDescription == null)
-                  ? Container()
-                  : Center(
-                      child: Text(
-                        audiodata.testDescription,
-                        style: TextStyle(
-                            fontSize: 18, fontWeight: FontWeight.bold),
-                      ),
-                    ),
+              SlideHeader(testName: audiodata.testName,testDescription: audiodata.testDescription,),
               Padding(
                 padding: EdgeInsets.only(top: 20),
               ),
@@ -116,12 +99,11 @@ class _DragDropAudioScreenState extends State<DragDropAudioScreen> {
             width: 64,
             height: 64,
             decoration: BoxDecoration(
-                color: Color.fromARGB(20, 10, 40, 230),
-                border: Border.all(width: 2),
+              color: Colors.blueGrey,
                 borderRadius: BorderRadius.circular(100)),
             child: Icon(
-              Icons.assignment_turned_in,
-              color: HexColor("#ed2a26"),
+              Icons.done_outline,
+              color: Colors.white,
               size: 32,
             )));
       } else {
@@ -141,8 +123,7 @@ class _DragDropAudioScreenState extends State<DragDropAudioScreen> {
                 child: Container(
                   decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(20),
-                      border: Border.all(color: HexColor("#ed2a26"), width: 2),
-                      color: HexColor("#ed2a26")),
+                      color: HexColor("#607196")),
                   padding: EdgeInsets.all(10),
                   height: 128,
                   child: Center(
@@ -163,8 +144,7 @@ class _DragDropAudioScreenState extends State<DragDropAudioScreen> {
                 child: Container(
                     decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(20),
-                        border: Border.all(color: Colors.black54, width: 2),
-                        color: HexColor("#ed2a26")),
+                        color: HexColor("#607196")),
                     padding: EdgeInsets.all(10),
                     height: 128,
                     child: Center(
@@ -182,65 +162,77 @@ class _DragDropAudioScreenState extends State<DragDropAudioScreen> {
           onAccept: (data) {
             print("This is correct :)");
             setState(() {
+              if(data == sound.description)
               correct[sound.description] = true;
               leftMarked[sound.description] = true;
               rightMarked[sound.description] = true;
-              choices[sound.description] = sound.description;
+              choices[sound.description] = data;
             });
           },
           onLeave: (data) {
             print("This is wrong :(");
             print(sound.description);
             print(data);
-            setState(() {
-              choices[data] = sound.description;
-              leftMarked[data] = true;
-              rightMarked[sound.description] = true;
-            });
+            // setState(() {
+            //   choices[data] = sound.description;
+            //   leftMarked[data] = true;
+            //   rightMarked[sound.description] = true;
+            // });
           },
-          onWillAccept: (data) => data == sound.description,
+          onWillAccept: (data) => true,
         ),
       );
     }
     targets..shuffle(Random(seed));
     for (int i = 0; i < audiodata.audios.length; i++) {
       body.add(Padding(
-          padding: EdgeInsets.only(top: 3, left: 40, right: 40),
+          padding: EdgeInsets.only(top: 3, left: 30, right: 30),
           child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: <Widget>[drops[i], targets[i]],
           )));
     }
     body.add(SizedBox(height: 20));
     body.add(
-      MaterialButton(
-        height: 55,
-        elevation: 8,
-        child: Text("Submit"),
-        color: HexColor("#ed2a26"),
-        padding: const EdgeInsets.all(5),
-        onPressed: () {
-          _updateProgress();
-          showDialog(
-            context: context,
-            builder: (BuildContext context){
-              return AlertDialog(
-                title: Text("Quiz submitted!"),
-                content: Text("The Quiz is submitted successfully"),
-                actions: [
-                  FlatButton(child: Text("Stay"),onPressed: (){
-                    Navigator.pop(context);
-                  },),
-                  FlatButton(child: Text("Leave"),onPressed: (){
-                    Navigator.pop(context);
-                    Navigator.pop(context);
-                  },)
-                ],
-              );
-            }
-          );
-         },
-      ),
+        MaterialButton(
+          minWidth: 75,
+          height: 65,
+          elevation: 10,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(10),
+          ),
+          child: Text("Submit",style: TextStyle(color: Colors.white),),
+          color: Colors.redAccent,
+          // Colors.white,
+          // HexColor("#ed2a26"),
+          padding: const EdgeInsets.all(5),
+          onPressed: () {
+            _updateProgress();
+            showDialog(
+                context: context,
+                builder: (BuildContext context) {
+                  return AlertDialog(
+                    title: Text("Quiz submitted!"),
+                    content: Text("The Quiz is submitted successfully"),
+                    actions: [
+                      FlatButton(
+                        child: Text("Stay"),
+                        onPressed: () {
+                          Navigator.pop(context);
+                        },
+                      ),
+                      FlatButton(
+                        child: Text("Leave"),
+                        onPressed: () {
+                          Navigator.pop(context);
+                          Navigator.pop(context);
+                        },
+                      )
+                    ],
+                  );
+                });
+          },
+        )
     );
     return body;
   }
@@ -339,14 +331,13 @@ class _DraggableAudioButtonState extends State<DraggableAudioButton>
           height: 72,
           decoration: BoxDecoration(
               color: Color.fromARGB(20, 90, 200, 30),
-              border: Border.all(width: 2, color: Colors.black45),
               borderRadius: BorderRadius.circular(100)),
           child: Icon(Icons.music_note)),
       childWhenDragging: Container(
         width: 64,
         height: 64,
         decoration: BoxDecoration(
-            border: Border.all(width: 1, color: Colors.black12),
+          color: Colors.blueGrey,
             borderRadius: BorderRadius.circular(40)),
       ),
       child: aud,

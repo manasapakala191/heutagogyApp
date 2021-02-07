@@ -5,6 +5,8 @@ import 'package:heutagogy/models/progress.dart';
 import 'package:heutagogy/models/test_type_models/multiple_choice_question_test.dart';
 import 'package:heutagogy/models/test_type_models/option_class.dart';
 import 'package:heutagogy/models/test_type_models/question_class.dart';
+import 'package:heutagogy/screens/handyWidgets/customAppBar.dart';
+import 'package:heutagogy/screens/handyWidgets/slideHeading.dart';
 import 'package:heutagogy/screens/score_screens/line_chart_widget.dart';
 import 'package:heutagogy/screens/score_screens/pie_chart_widget.dart';
 
@@ -15,32 +17,18 @@ class SingleCorrectImageResponseViewer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text(
-          "Your progress in Verbs/Actions words",
-          style: TextStyle(
-            color: Colors.white
-          )
-        ),
-        leading: IconButton(
-          icon: Icon(Icons.arrow_back,color: Colors.white),
-          onPressed: (){
-            Navigator.of(context).pop();
-          },
-        ),
-        backgroundColor: HexColor("#ed2a26"),
+      appBar: CustomAppBar(
+        title: 'Your Progress',
       ),
-      body: SizedBox(
-        height: MediaQuery.of(context).size.height,
-        width: MediaQuery.of(context).size.width,
+      body: Padding(
+        padding: const EdgeInsets.all(10.0),
         child: ListView(
+          shrinkWrap: true,
           children: [
-            ListTile(
-              title: Text(imageQuestionTest.testName, style: TextStyle(color: Colors.red),),
-              subtitle: Text(imageQuestionTest.testDescription),
-              trailing: Text(imageQuestionTest.subject),
+            SlideHeader(
+              testName: imageQuestionTest.testName,
+              testDescription: imageQuestionTest.testDescription,
             ),
-            
             Padding(
               padding: const EdgeInsets.all(8.0),
               child: PieChartWidget(
@@ -97,53 +85,56 @@ class ImageQuestionResponseViewer extends StatelessWidget {
   Widget build(BuildContext context) {
     return Card(
       margin: EdgeInsets.all(10),
-      child: Column(
-        children: [
-          ListTile(
-            title: Text(imageQuestionData.question),
-          ),
-          Column(
-            mainAxisSize: MainAxisSize.max,
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Row(
-                mainAxisSize: MainAxisSize.max,
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: [
-                  SizedBox(
-                    width: MediaQuery.of(context).size.width/3,
-                    child: OptionWidget(option: imageQuestionData.options[0],
-                    widget: check(idx, imageQuestionData.options[0]),),
-                  ),
-                  SizedBox(
-                    width: MediaQuery.of(context).size.width/3,
-                    child: OptionWidget(option: imageQuestionData.options[1],
-                    widget: check(idx, imageQuestionData.options[1]),
+      child: Padding(
+        padding: const EdgeInsets.all(10.0),
+        child: Column(
+          children: [
+            ListTile(
+              title: Text(imageQuestionData.question),
+            ),
+            Column(
+              mainAxisSize: MainAxisSize.max,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Row(
+                  mainAxisSize: MainAxisSize.max,
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: [
+                    SizedBox(
+                      width: MediaQuery.of(context).size.width/3,
+                      child: OptionWidget(option: imageQuestionData.options[0],
+                      widget: check(idx, imageQuestionData.options[0]),),
                     ),
-                  ),
-                ],
-              ),
-              Row(
-                mainAxisSize: MainAxisSize.max,
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: [
-                  SizedBox(
-                    width: MediaQuery.of(context).size.width/3,
-                    child: OptionWidget(option: imageQuestionData.options[2],
-                    widget: check(idx, imageQuestionData.options[2]),
+                    SizedBox(
+                      width: MediaQuery.of(context).size.width/3,
+                      child: OptionWidget(option: imageQuestionData.options[1],
+                      widget: check(idx, imageQuestionData.options[1]),
+                      ),
                     ),
-                  ),
-                  SizedBox(
-                    width: MediaQuery.of(context).size.width/3,
-                    child: OptionWidget(option: imageQuestionData.options[3],
-                    widget: check(idx, imageQuestionData.options[3]),
+                  ],
+                ),
+                Row(
+                  mainAxisSize: MainAxisSize.max,
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: [
+                    SizedBox(
+                      width: MediaQuery.of(context).size.width/3,
+                      child: OptionWidget(option: imageQuestionData.options[2],
+                      widget: check(idx, imageQuestionData.options[2]),
+                      ),
                     ),
-                  ),
-                ],
-              )
-            ],
-          )
-        ],
+                    SizedBox(
+                      width: MediaQuery.of(context).size.width/3,
+                      child: OptionWidget(option: imageQuestionData.options[3],
+                      widget: check(idx, imageQuestionData.options[3]),
+                      ),
+                    ),
+                  ],
+                )
+              ],
+            )
+          ],
+        ),
       ),
     );
   }
@@ -156,7 +147,6 @@ class OptionWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Card(
-      elevation: 10,
       margin: EdgeInsets.all(3),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,

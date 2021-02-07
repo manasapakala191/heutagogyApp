@@ -8,6 +8,8 @@ import 'package:heutagogy/models/test_type_models/multiple_choice_question_test.
 import 'package:heutagogy/models/test_type_models/option_class.dart';
 import 'package:heutagogy/models/test_type_models/question_class.dart';
 import 'package:heutagogy/models/userModel.dart';
+import 'package:heutagogy/screens/handyWidgets/customAppBar.dart';
+import 'package:heutagogy/screens/handyWidgets/slideHeading.dart';
 import 'package:heutagogy/screens/score_screens/single_correct_test_result_viewer.dart';
 import 'package:heutagogy/services/database.dart';
 import 'package:provider/provider.dart';
@@ -99,82 +101,66 @@ class _MultipleChoiceQuestionScreenState
   Widget build(BuildContext context) {
     timeObject.getStudent(context);
     return Scaffold(
-      appBar: AppBar(
-        title: Text('${singleCorrectTest.subject}'),
+      appBar: CustomAppBar(
+        title: singleCorrectTest.subject,
       ),
       backgroundColor: HexColor('#f7f7f7'),
-      body: SizedBox(
-          height: MediaQuery.of(context).size.height,
-          width: MediaQuery.of(context).size.width,
-          child: ListView(
-            children: <Widget>[
-              Container(
-                margin: EdgeInsets.symmetric(horizontal: 7, vertical: 10),
-                decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.only(
-                        topLeft: Radius.circular(7),
-                        topRight: Radius.circular(7))),
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[
-                    Container(
-                      height: 5,
-                      decoration: BoxDecoration(
-                          color: HexColor("#ed2a26"),
-                          borderRadius: BorderRadius.only(
-                              topRight: Radius.circular(7),
-                              topLeft: Radius.circular(7))),
-                    ),
-                    ListTile(
-                      title: Text('${singleCorrectTest.testName}'),
-                      subtitle: Text('${singleCorrectTest.testDescription}'),
-                      isThreeLine: true,
-                    ),
-                  ],
-                ),
+      body: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: ListView(
+          shrinkWrap: true,
+          children: <Widget>[
+            SlideHeader(testName: singleCorrectTest.testName,testDescription: singleCorrectTest.testDescription,),
+            Column(
+                children: singleCorrectTest.questions
+                    .map<Widget>(
+                        (e) => QuestionWidget(e, this.answers, this.choices))
+                    .toList()),
+            SizedBox(
+              height: 10,
+            ),
+            MaterialButton(
+              minWidth: 75,
+              height: 65,
+              elevation: 10,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10),
               ),
-              Column(
-                  children: singleCorrectTest.questions
-                      .map<Widget>(
-                          (e) => QuestionWidget(e, this.answers, this.choices))
-                      .toList()),
-              SizedBox(
-                height: 10,
-              ),
-              Container(
-                margin: EdgeInsets.all(7),
-                width: 50,
-                height: 50,
-                child: RaisedButton(
-                  onPressed: () {
-                    _updateProgress();
-                     showDialog(
-                      context: context,
-                      builder: (BuildContext context){
-                        return AlertDialog(
-                          title: Text("Quiz submitted!"),
-                          content: Text("The Quiz is submitted successfully"),
-                          actions: [
-                            FlatButton(child: Text("Stay"),onPressed: (){
+              child: Text("Submit",style: TextStyle(color: Colors.white),),
+              color: Colors.redAccent,
+              // Colors.white,
+              // HexColor("#ed2a26"),
+              padding: const EdgeInsets.all(5),
+              onPressed: () {
+                _updateProgress();
+                 showDialog(
+                    context: context,
+                    builder: (BuildContext context) {
+                      return AlertDialog(
+                        title: Text("Quiz submitted!"),
+                        content: Text("The Quiz is submitted successfully"),
+                        actions: [
+                          FlatButton(
+                            child: Text("Stay"),
+                            onPressed: () {
                               Navigator.pop(context);
-                            },),
-                            FlatButton(child: Text("Leave"),onPressed: (){
+                            },
+                          ),
+                          FlatButton(
+                            child: Text("Leave"),
+                            onPressed: () {
                               Navigator.pop(context);
                               Navigator.pop(context);
-                            },)
-                          ],
-                        );
-                      }
-                    );
-                  },
-                  elevation: 10,
-                  child: Text("Submit",),
-                ),
-              )
-            ],
-          )),
+                            },
+                          )
+                        ],
+                      );
+                    });
+              },
+            )
+          ],
+        ),
+      ),
     );
   }
 }
@@ -202,6 +188,9 @@ class QuestionWidget extends StatelessWidget {
               fontSize: 17,
               fontWeight: FontWeight.w600
             ),),
+          ),
+          Divider(
+            color: HexColor("#607196"),
           ),
           OptionBuilder(
               question.options, this.answers, this.choices, question.text)

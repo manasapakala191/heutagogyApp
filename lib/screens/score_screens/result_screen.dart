@@ -3,6 +3,8 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:heutagogy/hex_color.dart';
 import 'package:heutagogy/models/progress.dart';
 import 'package:heutagogy/models/test_type_models/match_text_test.dart';
+import 'package:heutagogy/screens/handyWidgets/customAppBar.dart';
+import 'package:heutagogy/screens/handyWidgets/slideHeading.dart';
 import 'package:heutagogy/screens/score_screens/line_chart_widget.dart';
 import 'package:heutagogy/screens/score_screens/pie_chart_widget.dart';
 
@@ -15,32 +17,17 @@ class ResultScreen extends StatelessWidget {
 
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text("Your Progress in Types of lines Quiz",
-          style: TextStyle(
-            color: Colors.white,
-          ),
-        ),
-        leading: IconButton(
-          icon: Icon(Icons.arrow_back, color: Colors.white,),
-          onPressed: (){
-            Navigator.of(context).pop();
-          },
-        ),
-        backgroundColor: HexColor('#ed2a26'),
-      ),
+      appBar: CustomAppBar(title: "Your Progress",),
       backgroundColor: Colors.white,
-      body: SizedBox(
-        width: MediaQuery.of(context).size.width,
-        height: MediaQuery.of(context).size.height,
+      body: Padding(
+        padding: EdgeInsets.all(10),
         child: ListView(
+          shrinkWrap: true,
           children: [
-            ListTile(
-              title: Text(matchPicWithText.testName, style: TextStyle(color: Colors.red),),
-              subtitle: Text(matchPicWithText.testDescription),
-              trailing: Text(matchPicWithText.subject),
+            SlideHeader(
+              testName: matchPicWithText.testName,
+              testDescription: matchPicWithText.testDescription,
             ),
-            
             Padding(
               padding: const EdgeInsets.all(8.0),
               child: PieChartWidget(

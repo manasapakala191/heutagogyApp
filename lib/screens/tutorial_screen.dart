@@ -2,19 +2,22 @@ import 'package:flutter/material.dart';
 import 'package:heutagogy/hex_color.dart';
 import 'package:heutagogy/models/lessons_models.dart';
 import 'package:heutagogy/models/time_object_model.dart';
+import 'package:heutagogy/screens/handyWidgets/customAppBar.dart';
+import 'package:heutagogy/screens/handyWidgets/slideHeading.dart';
 import 'package:video_player/video_player.dart';
 
 class LessonViewer extends StatefulWidget {
   final Lesson lesson;
   final String lessonID, courseID,type;
-  LessonViewer({this.lesson,this.lessonID,this.courseID,this.type});
+  final String videoURL;
+  LessonViewer({this.lesson,this.lessonID,this.courseID,this.type,this.videoURL});
   @override
   _LessonViewerState createState() => _LessonViewerState();
 }
 
 class _LessonViewerState extends State<LessonViewer> {
   Lesson lesson;
-
+  String videoUrl;
   final timeObject = TimeObject(
       screen: 'Lessons Screen',
       courseId: 'Default Course ID',
@@ -28,14 +31,20 @@ class _LessonViewerState extends State<LessonViewer> {
   void initState() {
     lesson = widget.lesson;
     timeObject.setStartTime(DateTime.now());
+    videoUrl=widget.videoURL;
+    print(widget.videoURL);
     _controller = VideoPlayerController.network(
-      'https://www.sample-videos.com/video123/mp4/720/big_buck_bunny_720p_20mb.mp4',
+      videoUrl,
     );
 
     _initializeVideoPlayerFuture = _controller.initialize();
     _controller.setLooping(true);
     super.initState();
   }
+  //
+  // _initializeVideoPlayerFuture(){
+  //
+  // }
 
   @override
   void dispose() {
@@ -49,15 +58,17 @@ class _LessonViewerState extends State<LessonViewer> {
   Widget build(BuildContext context) {
     timeObject.getStudent(context);
     return Scaffold(
-      appBar: AppBar(
-        title: Text(lesson.subject),
-      ),
-      body: SizedBox(
-        height: MediaQuery.of(context).size.height,
-        width: MediaQuery.of(context).size.width,
+      appBar: CustomAppBar(title: lesson.subject,),
+      body: Padding(
+        padding: const EdgeInsets.all(10.0),
         child: ListView(
+          shrinkWrap: true,
           children: [
-            InkWell(
+            SlideHeader(
+              testName: lesson.lessonName,
+              testDescription: lesson.description,
+            ),
+            videoUrl!=null? videoUrl.isNotEmpty? InkWell(
               onTap: () {
                 setState(
                   () {
@@ -125,11 +136,7 @@ class _LessonViewerState extends State<LessonViewer> {
                       : SizedBox(),
                 ],
               ),
-            ),
-            ListTile(
-              title: Text(lesson.lessonName),
-              subtitle: Text(lesson.description),
-            ),
+            ): Container() : Container(),
             Padding(
               padding: EdgeInsets.symmetric(horizontal: 12, vertical: 7),
               child: Text(lesson.lessonContent),

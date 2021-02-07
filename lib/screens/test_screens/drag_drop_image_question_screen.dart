@@ -8,6 +8,8 @@ import 'package:heutagogy/models/progress.dart';
 import 'package:heutagogy/models/test_type_models/drag_drop_test.dart';
 import 'package:heutagogy/models/test_type_models/option_class.dart';
 import 'package:heutagogy/models/userModel.dart';
+import 'package:heutagogy/screens/handyWidgets/customAppBar.dart';
+import 'package:heutagogy/screens/handyWidgets/slideHeading.dart';
 import 'package:provider/provider.dart';
 import 'package:heutagogy/services/database.dart';
 import 'package:heutagogy/models/studentProgress.dart';
@@ -72,32 +74,18 @@ class _DragDropImageScreenState extends State<DragDropImageScreen> {
   Widget build(BuildContext context) {
 
     return Scaffold(
-      appBar: AppBar(
-        title: Text(
-          dragDropImageTest.testName,
-        ),
-        leading: IconButton(
-          icon: Icon(Icons.keyboard_backspace_rounded,),
-          onPressed: () {
-            Navigator.pop(context);
-          },
-        ),
+      appBar: CustomAppBar(
+        title: dragDropImageTest.subject,
       ),
       body: Padding(
         padding: const EdgeInsets.all(20.0),
         child: SingleChildScrollView(
           child: Column(
             children: <Widget>[
-              (dragDropImageTest.testDescription == "" ||
-                      dragDropImageTest.testDescription == null)
-                  ? Container()
-                  : Center(
-                      child: Text(
-                        dragDropImageTest.testDescription,
-                        style: TextStyle(
-                            fontSize: 18, fontWeight: FontWeight.bold),
-                      ),
-                    ),
+              SlideHeader(
+                testName: dragDropImageTest.testName,
+                testDescription: dragDropImageTest.testDescription,
+              ),
               Padding(
                 padding: EdgeInsets.only(top: 20),
               ),
@@ -119,16 +107,15 @@ class _DragDropImageScreenState extends State<DragDropImageScreen> {
     for (var image in dragDropImageTest.pictures) {
       if (leftMarked[image.description]) {
         drops.add(Container(
-            width: 64,
-            height: 64,
+            width: 128,
+            height: 128,
             decoration: BoxDecoration(
-                color: Color.fromARGB(20, 10, 40, 230),
-                border: Border.all(width: 2),
-                borderRadius: BorderRadius.circular(100)),
+                color: Colors.blueGrey,
+                borderRadius: BorderRadius.circular(15)),
             child: Icon(
-              Icons.check_circle_rounded,
-              color: Color(0xFFAB4E68),
-              size: 32,
+              Icons.done_rounded,
+              color: HexColor("C2EABA"),
+              size: 40,
             )));
       } else {
         drops.add(
@@ -140,14 +127,13 @@ class _DragDropImageScreenState extends State<DragDropImageScreen> {
             if (!rightMarked[image.description]) {
               return Container(
                 padding: EdgeInsets.only(bottom: 4),
-                width: 140,
-                height: 128,
+                width: 120,
+                height: 120,
                 alignment: Alignment.center,
                 child: Container(
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(20),
-                    border: Border.all(color: Color(0xFFFDCC0D), width: 2),
-                    color: Color(0xFFFDCC0D),
+                    color: HexColor("C2EABA"),
                     // color: HexColor("#ed2a26")
                   ),
                   padding: EdgeInsets.all(10),
@@ -165,15 +151,13 @@ class _DragDropImageScreenState extends State<DragDropImageScreen> {
             } else {
               return Container(
                 padding: EdgeInsets.only(bottom: 4),
-                width: 140,
-                height: 128,
+                width: 120,
+                height: 120,
                 child: Container(
                     decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(20),
-                        border: Border.all(color: Colors.black54, width: 2),
-                        color: Color(0xFFAB4E68)),
+                        color: HexColor("#3B6064")),
                     padding: EdgeInsets.all(10),
-                    height: 128,
                     child: Center(
                       child: Text(
                         "Matched",
@@ -189,74 +173,79 @@ class _DragDropImageScreenState extends State<DragDropImageScreen> {
           onAccept: (data) {
             print("This is correct :)");
             setState(() {
+              if(data == image.description)
               correct[data] = true;
               leftMarked[image.description] = true;
               rightMarked[image.description] = true;
               print(data);
               print(image.description);
-              choices[image.description] = image.description;
+              choices[image.description] = data;
             });
           },
           onLeave: (data) {
             print("This is wrong :(");
             print(data);
             print(image.description);
-            setState(() {
-                leftMarked[data] = true;
-                rightMarked[image.description] = true;
-                choices[data] = image.description;
-            });
+            // setState(() {
+            //     leftMarked[data] = true;
+            //     rightMarked[image.description] = true;
+            //     choices[data] = image.description;
+            // });
           },
-          onWillAccept: (data) => data == image.description,
+          onWillAccept: (data) => true,
         ),
       );
     }
     targets..shuffle(Random(2));
     for (int i = 0; i < this.dragDropImageTest.pictures.length; i++) {
       body.add(Padding(
-          padding: EdgeInsets.only(top: 3, left: 40, right: 40),
+          padding: EdgeInsets.only(top: 3, left: 10, right: 10),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: <Widget>[drops[i], targets[i]],
+            children: <Widget>[drops[i],Padding(padding: EdgeInsets.all(10)), targets[i]],
           )));
     }
     body.add(SizedBox(height: 20));
     body.add(
-      MaterialButton(
-        minWidth: 75,
-        height: 75,
-        elevation: 8,
-        child: Text("Submit", style: TextStyle(color:Colors.white),),
-        color: HexColor("#ed2a26"),
-        padding: const EdgeInsets.all(5),
-        onPressed: () {
-          _updateProgress();
-          showDialog(
-              context: context,
-              builder: (BuildContext context) {
-                return AlertDialog(
-                  title: Text("Quiz submitted!"),
-                  content: Text("The Quiz is submitted successfully"),
-                  actions: [
-                    FlatButton(
-                      child: Text("Stay"),
-                      onPressed: () {
-                        Navigator.pop(context);
-                      },
-                    ),
-                    FlatButton(
-                      child: Text("Leave"),
-                      onPressed: () {
-                        Navigator.pop(context);
-                        Navigator.pop(context);
-                      },
-                    )
-                  ],
-                );
-              });
-          // Update progress and write to database
-        },
-      ),
+        MaterialButton(
+          minWidth: 85,
+          height: 65,
+          elevation: 10,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(10),
+          ),
+          child: Text("Submit",style: TextStyle(color: Colors.white),),
+          color: Colors.redAccent,
+          // Colors.white,
+          // HexColor("#ed2a26"),
+          padding: const EdgeInsets.all(5),
+          onPressed: () {
+            _updateProgress();
+            showDialog(
+                context: context,
+                builder: (BuildContext context) {
+                  return AlertDialog(
+                    title: Text("Quiz submitted!"),
+                    content: Text("The Quiz is submitted successfully"),
+                    actions: [
+                      FlatButton(
+                        child: Text("Stay"),
+                        onPressed: () {
+                          Navigator.pop(context);
+                        },
+                      ),
+                      FlatButton(
+                        child: Text("Leave"),
+                        onPressed: () {
+                          Navigator.pop(context);
+                          Navigator.pop(context);
+                        },
+                      )
+                    ],
+                  );
+                });
+          },
+        )
     );
     return body;
   }
@@ -273,16 +262,22 @@ class DraggableImage extends StatelessWidget {
     if (!this.active) {
       return Draggable<String>(
           data: image.description,
-          child: ClipRRect(
-            borderRadius: BorderRadius.circular(15),
-            child: CachedNetworkImage(
-              imageUrl: image.picture,
-              width: 128,
-              height: 128,
-              placeholder: (context, data) => CircularProgressIndicator(),
-              placeholderFadeInDuration: Duration(milliseconds: 500),
+          child: Card(
+            elevation: 5,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(15)
             ),
-            clipBehavior: Clip.hardEdge,
+            child: ClipRRect(
+              child: CachedNetworkImage(
+                imageUrl: image.picture,
+                width: 128,
+                height: 128,
+                fit: BoxFit.contain,
+                placeholder: (context, data) => CircularProgressIndicator(),
+                placeholderFadeInDuration: Duration(milliseconds: 500),
+              ),
+              clipBehavior: Clip.hardEdge,
+            ),
           ),
           feedback: ClipRRect(
             borderRadius: BorderRadius.circular(15),
@@ -297,6 +292,12 @@ class DraggableImage extends StatelessWidget {
           ),
           childWhenDragging: Container(
             width: 128,
+            height: 128,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(15),
+              color: Colors.blueGrey,
+            ),
+
           ));
     } else {
       return ClipRect(
@@ -305,11 +306,10 @@ class DraggableImage extends StatelessWidget {
           height: 128,
           child: Center(
             child: Icon(
-              Icons.check,
-              color: HexColor("#ed2a26"),
+              Icons.add,
             ),
           ),
-          color: Colors.lightBlueAccent,
+          // color: Colors.lightBlueAccent,
         ),
         clipBehavior: Clip.antiAlias,
       );

@@ -2,147 +2,198 @@ import 'package:flutter/material.dart';
 import 'dart:math';
 
 import 'package:heutagogy/hex_color.dart';
+import 'package:heutagogy/models/progress.dart';
+import 'package:heutagogy/models/test_type_models/missing_numbers_test.dart';
+import 'package:heutagogy/models/userModel.dart';
+import 'package:heutagogy/screens/handyWidgets/customAppBar.dart';
+import 'package:heutagogy/screens/handyWidgets/slideHeading.dart';
 import 'package:heutagogy/screens/score_screens/missing_numbers_result_screen.dart';
+import 'package:heutagogy/services/database.dart';
+import 'package:provider/provider.dart';
 
-class MissingNumbersTestType extends StatelessWidget {
+class MissingNumbersTestType extends StatefulWidget {
+  MissingNumbersTest missingNumbersTest;
+  String type,lid,cid;
+  MissingNumbersTestType(this.missingNumbersTest,this.type,this.cid,this.lid);
+  @override
+  _MissingNumbersTestTypeState createState() => _MissingNumbersTestTypeState(missingNumbersTest);
+}
 
-  final range = {'start': 1, 'end': 100};
+class _MissingNumbersTestTypeState extends State<MissingNumbersTestType> {
+  MissingNumbersTest testData;
+  _MissingNumbersTestTypeState(this.testData);
 
-  final start = 1;
+  List<int> answers;
+  Progress progress1;
 
-  final end = 100;
-
-  final List<int> randomList =
-      List.generate(10, (index) => 1 + Random().nextInt(100 + 1));
-
-  final List<int> answers = List.generate(10, (index) => 0);
-
-  final textEditingControllers =
-      List.generate(10, (index) => TextEditingController());
-
-  List<int> getRandomList() {
-    return List.generate(10, (index) => start + Random().nextInt(end + 1));
-  }
-
-  bool checkNumber(List<int> randomList, int num) {
-    for (var i in randomList) {
-      if (num == i) {
+  bool checkNumber(List missingList, int num) {
+    for (var i in missingList) {
+      if (testData.start+ num == i) {
         return false;
       }
     }
     return true;
   }
 
-  int getIndexInRandomList(int num) {
+  int getIndexInMissingList(int num) {
     int i = 0;
-    for (i = 0; i < randomList.length; i++) {
-      if (randomList[i] == num) {
+    for (i = 0; i < testData.missingList.length; i++) {
+      if (testData.missingList[i] == testData.start+ num) {
         return i;
       }
     }
     return 0;
   }
 
+  void _updateProgress() {
+    var user = Provider.of<UserModel>(context, listen: false);
+    String studentID = user.getID();
+    Map<String,int> evaluationMap={"total": 0,"correct":0};
+    evaluationMap['total'] = answers.length;
+    for (int i = 0; i < testData.missingList.length; i++) {
+      if (testData.missingList[i] == answers[i]) {
+        evaluationMap['correct'] = evaluationMap['correct'] + 1;
+      }
+    }
+    var progress = Progress(
+        name: testData.testName,
+        description: testData.testDescription,
+        partsDone: evaluationMap["correct"],
+        total: evaluationMap["total"],
+        responses: answers,
+    );
+    setState(() {
+      progress1=progress;
+    });
+    print(answers);
+    Map<String, dynamic> json = progress.toMap();
+    print(json);
+    // DatabaseService().writeProgress(json,studentID,widget.cid,widget.lid,widget.type);
+  }
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    answers = List.generate(testData.missingList.length, (index) => 0);
+    // randomList =
+    //     List.generate(testData.missing, (index) => testData.start+1 + Random().nextInt(testData.end-testData.start + 1));
+  }
   @override
   Widget build(BuildContext context) {
-    print(randomList);
     return Scaffold(
-      appBar: AppBar(title: Text('Missing Numbers')),
-      backgroundColor: Colors.grey[200],
+      appBar: CustomAppBar(title: testData.subject,),
       body: Container(
           height: MediaQuery.of(context).size.height,
           width: MediaQuery.of(context).size.width,
-          child: SingleChildScrollView(
-            child: Column(
-              children: [
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  mainAxisSize: MainAxisSize.max,
-                  children: [
-                    Card(
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 20),
-                        child: Center(
-                          child: Text(
-                            'Find the missing numbers',
-                            style: TextStyle(
-                                fontSize: 20, fontWeight: FontWeight.w500),
-                          ),
-                        ),
-                      ),
+          padding: EdgeInsets.all(10),
+          child: ListView(
+          shrinkWrap: true,
+            children: [
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                mainAxisAlignment: MainAxisAlignment.center,
+                mainAxisSize: MainAxisSize.max,
+                children: [
+                  SlideHeader(
+                    testName: testData.testName,
+                    testDescription: testData.testDescription,
+                  ),
+                  Padding(padding: EdgeInsets.all(8)),
+                  Container(
+                    // height: MediaQuery.of(context).size.height*3/5 + 50,
+                    padding: EdgeInsets.all(5),
+                    child: GridView.builder(
+                      shrinkWrap: true,
+                      physics: NeverScrollableScrollPhysics(),
+                    itemCount: testData.end-testData.start+1,
+                    gridDelegate:
+                        SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: 8,
+                      crossAxisSpacing: 8,
+                      mainAxisSpacing: 8
                     ),
-                    Container(
-                      height: MediaQuery.of(context).size.height*3/5 + 50,
-                      padding: EdgeInsets.all(5),
-                      decoration: BoxDecoration(color: Colors.white),
-                      child: GridView.builder(
-                        physics: NeverScrollableScrollPhysics(),
-                      itemCount: 100,
-                      gridDelegate:
-                          SliverGridDelegateWithFixedCrossAxisCount(
-                        crossAxisCount: 10,
-                        crossAxisSpacing: 8,
-                        mainAxisSpacing: 8
-                      ),
-                      itemBuilder: (context, index) => !checkNumber(
-                              randomList, index+1)
-                          ? Container(
-                              child: Center(
-                              child: TextField(
-                                onChanged: (val){
-                                  int i = getIndexInRandomList(index+1);
-                                  answers[i] = int.parse(val);
-                                  print(answers);
-                                },
-                                  decoration: InputDecoration(
-                                      hintText: '?',
-                                      contentPadding: EdgeInsets.all(3.0),
-                                      enabledBorder: OutlineInputBorder(
+                    itemBuilder: (context, index) => !checkNumber(
+                            testData.missingList, index)
+                        ? Container(
+                      alignment: Alignment.center,
+                            child: TextField(
+                              onChanged: (val){
+                                int i = getIndexInMissingList(index);
+                                answers[i] = int.parse(val);
+                                print(answers);
+                              },
+                                decoration: InputDecoration(
+                                    hintText: '?',
+                                    contentPadding: EdgeInsets.all(3.0),
+                                    enabledBorder: OutlineInputBorder(
+                                      borderRadius:
+                                          BorderRadius.circular(100),
+                                    ),
+                                    focusedBorder: OutlineInputBorder(
                                         borderRadius:
                                             BorderRadius.circular(100),
-                                      ),
-                                      focusedBorder: OutlineInputBorder(
-                                          borderRadius:
-                                              BorderRadius.circular(100),
-                                          borderSide: BorderSide(
-                                              color:
-                                                  HexColor('#ed2a26'))))),
-                            ))
-                          : Container(
-                            decoration: BoxDecoration(
-                              color: Colors.lightBlue,
-                              borderRadius: BorderRadius.circular(20)
-                            ),
-                              child: Center(
-                                  child: Text(
-                                    (index + 1).toString(),
-                                    style: TextStyle(
-                                      color: Colors.white,
-                                      fontWeight: FontWeight.w600
-                                    ),
-                                  )),
-                            )),
-                    ),
-                  ],
-                ),
-                Container(
-                  padding: EdgeInsets.symmetric(horizontal: 7),
-                  width: MediaQuery.of(context).size.width,
-                  child: RaisedButton(
-                    onPressed: () {
-                      Navigator.of(context).push(
-                        MaterialPageRoute(builder: (context) => MissingNumbersResultScreen(
-                          answers: randomList,
-                          responses: answers,
-                        ))
-                      );
-                    },
-                    child: Text('Submit'),
+                                        borderSide: BorderSide(
+                                            color:
+                                                HexColor('#ed2a26'))))))
+                        : Container(
+                          decoration: BoxDecoration(
+                            color: HexColor("#47A9EB"),
+                            borderRadius: BorderRadius.circular(20)
+                          ),
+                            child: Center(
+                                child: Text(
+                                  (testData.start+index).toString(),
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.w600
+                                  ),
+                                )),
+                          )),
                   ),
+                ],
+              ),
+              Padding(padding: EdgeInsets.all(15)),
+              MaterialButton(
+                minWidth: 75,
+                height: 65,
+                elevation: 10,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10),
                 ),
-              ],
-            ),
+                child: Text("Submit",style: TextStyle(color: Colors.white),),
+                color: Colors.redAccent,
+                // Colors.white,
+                // HexColor("#ed2a26"),
+                padding: const EdgeInsets.all(5),
+                onPressed: () {
+                  _updateProgress();
+                  // Navigator.push(context, MaterialPageRoute(builder: (context) => MissingNumbersResultScreen(missingNumbersTest: testData,progress: progress1,)));
+                  showDialog(
+                      context: context,
+                      builder: (BuildContext context) {
+                        return AlertDialog(
+                          title: Text("Quiz submitted!"),
+                          content: Text("The Quiz is submitted successfully"),
+                          actions: [
+                            FlatButton(
+                              child: Text("Stay"),
+                              onPressed: () {
+                                Navigator.pop(context);
+                              },
+                            ),
+                            FlatButton(
+                              child: Text("Leave"),
+                              onPressed: () {
+                                Navigator.pop(context);
+                                Navigator.pop(context);
+                              },
+                            )
+                          ],
+                        );
+                      });
+                },
+              )
+            ],
           )),
     );
   }

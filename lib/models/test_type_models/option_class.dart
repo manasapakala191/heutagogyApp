@@ -120,3 +120,24 @@ class AudioPair{
     };
   }
 }
+
+class TextPairData {
+  final String question;
+  final String correctText;
+
+  TextPairData({this.question, this.correctText});
+
+  factory TextPairData.fromJson(Map<String, dynamic> json){
+    return TextPairData(
+        question: json['question'],
+        correctText: json['correctText']
+    );
+  }
+
+  Map<String, dynamic> toMap() {
+    return {
+        'question': question,
+      'correctText': correctText
+    };
+  }
+}

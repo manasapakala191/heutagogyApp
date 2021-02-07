@@ -12,8 +12,8 @@ class PieChartWidget extends StatelessWidget {
   final data = Map<String, int>();
 
   final List<Color> colors = [
-    Colors.green,
-    Colors.red,
+    Colors.lightGreenAccent,
+    Colors.redAccent,
     Colors.yellow
   ];
 
@@ -26,7 +26,7 @@ class PieChartWidget extends StatelessWidget {
     final List<PieChartSectionData> sectionWidgets = [];
     if(data['correct'] != 0){
       sectionWidgets.add(PieChartSectionData(
-          color: Colors.green,
+          color: Colors.lightGreen,
           title: data['correct'].toString(),
           showTitle: true,
           value: data['correct'].toDouble(),
@@ -36,7 +36,7 @@ class PieChartWidget extends StatelessWidget {
 
     if(data['wrong'] != 0){
       sectionWidgets.add(PieChartSectionData(
-          color: Colors.red,
+          color: Colors.redAccent,
           title: data['wrong'].toString(),
           showTitle: true,
           value: data['wrong'].toDouble(),

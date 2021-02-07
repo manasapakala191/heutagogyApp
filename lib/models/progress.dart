@@ -17,7 +17,8 @@ class Progress{
         description:json["description"],
         partsDone: json["partsDone"],
         total: json["total"],
-        responses: json["responses"] is List<Object> ?json["responses"]:List.from(Map.from(json["responses"]).values)
+        responses: json["responses"] is List<Object> ?json["responses"]:List.from(Map.from(json["responses"]).values),
+        // randomList: json.containsKey("randomList") ? json["randomList"] : null
     );
   }
 
@@ -28,7 +29,7 @@ class Progress{
       "partsDone": this.partsDone,
       "total": this.total,
       "percentage": this.percentage,
-      "responses": this.responses
+      "responses": this.responses,
     };
   }
 }
