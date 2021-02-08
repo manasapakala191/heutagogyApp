@@ -9,7 +9,8 @@ import 'package:video_player/video_player.dart';
 class LessonViewer extends StatefulWidget {
   final Lesson lesson;
   final String lessonID, courseID,type;
-  LessonViewer({this.lesson,this.lessonID,this.courseID,this.type});
+  final bool isOffline;
+  LessonViewer({this.lesson,this.lessonID,this.courseID,this.type,this.isOffline});
   @override
   _LessonViewerState createState() => _LessonViewerState();
 }

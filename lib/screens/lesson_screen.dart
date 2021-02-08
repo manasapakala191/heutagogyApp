@@ -59,32 +59,32 @@ class LessonScreen extends StatelessWidget {
       case 'l0':
         {
           //done
-          return LessonViewer(lesson: Lesson.fromJson(data),type: sid, courseID: cid,lessonID: lid);
+          return LessonViewer(lesson: Lesson.fromJson(data),type: sid, courseID: cid,lessonID: lid, isOffline: false);
         }
         break;
       case 'q0':
         {
           //done
-          return MatchText(matchPicWithText: MatchPicWithText.fromJSON(data),type: sid, courseID: cid,lessonID: lid);
+          // return MatchText(matchPicWithText: MatchPicWithText.fromJSON(data),type: sid, courseID: cid,lessonID: lid, isOffline: false);
         }
         break;
       case 'q1':
         {
           //done
-          return MultipleChoiceImageQuestionScreen(
-              imageQuestionTest: ImageQuestionTest.fromJson(data),type: sid, courseID: cid,lessonID: lid);
+          // return MultipleChoiceImageQuestionScreen(
+          //     imageQuestionTest: ImageQuestionTest.fromJson(data),type: sid, courseID: cid,lessonID: lid, isOffline: false);
         }
         break;
       case 'q2':
         {
-          return MultipleChoiceQuestionScreen(
-              singleCorrectTest: SingleCorrectTest.fromJson(data),type: sid, courseID: cid,lessonID: lid);
+          // return MultipleChoiceQuestionScreen(
+          //     singleCorrectTest: SingleCorrectTest.fromJson(data),type: sid, courseID: cid,lessonID: lid, isOffline: false);
         }
         break;
       case 'q3':
         {
           //done
-          return DragDropImageScreen(DragDropImageTest.fromJSON(data),sid,cid,lid);
+          return DragDropImageScreen(DragDropImageTest.fromJSON(data),sid,cid,lid,false);
         }
         break;
       case 'q4':
@@ -96,7 +96,7 @@ class LessonScreen extends StatelessWidget {
       case 'q5':
         {
           //done
-          return MathMatchScreen(MathMatchTest.fromJSON(data),sid,cid,lid);
+          return MathMatchScreen(MathMatchTest.fromJSON(data),sid,cid,lid,false);
         }
         break;
       default:

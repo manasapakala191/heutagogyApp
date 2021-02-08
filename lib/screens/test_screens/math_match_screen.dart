@@ -14,7 +14,8 @@ import 'package:heutagogy/models/studentProgress.dart';
 class MathMatchScreen extends StatefulWidget {
   final MathMatchTest data;
   final String courseID,lessonID,type;
-  MathMatchScreen(this.data,this.type,this.courseID,this.lessonID);
+  final bool isOffline;
+  MathMatchScreen(this.data,this.type,this.courseID,this.lessonID,this.isOffline);
 
   @override
   _MathMatchScreenState createState() => _MathMatchScreenState(data);
@@ -103,7 +104,7 @@ class _MathMatchScreenState extends State<MathMatchScreen> {
         color: HexColor("#ed2a26"),
         padding: const EdgeInsets.all(5),
         onPressed: () {
-          if(isConnected){
+          if(!widget.isOffline){
               _updateProgress();
               showDialog(
                   context: context,

@@ -49,7 +49,7 @@ class _OfflineCourseScreenState extends State<OfflineCourseScreen> {
       builder: (context, userModel, child) {
         return Scaffold(
           appBar: AppBar(
-            title: Text(widget.courseData.courseName+"oFF"),
+            title: Text(widget.courseData.courseName),
           ),
           body: Container(
             child: ListView(

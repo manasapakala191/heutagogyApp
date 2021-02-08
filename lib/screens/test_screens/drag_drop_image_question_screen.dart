@@ -18,9 +18,10 @@ import 'package:heutagogy/models/studentProgress.dart';
 class DragDropImageScreen extends StatefulWidget {
   final DragDropImageTest dragDropImageTest;
   final String courseID, lessonID, type;
+  final bool isOffline;
 
   DragDropImageScreen(
-      this.dragDropImageTest, this.type, this.courseID, this.lessonID,
+      this.dragDropImageTest, this.type, this.courseID, this.lessonID, this.isOffline,
       {Key key})
       : super(key: key);
 
@@ -35,25 +36,26 @@ class _DragDropImageScreenState extends State<DragDropImageScreen> {
   Map<String, bool> leftMarked;
   Map<String,bool> rightMarked;
   Map<String,dynamic> choices;
-  bool isConnected = true;
-  var connectivity;
-  StreamSubscription<ConnectivityResult> subscription;
-  @override
-  void initState(){
-    super.initState();
-    connectivity = new Connectivity();
-    subscription = connectivity.onConnectivityChanged.listen((ConnectivityResult result){
-      print(result);
-      isConnected = (result != ConnectivityResult.none);
-      setState((){});
-    });
-  }
+  // bool isConnected = true;
+  // var connectivity;
+  // StreamSubscription<ConnectivityResult> subscription;
+  // @override
+  // void initState(){
+  //   super.initState();
+  //   connectivity = new Connectivity();
+  //   subscription = connectivity.onConnectivityChanged.listen((ConnectivityResult result){
+  //     print(result);
+  //     setState((){
+  //       isConnected = (result != ConnectivityResult.none);
+  //     });
+  //   });
+  // }
 
-  @override
-  void dispose(){
-    subscription.cancel();
-    super.dispose();
-  }
+  // @override
+  // void dispose(){
+  //   subscription.cancel();
+  //   super.dispose();
+  // }
 
   _DragDropImageScreenState(DragDropImageTest dragDropImageTest) {
     this.dragDropImageTest = dragDropImageTest;
@@ -158,7 +160,7 @@ class _DragDropImageScreenState extends State<DragDropImageScreen> {
             )));
       } else {
         drops.add(
-            DraggableImage(image: image, active: correct[image.description], isConnected: isConnected,));
+            DraggableImage(image: image, active: correct[image.description], isConnected: !widget.isOffline,));
       }
       targets.add(
         DragTarget(
@@ -256,7 +258,7 @@ class _DragDropImageScreenState extends State<DragDropImageScreen> {
         color: HexColor("#ed2a26"),
         padding: const EdgeInsets.all(5),
         onPressed: () {
-          if(isConnected == true){
+          if(widget.isOffline == false){
               _updateProgress();
               showDialog(
                   context: context,
@@ -340,14 +342,19 @@ class DraggableImage extends StatelessWidget {
           ),
           feedback: ClipRRect(
             borderRadius: BorderRadius.circular(15),
-            // child: (Connectivity().checkConnectivity() == ConnectivityResult.none)?Image(image: FileImage(File(image.picture))):CachedNetworkImage(
+            child: (isConnected == false) ?Image(image: FileImage(File(image.picture))):Image.network(
+              image.picture,
+              width: 128,
+              height: 128
+            ),
+            // CachedNetworkImage(
             //   placeholder: (context, url) => CircularProgressIndicator(),
             //   placeholderFadeInDuration: Duration(milliseconds: 100),
             //   imageUrl: image.picture,
             //   width: 128,
             //   height: 128,
             // ),
-            child: Image(image: FileImage(File(image.picture)),height: 125,width: 125,),
+            // child: Image(image: FileImage(File(image.picture)),height: 125,width: 125,),
             clipBehavior: Clip.hardEdge,
           ),
           childWhenDragging: Container(

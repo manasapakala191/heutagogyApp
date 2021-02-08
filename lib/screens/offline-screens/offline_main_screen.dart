@@ -7,7 +7,14 @@ import 'package:heutagogy/hex_color.dart';
 import 'package:heutagogy/models/course_model.dart';
 import 'package:heutagogy/models/userModel.dart';
 import 'package:heutagogy/screens/course_screen.dart';
+import 'package:heutagogy/screens/login-resources/login.dart';
+import 'package:heutagogy/screens/widgets/custom_app_bar.dart';
+import 'package:heutagogy/screens/widgets/custom_floating_action_button.dart';
+import 'package:heutagogy/screens/widgets/drawer_widget.dart';
+import 'package:heutagogy/screens/misc-screens/profile.dart';
 import 'package:heutagogy/screens/offline-screens/offline_course_screen.dart';
+import 'package:heutagogy/screens/progress/progress_screen.dart';
+import 'package:heutagogy/services/database.dart';
 import 'package:heutagogy/services/localFileService.dart';
 import 'package:provider/provider.dart';
 
@@ -21,6 +28,8 @@ class _OfflineMainScreenState extends State<OfflineMainScreen> {
     var connectivity;
     bool isConnected = true;
     StreamSubscription<ConnectivityResult> subscription;
+    final GlobalKey<ScaffoldState> _scaffoldkey = new GlobalKey<ScaffoldState>();
+
     @override
     void initState(){
       super.initState();
@@ -40,17 +49,14 @@ class _OfflineMainScreenState extends State<OfflineMainScreen> {
     }
   @override
   Widget build(BuildContext context) {
-    print("Built!");
-    final userModel = Provider.of<UserModel>(context);
+   final userModel = Provider.of<UserModel>(context);
     final _screenSize = MediaQuery.of(context).size;
-    // List<Future<CourseData>> courses = LocalFileService.fetchCourses(userModel.courses_enrolled);
-    // subscription = connectivity.onConnectivityChanged.listen(
-    //     (ConnectivityResult result){
-    //       print(result);
-    //       isConnected = (result != ConnectivityResult.none);
-    //     }
-    //   );
-    return Center(
+    return Scaffold(
+      key: _scaffoldkey,
+      appBar: CustomAppBar(),
+      drawer: CustomDrawer(),
+      floatingActionButton: CustomFloatingActionButton(scaffoldkey: _scaffoldkey),
+      body: Center(
         child: Container(
           // child: Text(courses.length.toString()),
           child: (userModel.courses_enrolled != null &&
@@ -168,6 +174,7 @@ class _OfflineMainScreenState extends State<OfflineMainScreen> {
                   ),
                 ),
         ),
-        );
+        ),
+    );
   }
 }

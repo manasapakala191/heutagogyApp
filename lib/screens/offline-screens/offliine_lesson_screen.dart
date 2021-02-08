@@ -85,7 +85,7 @@ class OfflineLessonScreen extends StatelessWidget {
       case 'q3':
         {
           //done
-          return DragDropImageScreen(DragDropImageTest.fromJSON(data),sid,cid,lid);
+          return DragDropImageScreen(DragDropImageTest.fromJSON(data),sid,cid,lid, true);
         }
         break;
       case 'q4':
@@ -97,7 +97,7 @@ class OfflineLessonScreen extends StatelessWidget {
       case 'q5':
         {
           //done
-          return MathMatchScreen(MathMatchTest.fromJSON(data),sid,cid,lid);
+          return MathMatchScreen(MathMatchTest.fromJSON(data),sid,cid,lid,true);
         }
         break;
       default:

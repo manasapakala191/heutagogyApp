@@ -9,6 +9,9 @@ import 'package:heutagogy/models/userModel.dart';
 import 'package:heutagogy/screens/course_screen.dart';
 import 'package:heutagogy/screens/jsonReadScreen.dart';
 import 'package:heutagogy/screens/login-resources/login.dart';
+import 'package:heutagogy/screens/widgets/custom_app_bar.dart';
+import 'package:heutagogy/screens/widgets/custom_floating_action_button.dart';
+import 'package:heutagogy/screens/widgets/drawer_widget.dart';
 import 'package:heutagogy/screens/misc-screens/profile.dart';
 import 'package:heutagogy/screens/progress/progress_screen.dart';
 import 'package:heutagogy/services/database.dart';
@@ -65,129 +68,9 @@ class _CoursesHomeScreenState extends State<CoursesHomeScreen> {
     // });
     return Scaffold(
       key: _scaffoldkey,
-      appBar: AppBar(
-        centerTitle: true,
-        title: Text(
-          'Heutagogy',
-          style: GoogleFonts.droidSerif(fontWeight: FontWeight.w400),
-        ),
-      ),
-      drawer: Drawer(
-        child: ListView(
-          children: [
-            DrawerHeader(
-              child: Center(
-                  child: Text(
-                "Heutagogy",
-                style: GoogleFonts.droidSerif(
-                    fontSize: 25,
-                    color: Colors.white,
-                    fontWeight: FontWeight.w500),
-              )),
-              decoration: BoxDecoration(
-                color: HexColor("#ed2a26"),
-              ),
-            ),
-            ListTile(
-              title: Text("My Profile"),
-              trailing: Icon(Icons.account_circle),
-              onTap: () {
-                Navigator.of(context).push(
-                  MaterialPageRoute(
-                    builder: (context) {
-                      return ProfilePage();
-                    },
-                  ),
-                );
-              },
-            ),
-            ListTile(
-              title: Text("My Progress"),
-              trailing: Icon(Icons.assignment_turned_in),
-              onTap: () {
-                Navigator.of(context).push(
-                  MaterialPageRoute(
-                    builder: (context) {
-                      return ProgressScreen();
-                    },
-                  ),
-                );
-              },
-            ),
-            ListTile(
-              title: Text("Settings"),
-              trailing: Icon(Icons.settings),
-            ),
-            ListTile(
-              title: Text("Logout"),
-              trailing: Icon(Icons.logout),
-              onTap: () {
-                Navigator.of(context).push(
-                  MaterialPageRoute(
-                    builder: (context) {
-                      return LoginPage();
-                    },
-                  ),
-                );
-              },
-            ),
-          ],
-        ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        child: Icon(
-          Icons.add,
-        ),
-        backgroundColor: HexColor("#ed2a26"),
-        onPressed: () async {
-          bool add = false;
-          bool added = await showDialog(
-              barrierDismissible: false,
-              context: context,
-              builder: (_) => AlertDialog(
-                    actions: [
-                      FlatButton(
-                          onPressed: () {
-                            print(courseCode);
-                            if (_formCourseKey.currentState.validate()) {
-                              _formCourseKey.currentState.save();
-                              Navigator.pop(context, true);
-                            }
-                          },
-                          child: Text("Add")),
-                      FlatButton(
-                          onPressed: () {
-                            Navigator.pop(context, false);
-                          },
-                          child: Text("Cancel"))
-                    ],
-                    title: Text('Add New Course'),
-                    content: Container(
-                      width: _screenSize.width * 0.3,
-                      child: Form(
-                        key: _formCourseKey,
-                        child: TextFormField(
-                          onSaved: (val) {
-                            setState(() {
-                              courseCode = val;
-                            });
-                          },
-                          validator: (val) {
-                            if (val.isEmpty) {
-                              print("empty");
-                              return "Type a course code.";
-                            }
-                            return null;
-                          },
-                        ),
-                      ),
-                    ),
-                  ));
-          if (added) {
-            await showAdding(userModel.roll, userModel);
-          }
-        },
-      ),
+      appBar: CustomAppBar(),
+      drawer: CustomDrawer(),
+      floatingActionButton: CustomFloatingActionButton(scaffoldkey: _scaffoldkey),
       body: isConnected ? Center(
         child: Container(
           // child: Text(courses.length.toString()),
@@ -307,7 +190,16 @@ class _CoursesHomeScreenState extends State<CoursesHomeScreen> {
                           );
                         }
                       }
-                      return OfflineMainScreen();
+                      return Container(
+                        child: Text(
+                          "You're offline. \n"
+                          "Keep learning from your downloaded courses!",
+                          style: TextStyle(
+                            fontSize: 40,
+                          ),
+                          textAlign: TextAlign.center,
+                        ),
+                      );
                     }
                   },
                 )
@@ -322,7 +214,16 @@ class _CoursesHomeScreenState extends State<CoursesHomeScreen> {
                   ),
                 ),
         ),
-      ):OfflineMainScreen(),
+      ):Container(
+          child: Text(
+            "You're offline. \n"
+            "Keep learning from your downloaded courses!",
+            style: TextStyle(
+              fontSize: 40,
+            ),
+            textAlign: TextAlign.center,
+          ),
+        )
     );
   }
 
