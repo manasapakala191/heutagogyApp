@@ -6,9 +6,11 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:heutagogy/hex_color.dart';
 import 'package:heutagogy/models/studentProgress.dart';
 import 'package:heutagogy/models/userModel.dart';
+import 'package:heutagogy/screens/courses_screen.dart';
 import 'package:heutagogy/screens/login-resources/login.dart';
 import 'package:heutagogy/services/database.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 void main() {
   runApp(
@@ -29,6 +31,43 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+  bool _isAlreadyLoggedIn;
+
+  _checkIfAlreadyLoggedIn() async{
+    final credentialsStorage = await SharedPreferences.getInstance();
+    String password = credentialsStorage.getString('password');
+    if(password == null){
+      _isAlreadyLoggedIn = false;
+    }
+    else{
+      _isAlreadyLoggedIn = true;
+      String rollNumber = credentialsStorage.getString('rollNumber');
+      String name = credentialsStorage.getString('name');
+      String photoURL = credentialsStorage.getString('photoURL');
+      List<String> courses = credentialsStorage.getStringList('courses');
+      if(courses != null && courses.isNotEmpty){
+        Map<String,dynamic> coursesMap = {};
+        // Map<String, dynamic> temp = {};
+        for(var course in courses){
+          // temp[course] = {};
+          coursesMap[course] = {};
+        }
+        print(coursesMap);
+        final userModel = Provider.of<UserModel>(context,listen: false);
+        print("-=");
+        userModel.fillDataWhileSigningIn(name, password, rollNumber, photoURL, coursesMap);
+        print("+=");
+      }
+    }
+    setState((){});
+  }
+
+  @override
+  void initState(){
+    super.initState();
+    _checkIfAlreadyLoggedIn();
+  }
+
   @override
   Widget build(BuildContext context) {
     // fetchData();
@@ -68,13 +107,13 @@ class _MyHomePageState extends State<MyHomePage> {
                         () => Navigator.of(context).pushReplacement(
                             MaterialPageRoute(
                                 builder: (BuildContext context) =>
-                                    LoginPage())));
+                                    (_isAlreadyLoggedIn == true)?CoursesHomeScreen():LoginPage())));
                     return IconButton(
                       onPressed: () {
                         Navigator.pushReplacement(
                             context,
                             MaterialPageRoute(
-                                builder: (context) => LoginPage()));
+                                builder: (context) => (_isAlreadyLoggedIn == true)?CoursesHomeScreen():LoginPage()));
                       },
                       icon: Icon(
                         Icons.check_circle,

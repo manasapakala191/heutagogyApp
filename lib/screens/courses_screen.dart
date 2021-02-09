@@ -32,13 +32,13 @@ class _CoursesHomeScreenState extends State<CoursesHomeScreen> {
   bool add;
   final GlobalKey<ScaffoldState> _scaffoldkey = new GlobalKey<ScaffoldState>();
   var connectivity;
-  bool isConnected = true;
+  bool isConnected;
   StreamSubscription<ConnectivityResult> subscription;
 
-  @override
-  void initState(){
-    super.initState();
+  _updateConnectivityInformation() async {
     connectivity = new Connectivity();
+    isConnected = ((await connectivity.checkConnectivity()) != ConnectivityResult.none);
+    setState(() {});
     subscription = connectivity.onConnectivityChanged.listen((ConnectivityResult result){
       print(result);
       if(result == ConnectivityResult.wifi || result == ConnectivityResult.mobile){
@@ -47,14 +47,15 @@ class _CoursesHomeScreenState extends State<CoursesHomeScreen> {
       else{
         isConnected = false;
       }
-      setState((){});
+      setState(() {});
     });
+    subscription.cancel();
   }
 
   @override
-  void dispose(){
-    subscription.cancel();
-    super.dispose();
+  void initState(){
+    super.initState();
+    _updateConnectivityInformation();
   }
 
   @override
@@ -214,16 +215,18 @@ class _CoursesHomeScreenState extends State<CoursesHomeScreen> {
                   ),
                 ),
         ),
-      ):Container(
-          child: Text(
-            "You're offline. \n"
-            "Keep learning from your downloaded courses!",
-            style: TextStyle(
-              fontSize: 40,
+      ):Center(
+        child: Container(
+            child: Text(
+              "You're offline. \n"
+              "Keep learning from your downloaded courses!",
+              style: TextStyle(
+                fontSize: 40,
+              ),
+              textAlign: TextAlign.center,
             ),
-            textAlign: TextAlign.center,
           ),
-        )
+      )
     );
   }
 

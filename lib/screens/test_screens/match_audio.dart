@@ -16,8 +16,9 @@ class DragDropAudioScreen extends StatefulWidget {
 
   final DragDropAudioTest data;
   final String courseID,lessonID,type;
+  final String typeOfData;
   
-  DragDropAudioScreen(this.data,this.type,this.courseID,this.lessonID, {Key key}) : super(key: key);
+  DragDropAudioScreen(this.data,this.type,this.courseID,this.lessonID,this.typeOfData, {Key key}) : super(key: key);
   
   @override
   _DragDropAudioScreenState createState() => _DragDropAudioScreenState(data);
@@ -31,24 +32,31 @@ class _DragDropAudioScreenState extends State<DragDropAudioScreen> {
   var leftMarked;
   var rightMarked;
   StudentProgress progress;
-  bool isConnected = true;
+  bool isConnected;
   var connectivity;
   StreamSubscription<ConnectivityResult> subscription;
+  
+  _updateConnectivityInformation() async {
+      connectivity = new Connectivity();
+      isConnected = ((await connectivity.checkConnectivity()) != ConnectivityResult.none);
+      setState((){});
+      subscription = connectivity.onConnectivityChanged.listen((ConnectivityResult result){
+        print("Subscription result below");
+        print(result);
+        setState((){
+          isConnected = (result != ConnectivityResult.none);
+        });
+      });
+      subscription.cancel();
+  }
+
   @override
   void initState(){
     super.initState();
-    connectivity = new Connectivity();
-    subscription = connectivity.onConnectivityChanged.listen((ConnectivityResult result){
-      print(result);
-      isConnected = (result != ConnectivityResult.none);
-      setState((){});
-    });
+    print("Called init state");
+    _updateConnectivityInformation();
   }
-  @override
-  void dispose(){
-    subscription.cancel();
-    super.dispose();
-  }
+
   _DragDropAudioScreenState(DragDropAudioTest data) {
     seed = Random().nextInt(100);
     this.audiodata = data;
@@ -231,7 +239,8 @@ class _DragDropAudioScreenState extends State<DragDropAudioScreen> {
           )));
     }
     body.add(SizedBox(height: 20));
-    body.add(
+    if(widget.typeOfData == "online"){
+        body.add(
       MaterialButton(
         height: 55,
         elevation: 8,
@@ -270,7 +279,7 @@ class _DragDropAudioScreenState extends State<DragDropAudioScreen> {
                   context: context,
                   builder: (BuildContext context) {
                     return AlertDialog(
-                      title: Text("Quiz not submitted!"),
+                      title: Text("Quiz was NOT submitted!"),
                       content: Text("You are offline. Connect to a network or read offline course content."),
                       actions: [
                         FlatButton(
@@ -293,6 +302,7 @@ class _DragDropAudioScreenState extends State<DragDropAudioScreen> {
          },
       ),
     );
+    }
     return body;
   }
 }

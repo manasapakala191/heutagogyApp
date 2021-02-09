@@ -19,8 +19,9 @@ import 'package:provider/provider.dart';
 class MultipleChoiceImageQuestionScreen extends StatefulWidget {
   final ImageQuestionTest imageQuestionTest;
   final String courseID, lessonID, type;
+  final String typeOfData;
   MultipleChoiceImageQuestionScreen(
-      {this.imageQuestionTest, this.type, this.courseID, this.lessonID});
+      {this.imageQuestionTest, this.type, this.courseID, this.lessonID, this.typeOfData});
   @override
   _MultipleChoiceImageQuestionScreenState createState() =>
       _MultipleChoiceImageQuestionScreenState(this.imageQuestionTest);
@@ -42,9 +43,23 @@ class _MultipleChoiceImageQuestionScreenState
   int total = 0;
 
   List<String> responses = List<String>();
-  bool isConnected = true;
+  bool isConnected;
   var connectivity;
   StreamSubscription<ConnectivityResult> subscription;
+
+  _updateConnectivityInformation() async {
+      connectivity = new Connectivity();
+      isConnected = ((await connectivity.checkConnectivity()) != ConnectivityResult.none);
+      setState((){});
+      subscription = connectivity.onConnectivityChanged.listen((ConnectivityResult result){
+        print("Subscription result below");
+        print(result);
+        setState((){
+          isConnected = (result != ConnectivityResult.none);
+        });
+      });
+      subscription.cancel();
+  }
 
   Map<String, dynamic> getResponseMap() {
     Map<String, dynamic> responseMap = Map<String, dynamic>();
@@ -78,6 +93,9 @@ class _MultipleChoiceImageQuestionScreenState
 
   @override
   void initState() {
+    print("Called init state");
+    super.initState();
+    _updateConnectivityInformation();
     for (var _ in imageQuestionTest.questions) {
       choices[_.question] = null;
       answers[_.question] = false;
@@ -85,31 +103,18 @@ class _MultipleChoiceImageQuestionScreenState
     print(choices);
     print(answers);
     timeObject.setStartTime(DateTime.now());
-    super.initState();
-    connectivity = new Connectivity();
-    subscription = connectivity.onConnectivityChanged.listen((ConnectivityResult result){
-      print(result);
-      isConnected = (result != ConnectivityResult.none);
-      setState((){});
-    });
   }
 
   @override
   void dispose() {
     timeObject.setEndTime(DateTime.now());
     timeObject.addTimeObjectToStudentPerformance();
-    subscription.cancel();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     timeObject.getStudent(context);
-    subscription = connectivity.onConnectivityChanged.listen((ConnectivityResult result){
-      print(result);
-      isConnected = (result != ConnectivityResult.none);
-      setState((){});
-    });
     return Scaffold(
       appBar: AppBar(
         title: Text(imageQuestionTest.subject),
@@ -151,19 +156,20 @@ class _MultipleChoiceImageQuestionScreenState
             ),
             Column(
               children: imageQuestionTest.questions
-                  .map((e) => QuestionWidget(e, this.choices, this.answers, isConnected))
+                  .map((e) => QuestionWidget(e, this.choices, this.answers, widget.typeOfData))
                   .toList(),
             ),
             SizedBox(
               height: 10,
             ),
+            (widget.typeOfData == "online")?
             Container(
               margin: EdgeInsets.all(7),
               width: 50,
               height: 50,
               child: RaisedButton(
                 onPressed: () {
-                 if(isConnected){
+                 if(isConnected == true){
               _updateProgress();
               showDialog(
                   context: context,
@@ -194,7 +200,7 @@ class _MultipleChoiceImageQuestionScreenState
                   context: context,
                   builder: (BuildContext context) {
                     return AlertDialog(
-                      title: Text("Quiz not submitted!"),
+                      title: Text("Quiz was NOT submitted!"),
                       content: Text("You are offline. Connect to a network or read offline course content."),
                       actions: [
                         FlatButton(
@@ -219,7 +225,7 @@ class _MultipleChoiceImageQuestionScreenState
                 child: Text("Submit", style: TextStyle(color: Colors.white),),
                 color: HexColor("#ed2a26"),
               ),
-            )
+            ):Container(),
           ],
         ),
       ),
@@ -230,8 +236,8 @@ class _MultipleChoiceImageQuestionScreenState
 class QuestionWidget extends StatelessWidget {
   final ImageQuestionData question;
   final Map choices, answers;
-  bool isConnected;
-  QuestionWidget(this.question, this.choices, this.answers, this.isConnected);
+  final String typeOfData;
+  QuestionWidget(this.question, this.choices, this.answers, this.typeOfData);
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -250,7 +256,7 @@ class QuestionWidget extends StatelessWidget {
             child: Text(question.question),
           ),
           ImageOptionBuilder(
-              question.options, this.choices, this.answers, question.question, this.isConnected),
+              question.options, this.choices, this.answers, question.question, this.typeOfData),
         ],
       ),
     );
@@ -261,8 +267,8 @@ class ImageOptionBuilder extends StatefulWidget {
   final List<ImageChoice> options;
   final Map choices, answers;
   final String question;
-  bool isConnected;
-  ImageOptionBuilder(this.options, this.choices, this.answers, this.question, this.isConnected);
+  final String typeOfData;
+  ImageOptionBuilder(this.options, this.choices, this.answers, this.question,this.typeOfData);
   @override
   _ImageOptionBuilderState createState() =>
       _ImageOptionBuilderState(this.choices, this.answers, this.question);
@@ -314,7 +320,7 @@ class _ImageOptionBuilderState extends State<ImageOptionBuilder> {
           //   //   return CircularProgressIndicator();
           //   // },
           // ),
-          title: widget.isConnected ?widget.options[index].picture!=null && widget.options[index].picture.isNotEmpty
+          title: (widget.typeOfData == "online")?(widget.options[index].picture!=null && widget.options[index].picture.isNotEmpty)
                       ? FadeInImage.assetNetwork(
                           placeholder: "assets/images/loading.gif",
                           image: widget.options[index].picture != null ? widget.options[index].picture : "No image")

@@ -35,6 +35,7 @@ dependencies:
   fl_chart: ^0.12.0
   dio:
   connectivity:
+  shared_preferences:
 dev_dependencies:
   flutter_test:
     sdk: flutter

@@ -20,22 +20,25 @@ class OfflineCourseScreen extends StatefulWidget {
 
 class _OfflineCourseScreenState extends State<OfflineCourseScreen> {
   var connectivity;
-    bool isConnected = true;
+    bool isConnected;
     StreamSubscription<ConnectivityResult> subscription;
+    _updateConnectivityInformation() async {
+      connectivity = new Connectivity();
+      isConnected = ((await connectivity.checkConnectivity()) != ConnectivityResult.none);
+      setState((){});
+      subscription = connectivity.onConnectivityChanged.listen((ConnectivityResult result){
+        print("Subscription result below");
+        print(result);
+        setState((){
+          isConnected = (result != ConnectivityResult.none);
+        });
+      });
+      subscription.cancel();
+  }
     @override
     void initState(){
       super.initState();
-      connectivity = new Connectivity();
-      subscription = connectivity.onConnectivityChanged.listen((ConnectivityResult result){
-        print(result);
-        isConnected = (result != ConnectivityResult.none);
-      });
-      setState(() {});
-    }
-    @override
-    void dispose(){
-      subscription.cancel();
-      super.dispose();
+      _updateConnectivityInformation();
     }
   @override
   Widget build(BuildContext context) {
@@ -103,7 +106,6 @@ class _OfflineCourseScreenState extends State<OfflineCourseScreen> {
                                                                     builder: (context) => OfflineLessonScreen(
                                                                         courseData: widget.courseData,
                                                                         lessonData: lessons[idx])));
-                                                                        // (isConnected == true) ? LessonScreen(courseData: widget.courseData, lessonData: lessons[idx]) :
                                               },
                                               child: Column(
                                                   mainAxisSize: MainAxisSize.max,

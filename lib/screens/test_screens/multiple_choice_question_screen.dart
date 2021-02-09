@@ -19,8 +19,9 @@ import 'package:heutagogy/models/time_object_model.dart';
 class MultipleChoiceQuestionScreen extends StatefulWidget {
   final singleCorrectTest;
   final String courseID, lessonID, type;
+  final String typeOfData;
   MultipleChoiceQuestionScreen(
-      {this.singleCorrectTest, this.type, this.courseID, this.lessonID});
+      {this.singleCorrectTest, this.type, this.courseID, this.lessonID, this.typeOfData});
 
   @override
   _MultipleChoiceQuestionScreenState createState() =>
@@ -84,38 +85,41 @@ class _MultipleChoiceQuestionScreenState
       courseId: 'Default Course ID',
       testId: 'Default Test ID');
 
+   _updateConnectivityInformation() async {
+      connectivity = new Connectivity();
+      isConnected = ((await connectivity.checkConnectivity()) != ConnectivityResult.none);
+      setState((){});
+      subscription = connectivity.onConnectivityChanged.listen((ConnectivityResult result){
+        print("Subscription result below");
+        print(result);
+        setState((){
+          isConnected = (result != ConnectivityResult.none);
+        });
+      });
+      subscription.cancel();
+  }
+
   @override
   void initState() {
+    super.initState();
     for (var _ in singleCorrectTest.questions) {
       answers[_.text] = false;
       choices[_.text] = null;
     }
     timeObject.setStartTime(DateTime.now());
-    super.initState();
-    connectivity = new Connectivity();
-    subscription = connectivity.onConnectivityChanged.listen((ConnectivityResult result){
-      print(result);
-      isConnected = (result != ConnectivityResult.none);
-      setState((){});
-    });
+    _updateConnectivityInformation();
   }
 
   @override
   void dispose() {
     timeObject.setEndTime(DateTime.now());
     timeObject.addTimeObjectToStudentPerformance();
-    subscription.cancel();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     timeObject.getStudent(context);
-    subscription = connectivity.onConnectivityChanged.listen((ConnectivityResult result){
-      print(result);
-      isConnected = (result != ConnectivityResult.none);
-      setState((){});
-    });
     return Scaffold(
       appBar: AppBar(
         title: Text('${singleCorrectTest.subject}'),
@@ -161,13 +165,14 @@ class _MultipleChoiceQuestionScreenState
               SizedBox(
                 height: 10,
               ),
+              (widget.typeOfData == "online")?
               Container(
                 margin: EdgeInsets.all(7),
                 width: 50,
                 height: 50,
                 child: RaisedButton(
                   onPressed: () {
-                    if(isConnected){
+                    if(isConnected == true){
               _updateProgress();
               showDialog(
                   context: context,
@@ -198,7 +203,7 @@ class _MultipleChoiceQuestionScreenState
                   context: context,
                   builder: (BuildContext context) {
                     return AlertDialog(
-                      title: Text("Quiz not submitted!"),
+                      title: Text("Quiz was NOT submitted!"),
                       content: Text("You are offline. Connect to a network or read offline course content."),
                       actions: [
                         FlatButton(
@@ -222,7 +227,7 @@ class _MultipleChoiceQuestionScreenState
                   elevation: 10,
                   child: Text("Submit",),
                 ),
-              )
+              ):Container(),
             ],
           )),
     );

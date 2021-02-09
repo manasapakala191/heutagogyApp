@@ -14,8 +14,8 @@ import 'package:heutagogy/models/studentProgress.dart';
 class MathMatchScreen extends StatefulWidget {
   final MathMatchTest data;
   final String courseID,lessonID,type;
-  final bool isOffline;
-  MathMatchScreen(this.data,this.type,this.courseID,this.lessonID,this.isOffline);
+  final String typeOfData;
+  MathMatchScreen(this.data,this.type,this.courseID,this.lessonID,this.typeOfData);
 
   @override
   _MathMatchScreenState createState() => _MathMatchScreenState(data);
@@ -29,12 +29,29 @@ class _MathMatchScreenState extends State<MathMatchScreen> {
   var rightMarked = Map();
 
   _MathMatchScreenState(this.testdata);
-  bool isConnected = true;
+  bool isConnected;
   var connectivity;
   StreamSubscription<ConnectivityResult> subscription;
+
+  _updateConnectivityInformation() async {
+      connectivity = new Connectivity();
+      isConnected = ((await connectivity.checkConnectivity()) != ConnectivityResult.none);
+      setState((){});
+      subscription = connectivity.onConnectivityChanged.listen((ConnectivityResult result){
+        print("Subscription result below");
+        print(result);
+        setState((){
+          isConnected = (result != ConnectivityResult.none);
+        });
+      });
+      subscription.cancel();
+  }
+
   @override
   void initState() {
     super.initState();
+    print("Called init state");
+    _updateConnectivityInformation();
     data = Map<String, dynamic>();
     for (var x in testdata.questions) {
       data[x.second] = false;
@@ -42,19 +59,8 @@ class _MathMatchScreenState extends State<MathMatchScreen> {
       leftMarked[x.second] = false;
       rightMarked[x.second] = false;
     }
-    connectivity = new Connectivity();
-    subscription = connectivity.onConnectivityChanged.listen((ConnectivityResult result){
-      print(result);
-      isConnected = (result != ConnectivityResult.none);
-      setState((){});
-    });
   }
-  @override
-  void dispose(){
-    subscription.cancel();
-    super.dispose();
-  }
-
+  
   void _updateProgress() {
     var user = Provider.of<UserModel>(context,listen: false);
     String studentID = user.getID();
@@ -95,7 +101,8 @@ class _MathMatchScreenState extends State<MathMatchScreen> {
     rows.add(
       SizedBox(height: 20),
     );
-    rows.add(
+    if(widget.typeOfData == "online"){
+      rows.add(
       MaterialButton(
         minWidth: 75,
         height: 75,
@@ -104,7 +111,7 @@ class _MathMatchScreenState extends State<MathMatchScreen> {
         color: HexColor("#ed2a26"),
         padding: const EdgeInsets.all(5),
         onPressed: () {
-          if(!widget.isOffline){
+          if(isConnected == true){
               _updateProgress();
               showDialog(
                   context: context,
@@ -135,7 +142,7 @@ class _MathMatchScreenState extends State<MathMatchScreen> {
                   context: context,
                   builder: (BuildContext context) {
                     return AlertDialog(
-                      title: Text("Quiz not submitted!"),
+                      title: Text("Quiz was NOT submitted!"),
                       content: Text("You are offline. Connect to a network or read offline course content."),
                       actions: [
                         FlatButton(
@@ -158,11 +165,8 @@ class _MathMatchScreenState extends State<MathMatchScreen> {
         },
       ),
     );
-    subscription = connectivity.onConnectivityChanged.listen((ConnectivityResult result){
-      print(result);
-      isConnected = (result != ConnectivityResult.none);
-      setState((){});
-    });
+    }
+    
     return Scaffold(
         appBar: AppBar(
             title: Text(

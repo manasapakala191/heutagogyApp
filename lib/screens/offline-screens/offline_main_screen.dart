@@ -1,5 +1,4 @@
 import 'dart:async';
-
 import 'package:connectivity/connectivity.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -26,26 +25,28 @@ class OfflineMainScreen extends StatefulWidget {
 
 class _OfflineMainScreenState extends State<OfflineMainScreen> {
     var connectivity;
-    bool isConnected = true;
+    bool isConnected;
     StreamSubscription<ConnectivityResult> subscription;
     final GlobalKey<ScaffoldState> _scaffoldkey = new GlobalKey<ScaffoldState>();
+
+    _updateConnectivityInformation() async {
+      connectivity = new Connectivity();
+      isConnected = ((await connectivity.checkConnectivity()) != ConnectivityResult.none);
+      setState((){});
+      subscription = connectivity.onConnectivityChanged.listen((ConnectivityResult result){
+        print("Subscription result below");
+        print(result);
+        setState((){
+          isConnected = (result != ConnectivityResult.none);
+        });
+      });
+      subscription.cancel();
+    }
 
     @override
     void initState(){
       super.initState();
-      connectivity = new Connectivity();
-      subscription = connectivity.onConnectivityChanged.listen(
-        (ConnectivityResult result){
-          print(result);
-          isConnected = (result != ConnectivityResult.none);
-        }
-      );
-      setState((){});
-    }
-    @override
-    void dispose(){
-      subscription.cancel();
-      super.dispose();
+      _updateConnectivityInformation();
     }
   @override
   Widget build(BuildContext context) {
@@ -165,8 +166,7 @@ class _OfflineMainScreenState extends State<OfflineMainScreen> {
                 )
               : Container(
                   child: Text(
-                    "No courses yet. \n"
-                    "Download when online",
+                    "No courses yet. \n",
                     style: TextStyle(
                       fontSize: 40,
                     ),

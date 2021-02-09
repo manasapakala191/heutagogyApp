@@ -4,6 +4,7 @@ import 'package:heutagogy/models/course_model.dart';
 import 'package:heutagogy/models/lessonModel.dart';
 import 'package:heutagogy/models/userModel.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class DatabaseService {
   static final db = FirebaseFirestore.instance;
@@ -277,6 +278,18 @@ class DatabaseService {
           doc_required["PhotoURL"],
           doc_required["Courses"],
         );
+        final credentialsStorage = await SharedPreferences.getInstance();
+        credentialsStorage.setString('rollNumber', doc_required["Roll_No"]);
+        credentialsStorage.setString('password',doc_required["Password"]);
+        credentialsStorage.setString('name',doc_required["Name"]);
+        credentialsStorage.setString('photoURL',doc_required["PhotoURL"]);
+        List<String> courseList = List<String>();
+        for(var course in doc_required["Courses"].keys){
+          // print(course);
+          courseList.add(course);
+        }
+        credentialsStorage.setStringList('courses',courseList);
+        print("Success");
         return "Success";
       } else {
         print("Password is wrong");
@@ -331,6 +344,18 @@ class DatabaseService {
           doc_required["Name"],
           doc_required["PhotoURL"],
           doc_required["Courses"]);
+        final credentialsStorage = await SharedPreferences.getInstance();
+        credentialsStorage.setString('rollNumber', doc_required["Roll_No"]);
+        credentialsStorage.setString('password',doc_required["Password"]);
+        credentialsStorage.setString('name',doc_required["Name"]);
+        credentialsStorage.setString('photoURL',doc_required["PhotoURL"]);
+        List<String> courseList = List<String>();
+        for(var course in doc_required["Courses"].keys){
+          // print(course);
+          courseList.add(course);
+        }
+        credentialsStorage.setStringList('courses',courseList);
+        print("Success");
       return true;
     } else {
       return false;

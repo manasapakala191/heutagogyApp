@@ -66,38 +66,38 @@ class OfflineLessonScreen extends StatelessWidget {
       case 'q0':
         {
           //done
-          return MatchText(matchPicWithText: MatchPicWithText.fromJSON(data),type: sid, courseID: cid,lessonID: lid);
+          return MatchText(matchPicWithText: MatchPicWithText.fromJSON(data),type: sid, courseID: cid,lessonID: lid,typeOfData: "offline");
         }
         break;
       case 'q1':
         {
           //done
           return MultipleChoiceImageQuestionScreen(
-              imageQuestionTest: ImageQuestionTest.fromJson(data),type: sid, courseID: cid,lessonID: lid);
+              imageQuestionTest: ImageQuestionTest.fromJson(data),type: sid, courseID: cid,lessonID: lid, typeOfData: "offline",);
         }
         break;
       case 'q2':
         {
           return MultipleChoiceQuestionScreen(
-              singleCorrectTest: SingleCorrectTest.fromJson(data),type: sid, courseID: cid,lessonID: lid);
+              singleCorrectTest: SingleCorrectTest.fromJson(data),type: sid, courseID: cid,lessonID: lid, typeOfData: "offline",);
         }
         break;
       case 'q3':
         {
           //done
-          return DragDropImageScreen(DragDropImageTest.fromJSON(data),sid,cid,lid, true);
+          return DragDropImageScreen(DragDropImageTest.fromJSON(data),sid,cid,lid,"offline");
         }
         break;
       case 'q4':
         {
           //done
-          return DragDropAudioScreen(DragDropAudioTest.fromJSON(data),sid,cid,lid);
+          return DragDropAudioScreen(DragDropAudioTest.fromJSON(data),sid,cid,lid,"offline");
         }
         break;
       case 'q5':
         {
           //done
-          return MathMatchScreen(MathMatchTest.fromJSON(data),sid,cid,lid,true);
+          return MathMatchScreen(MathMatchTest.fromJSON(data),sid,cid,lid,"offline");
         }
         break;
       default:

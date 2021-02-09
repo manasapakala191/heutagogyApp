@@ -7,6 +7,7 @@ import 'package:heutagogy/screens/login-resources/login.dart';
 import 'package:heutagogy/screens/misc-screens/profile.dart';
 import 'package:heutagogy/screens/offline-screens/offline_main_screen.dart';
 import 'package:heutagogy/screens/progress/progress_screen.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class CustomDrawer extends StatefulWidget {
   @override
@@ -91,7 +92,13 @@ class _CustomDrawerState extends State<CustomDrawer> {
             ListTile(
               title: Text("Logout"),
               trailing: Icon(Icons.logout),
-              onTap: () {
+              onTap: () async {
+                final credentialsStorage = await SharedPreferences.getInstance();
+                credentialsStorage.remove('rollNumber');
+                credentialsStorage.remove('password');
+                credentialsStorage.remove('photoURL');
+                credentialsStorage.remove('name');
+                credentialsStorage.remove('courses');
                 Navigator.of(context).push(
                   MaterialPageRoute(
                     builder: (context) {

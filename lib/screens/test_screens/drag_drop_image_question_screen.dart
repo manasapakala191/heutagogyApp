@@ -18,10 +18,10 @@ import 'package:heutagogy/models/studentProgress.dart';
 class DragDropImageScreen extends StatefulWidget {
   final DragDropImageTest dragDropImageTest;
   final String courseID, lessonID, type;
-  final bool isOffline;
-
+  final String typeOfData;
+  
   DragDropImageScreen(
-      this.dragDropImageTest, this.type, this.courseID, this.lessonID, this.isOffline,
+      this.dragDropImageTest, this.type, this.courseID, this.lessonID, this.typeOfData,
       {Key key})
       : super(key: key);
 
@@ -36,26 +36,31 @@ class _DragDropImageScreenState extends State<DragDropImageScreen> {
   Map<String, bool> leftMarked;
   Map<String,bool> rightMarked;
   Map<String,dynamic> choices;
-  // bool isConnected = true;
-  // var connectivity;
-  // StreamSubscription<ConnectivityResult> subscription;
-  // @override
-  // void initState(){
-  //   super.initState();
-  //   connectivity = new Connectivity();
-  //   subscription = connectivity.onConnectivityChanged.listen((ConnectivityResult result){
-  //     print(result);
-  //     setState((){
-  //       isConnected = (result != ConnectivityResult.none);
-  //     });
-  //   });
-  // }
+  bool isConnected;
+  var connectivity;
+  StreamSubscription<ConnectivityResult> subscription;
 
-  // @override
-  // void dispose(){
-  //   subscription.cancel();
-  //   super.dispose();
-  // }
+
+  _updateConnectivityInformation() async {
+      connectivity = new Connectivity();
+      isConnected = ((await connectivity.checkConnectivity()) != ConnectivityResult.none);
+      setState((){});
+      subscription = connectivity.onConnectivityChanged.listen((ConnectivityResult result){
+        print("Subscription result below");
+        print(result);
+        setState((){
+          isConnected = (result != ConnectivityResult.none);
+        });
+      });
+      subscription.cancel();
+  }
+
+  @override
+  void initState(){
+    super.initState();
+    print("Called init state");
+    _updateConnectivityInformation();
+  }
 
   _DragDropImageScreenState(DragDropImageTest dragDropImageTest) {
     this.dragDropImageTest = dragDropImageTest;
@@ -94,11 +99,6 @@ class _DragDropImageScreenState extends State<DragDropImageScreen> {
 
   @override
   Widget build(BuildContext context) {
-    // subscription = connectivity.onConnectivityChanged.listen((ConnectivityResult result){
-    //   print(result);
-    //   isConnected = (result != ConnectivityResult.none);
-    //   setState((){});
-    // });
     return Scaffold(
       appBar: AppBar(
         title: Text(
@@ -160,7 +160,7 @@ class _DragDropImageScreenState extends State<DragDropImageScreen> {
             )));
       } else {
         drops.add(
-            DraggableImage(image: image, active: correct[image.description], isConnected: !widget.isOffline,));
+            DraggableImage(image: image, active: correct[image.description], typeOfData: widget.typeOfData,));
       }
       targets.add(
         DragTarget(
@@ -249,7 +249,8 @@ class _DragDropImageScreenState extends State<DragDropImageScreen> {
           )));
     }
     body.add(SizedBox(height: 20));
-    body.add(
+    if(widget.typeOfData == "online"){
+      body.add(
       MaterialButton(
         minWidth: 75,
         height: 75,
@@ -258,7 +259,7 @@ class _DragDropImageScreenState extends State<DragDropImageScreen> {
         color: HexColor("#ed2a26"),
         padding: const EdgeInsets.all(5),
         onPressed: () {
-          if(widget.isOffline == false){
+          if(isConnected == true){
               _updateProgress();
               showDialog(
                   context: context,
@@ -289,7 +290,7 @@ class _DragDropImageScreenState extends State<DragDropImageScreen> {
                   context: context,
                   builder: (BuildContext context) {
                     return AlertDialog(
-                      title: Text("Quiz not submitted!"),
+                      title: Text("Quiz was NOT submitted!"),
                       content: Text("You are offline. Connect to a network or read offline course content."),
                       actions: [
                         FlatButton(
@@ -313,6 +314,7 @@ class _DragDropImageScreenState extends State<DragDropImageScreen> {
         },
       ),
     );
+    }
     return body;
   }
 }
@@ -320,9 +322,9 @@ class _DragDropImageScreenState extends State<DragDropImageScreen> {
 class DraggableImage extends StatelessWidget {
   final PicturePair image;
   final bool active;
-  final bool isConnected;
+  final String typeOfData;
 
-  DraggableImage({this.image, this.active, this.isConnected});
+  DraggableImage({this.image, this.active, this.typeOfData});
 
   @override
   Widget build(BuildContext context) {
@@ -331,7 +333,7 @@ class DraggableImage extends StatelessWidget {
           data: image.description,
           child: ClipRRect(
             borderRadius: BorderRadius.circular(15),
-            child: isConnected ? CachedNetworkImage(
+            child: (typeOfData == "online") ? CachedNetworkImage(
               imageUrl: image.picture,
               width: 128,
               height: 128,
@@ -342,11 +344,13 @@ class DraggableImage extends StatelessWidget {
           ),
           feedback: ClipRRect(
             borderRadius: BorderRadius.circular(15),
-            child: (isConnected == false) ?Image(image: FileImage(File(image.picture))):Image.network(
-              image.picture,
+            child: (typeOfData == "online") ? CachedNetworkImage(
+              imageUrl: image.picture,
               width: 128,
-              height: 128
-            ),
+              height: 128,
+              placeholder: (context, data) => CircularProgressIndicator(),
+              placeholderFadeInDuration: Duration(milliseconds: 500),
+            ): Image(image: FileImage(File(image.picture)),height: 125,width: 125,),
             // CachedNetworkImage(
             //   placeholder: (context, url) => CircularProgressIndicator(),
             //   placeholderFadeInDuration: Duration(milliseconds: 100),
