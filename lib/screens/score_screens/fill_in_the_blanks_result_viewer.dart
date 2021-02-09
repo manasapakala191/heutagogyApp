@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:heutagogy/models/progress.dart';
 import 'package:heutagogy/models/test_type_models/fill_the_blank_test.dart';
-import 'package:heutagogy/screens/handyWidgets/customAppBar.dart';
-import 'package:heutagogy/screens/handyWidgets/slideHeading.dart';
+import 'package:heutagogy/screens/widgets/customAppBar.dart';
+import 'package:heutagogy/screens/widgets/slideHeading.dart';
 import 'package:heutagogy/screens/score_screens/pie_chart_widget.dart';
 
 class FillInTheBlanksResultViewer extends StatelessWidget {

@@ -13,7 +13,7 @@ import 'package:heutagogy/models/test_type_models/math_match.dart';
 import 'package:heutagogy/models/test_type_models/missing_numbers_test.dart';
 import 'package:heutagogy/models/test_type_models/multiple_choice_question_test.dart';
 import 'package:heutagogy/models/userModel.dart';
-import 'package:heutagogy/screens/handyWidgets/customAppBar.dart';
+import 'package:heutagogy/screens/widgets/customAppBar.dart';
 import 'package:heutagogy/screens/score_screens/drag_drop_image_score.dart';
 import 'package:heutagogy/screens/score_screens/drag_drop_multiple_score.dart';
 import 'package:heutagogy/screens/score_screens/drag_drop_score.dart';

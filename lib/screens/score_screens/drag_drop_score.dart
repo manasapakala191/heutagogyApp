@@ -7,8 +7,8 @@ import 'package:heutagogy/hex_color.dart';
 import 'package:heutagogy/models/progress.dart';
 import 'package:heutagogy/models/test_type_models/match_audio.dart';
 import 'package:heutagogy/models/test_type_models/option_class.dart';
-import 'package:heutagogy/screens/handyWidgets/customAppBar.dart';
-import 'package:heutagogy/screens/handyWidgets/slideHeading.dart';
+import 'package:heutagogy/screens/widgets/customAppBar.dart';
+import 'package:heutagogy/screens/widgets/slideHeading.dart';
 import 'package:heutagogy/screens/score_screens/pie_chart_widget.dart';
 
 class DragDropScoreWidget extends StatefulWidget {

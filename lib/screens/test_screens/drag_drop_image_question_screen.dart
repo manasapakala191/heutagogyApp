@@ -1,3 +1,6 @@
+import 'dart:async';
+import 'dart:io';
+import 'package:connectivity/connectivity.dart';
 import 'package:flutter/material.dart';
 import 'dart:math';
 import 'package:cached_network_image/cached_network_image.dart';
@@ -8,8 +11,8 @@ import 'package:heutagogy/models/progress.dart';
 import 'package:heutagogy/models/test_type_models/drag_drop_test.dart';
 import 'package:heutagogy/models/test_type_models/option_class.dart';
 import 'package:heutagogy/models/userModel.dart';
-import 'package:heutagogy/screens/handyWidgets/customAppBar.dart';
-import 'package:heutagogy/screens/handyWidgets/slideHeading.dart';
+import 'package:heutagogy/screens/widgets/customAppBar.dart';
+import 'package:heutagogy/screens/widgets/slideHeading.dart';
 import 'package:provider/provider.dart';
 import 'package:heutagogy/services/database.dart';
 import 'package:heutagogy/models/studentProgress.dart';
@@ -17,9 +20,10 @@ import 'package:heutagogy/models/studentProgress.dart';
 class DragDropImageScreen extends StatefulWidget {
   final DragDropImageTest dragDropImageTest;
   final String courseID, lessonID, type;
-
+  final String typeOfData;
+  
   DragDropImageScreen(
-      this.dragDropImageTest, this.type, this.courseID, this.lessonID,
+      this.dragDropImageTest, this.type, this.courseID, this.lessonID, this.typeOfData,
       {Key key})
       : super(key: key);
 
@@ -34,6 +38,31 @@ class _DragDropImageScreenState extends State<DragDropImageScreen> {
   Map<String, bool> leftMarked;
   Map<String,bool> rightMarked;
   Map<String,dynamic> choices;
+  bool isConnected;
+  var connectivity;
+  StreamSubscription<ConnectivityResult> subscription;
+
+
+  _updateConnectivityInformation() async {
+      connectivity = new Connectivity();
+      isConnected = ((await connectivity.checkConnectivity()) != ConnectivityResult.none);
+      setState((){});
+      subscription = connectivity.onConnectivityChanged.listen((ConnectivityResult result){
+        print("Subscription result below");
+        print(result);
+        setState((){
+          isConnected = (result != ConnectivityResult.none);
+        });
+      });
+      subscription.cancel();
+  }
+
+  @override
+  void initState(){
+    super.initState();
+    print("Called init state");
+    _updateConnectivityInformation();
+  }
 
   _DragDropImageScreenState(DragDropImageTest dragDropImageTest) {
     this.dragDropImageTest = dragDropImageTest;
@@ -72,7 +101,6 @@ class _DragDropImageScreenState extends State<DragDropImageScreen> {
 
   @override
   Widget build(BuildContext context) {
-
     return Scaffold(
       appBar: CustomAppBar(
         title: dragDropImageTest.subject,
@@ -119,7 +147,7 @@ class _DragDropImageScreenState extends State<DragDropImageScreen> {
             )));
       } else {
         drops.add(
-            DraggableImage(image: image, active: correct[image.description]));
+            DraggableImage(image: image, active: correct[image.description], typeOfData: widget.typeOfData,));
       }
       targets.add(
         DragTarget(
@@ -206,47 +234,72 @@ class _DragDropImageScreenState extends State<DragDropImageScreen> {
           )));
     }
     body.add(SizedBox(height: 20));
-    body.add(
-        MaterialButton(
-          minWidth: 85,
-          height: 65,
-          elevation: 10,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(10),
-          ),
-          child: Text("Submit",style: TextStyle(color: Colors.white),),
-          color: Colors.redAccent,
-          // Colors.white,
-          // HexColor("#ed2a26"),
-          padding: const EdgeInsets.all(5),
-          onPressed: () {
-            _updateProgress();
+    if(widget.typeOfData == "online"){
+      body.add(
+      MaterialButton(
+        minWidth: 75,
+        height: 75,
+        elevation: 8,
+        child: Text("Submit", style: TextStyle(color:Colors.white),),
+        color: HexColor("#ed2a26"),
+        padding: const EdgeInsets.all(5),
+        onPressed: () {
+          if(isConnected == true){
+              _updateProgress();
+              showDialog(
+                  context: context,
+                  builder: (BuildContext context) {
+                    return AlertDialog(
+                      title: Text("Quiz submitted!"),
+                      content: Text("The Quiz is submitted successfully"),
+                      actions: [
+                        FlatButton(
+                          child: Text("Stay"),
+                          onPressed: () {
+                            Navigator.pop(context);
+                          },
+                        ),
+                        FlatButton(
+                          child: Text("Leave"),
+                          onPressed: () {
+                            Navigator.pop(context);
+                            Navigator.pop(context);
+                          },
+                        )
+                      ],
+                    );
+                  });
+          }
+          else{
             showDialog(
-                context: context,
-                builder: (BuildContext context) {
-                  return AlertDialog(
-                    title: Text("Quiz submitted!"),
-                    content: Text("The Quiz is submitted successfully"),
-                    actions: [
-                      FlatButton(
-                        child: Text("Stay"),
-                        onPressed: () {
-                          Navigator.pop(context);
-                        },
-                      ),
-                      FlatButton(
-                        child: Text("Leave"),
-                        onPressed: () {
-                          Navigator.pop(context);
-                          Navigator.pop(context);
-                        },
-                      )
-                    ],
-                  );
-                });
-          },
-        )
+                  context: context,
+                  builder: (BuildContext context) {
+                    return AlertDialog(
+                      title: Text("Quiz was NOT submitted!"),
+                      content: Text("You are offline. Connect to a network or read offline course content."),
+                      actions: [
+                        FlatButton(
+                          child: Text("Stay"),
+                          onPressed: () {
+                            Navigator.pop(context);
+                          },
+                        ),
+                        FlatButton(
+                          child: Text("Leave"),
+                          onPressed: () {
+                            Navigator.pop(context);
+                            Navigator.pop(context);
+                          },
+                        )
+                      ],
+                    );
+                  });
+          }
+          // Update progress and write to database
+        },
+      ),
     );
+    }
     return body;
   }
 }
@@ -254,40 +307,43 @@ class _DragDropImageScreenState extends State<DragDropImageScreen> {
 class DraggableImage extends StatelessWidget {
   final PicturePair image;
   final bool active;
+  final String typeOfData;
 
-  DraggableImage({this.image, this.active});
+  DraggableImage({this.image, this.active, this.typeOfData});
 
   @override
   Widget build(BuildContext context) {
     if (!this.active) {
       return Draggable<String>(
           data: image.description,
-          child: Card(
-            elevation: 5,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(15)
-            ),
-            child: ClipRRect(
-              child: CachedNetworkImage(
-                imageUrl: image.picture,
-                width: 128,
-                height: 128,
-                fit: BoxFit.contain,
-                placeholder: (context, data) => CircularProgressIndicator(),
-                placeholderFadeInDuration: Duration(milliseconds: 500),
-              ),
-              clipBehavior: Clip.hardEdge,
-            ),
-          ),
-          feedback: ClipRRect(
+          child: ClipRRect(
             borderRadius: BorderRadius.circular(15),
-            child: CachedNetworkImage(
-              placeholder: (context, url) => CircularProgressIndicator(),
-              placeholderFadeInDuration: Duration(milliseconds: 100),
+            child: (typeOfData == "online") ? CachedNetworkImage(
               imageUrl: image.picture,
               width: 128,
               height: 128,
-            ),
+              placeholder: (context, data) => CircularProgressIndicator(),
+              placeholderFadeInDuration: Duration(milliseconds: 500),
+            ): Image(image: FileImage(File(image.picture)),height: 125,width: 125,),
+            clipBehavior: Clip.hardEdge,
+          ),
+          feedback: ClipRRect(
+            borderRadius: BorderRadius.circular(15),
+            child: (typeOfData == "online") ? CachedNetworkImage(
+              imageUrl: image.picture,
+              width: 128,
+              height: 128,
+              placeholder: (context, data) => CircularProgressIndicator(),
+              placeholderFadeInDuration: Duration(milliseconds: 500),
+            ): Image(image: FileImage(File(image.picture)),height: 125,width: 125,),
+            // CachedNetworkImage(
+            //   placeholder: (context, url) => CircularProgressIndicator(),
+            //   placeholderFadeInDuration: Duration(milliseconds: 100),
+            //   imageUrl: image.picture,
+            //   width: 128,
+            //   height: 128,
+            // ),
+            // child: Image(image: FileImage(File(image.picture)),height: 125,width: 125,),
             clipBehavior: Clip.hardEdge,
           ),
           childWhenDragging: Container(

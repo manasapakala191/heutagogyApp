@@ -6,7 +6,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:heutagogy/hex_color.dart';
 import 'package:heutagogy/models/progress.dart';
 import 'package:heutagogy/models/test_type_models/drag_drop_test.dart';
-import 'package:heutagogy/screens/handyWidgets/slideHeading.dart';
+import 'package:heutagogy/screens/widgets/slideHeading.dart';
 import 'package:heutagogy/screens/score_screens/pie_chart_widget.dart';
 
 

@@ -1,5 +1,9 @@
+import 'dart:async';
+import 'dart:convert';
+import 'dart:io';
 import 'dart:ui';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:connectivity/connectivity.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:heutagogy/hex_color.dart';
@@ -7,17 +11,19 @@ import 'package:heutagogy/models/progress.dart';
 import 'package:heutagogy/models/studentProgress.dart';
 import 'package:heutagogy/models/test_type_models/match_text_test.dart';
 import 'package:heutagogy/models/userModel.dart';
-import 'package:heutagogy/screens/handyWidgets/customAppBar.dart';
-import 'package:heutagogy/screens/handyWidgets/slideHeading.dart';
+import 'package:heutagogy/screens/widgets/customAppBar.dart';
+import 'package:heutagogy/screens/widgets/slideHeading.dart';
 import 'package:heutagogy/screens/score_screens/result_screen.dart';
 import 'package:heutagogy/services/database.dart';
+import 'package:heutagogy/services/localFileService.dart';
 import 'package:provider/provider.dart';
 import 'package:heutagogy/models/time_object_model.dart';
 
 class MatchText extends StatefulWidget {
   final MatchPicWithText matchPicWithText;
   final String type, courseID, lessonID;
-  MatchText({this.matchPicWithText,this.type,this.courseID, this.lessonID});
+  final String typeOfData;
+  MatchText({this.matchPicWithText,this.type,this.courseID, this.lessonID, this.typeOfData});
   @override
   _MatchTextState createState() => _MatchTextState();
 }
@@ -31,6 +37,9 @@ class _MatchTextState extends State<MatchText> {
   int count = 0;
 
   List<String> responses = [];
+  bool isConnected;
+  var connectivity;
+  StreamSubscription<ConnectivityResult> subscription;
 
   void _updateProgress(){
     var user = Provider.of<UserModel>(context,listen: false);
@@ -38,9 +47,7 @@ class _MatchTextState extends State<MatchText> {
     for (var response in choices.values) {
         responses.add(response);
     }
-    print("Hoyaaa");
     print(responses);
-    print("Whyyyaa");
     // print(progress.getPerformance(widget.courseID, widget.lessonID));
     for(var val in data.values){
       if(val == true){
@@ -59,8 +66,26 @@ class _MatchTextState extends State<MatchText> {
     testId: 'Default Test ID'
   );
 
+  _updateConnectivityInformation() async {
+      connectivity = new Connectivity();
+      isConnected = ((await connectivity.checkConnectivity()) != ConnectivityResult.none);
+      setState((){});
+      subscription = connectivity.onConnectivityChanged.listen((ConnectivityResult result){
+        print("Subscription result below");
+        print(result);
+        setState((){
+          isConnected = (result != ConnectivityResult.none);
+        });
+      });
+      subscription.cancel();
+  }
+
+
   @override
   void initState() {
+    super.initState();
+    print("Called init state");
+    _updateConnectivityInformation();
     _matchPicWithText = widget.matchPicWithText;
     // Uncomment the following to test this out
     timeObject.setStartTime(DateTime.now());
@@ -88,7 +113,7 @@ class _MatchTextState extends State<MatchText> {
       data[choice.correctText] = false;
       choices[choice.correctText] = null;
     }
-    super.initState();
+    
   }
 
   @override
@@ -104,18 +129,40 @@ class _MatchTextState extends State<MatchText> {
       testName: _matchPicWithText.testName,
       testDescription: _matchPicWithText.testDescription,
     ));
+    
+    if (_matchPicWithText.testDescription != null &&
+        _matchPicWithText.testDescription != "") {
+      items.add(
+        Container(
+          padding: EdgeInsets.all(10.0),
+          child: Text(
+            _matchPicWithText.testDescription,
+            style: TextStyle(
+              fontSize: 20,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+        ),
+      );
+    }
+    // print("Size is: ");
+    // print(_matchPicWithText.choices.length);
     for (var x in _matchPicWithText.choices) {
+      print("Image is: ");
+      print(x.picture);
+      print(isConnected);
       items.add(
         Column(
           key: ObjectKey(x),
           children: <Widget>[
             SizedBox(height: 20.0),
-            CachedNetworkImage(
+            (widget.typeOfData == "online") ? CachedNetworkImage(
               imageUrl: x.picture,
-              width: 250,
-              height: 250,
-              fit: BoxFit.contain,
-            ),
+              width: 128,
+              height: 128,
+              placeholder: (context, data) => CircularProgressIndicator(),
+              placeholderFadeInDuration: Duration(milliseconds: 500),
+            ): Image(image: FileImage(File(x.picture)),height: 125,width: 125,),
             SizedBox(height: 20.0),
             // (!data[x.correctText])?
             Container(
@@ -178,54 +225,77 @@ class _MatchTextState extends State<MatchText> {
         padding: EdgeInsets.only(bottom: 40),
       ),
     );
-    items.add(
-        MaterialButton(
-          minWidth: 75,
-          height: 65,
-          elevation: 10,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(10),
-          ),
-          child: Text("Submit",style: TextStyle(color: Colors.white),),
-          color: Colors.redAccent,
-          // Colors.white,
-          // HexColor("#ed2a26"),
-          padding: const EdgeInsets.all(5),
-          onPressed: () {
-            _updateProgress();
+    if(widget.typeOfData == "online"){
+      items.add(
+      MaterialButton(
+        minWidth: 25,
+        height: 75,
+        elevation: 8,
+        child: Text("Submit"),
+        color: HexColor("#ed2a26"),
+        padding: const EdgeInsets.all(5),
+        onPressed: (){
+          if(isConnected == true){
+              _updateProgress();
+              showDialog(
+                  context: context,
+                  builder: (BuildContext context) {
+                    return AlertDialog(
+                      title: Text("Quiz submitted!"),
+                      content: Text("The Quiz is submitted successfully"),
+                      actions: [
+                        FlatButton(
+                          child: Text("Stay"),
+                          onPressed: () {
+                            Navigator.pop(context);
+                          },
+                        ),
+                        FlatButton(
+                          child: Text("Leave"),
+                          onPressed: () {
+                            Navigator.pop(context);
+                            Navigator.pop(context);
+                          },
+                        )
+                      ],
+                    );
+                  });
+          }
+          else{
             showDialog(
-                context: context,
-                builder: (BuildContext context) {
-                  return AlertDialog(
-                    title: Text("Quiz submitted!"),
-                    content: Text("The Quiz is submitted successfully"),
-                    actions: [
-                      FlatButton(
-                        child: Text("Stay"),
-                        onPressed: () {
-                          Navigator.pop(context);
-                        },
-                      ),
-                      FlatButton(
-                        child: Text("Leave"),
-                        onPressed: () {
-                          Navigator.pop(context);
-                          Navigator.pop(context);
-                        },
-                      )
-                    ],
-                  );
-                });
-          },
-        )
+                  context: context,
+                  builder: (BuildContext context) {
+                    return AlertDialog(
+                      title: Text("Quiz was NOT submitted!"),
+                      content: Text("You are offline. Connect to a network or read offline course content."),
+                      actions: [
+                        FlatButton(
+                          child: Text("Stay"),
+                          onPressed: () {
+                            Navigator.pop(context);
+                          },
+                        ),
+                        FlatButton(
+                          child: Text("Leave"),
+                          onPressed: () {
+                            Navigator.pop(context);
+                            Navigator.pop(context);
+                          },
+                        )
+                      ],
+                    );
+                  });
+          }
+        },
+      ),
     );
+    }
     return items;
   }
-
+ 
   @override
   Widget build(BuildContext context) {
     timeObject.getStudent(context);
-    //_buildImageInput();
     return Scaffold(
       appBar: CustomAppBar(
         title: _matchPicWithText.subject,

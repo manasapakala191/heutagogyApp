@@ -1,12 +1,14 @@
+import 'dart:async';
 import 'dart:math';
+import 'package:connectivity/connectivity.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:heutagogy/hex_color.dart';
 import 'package:heutagogy/models/progress.dart';
 import 'package:heutagogy/models/test_type_models/math_match.dart';
 import 'package:heutagogy/models/userModel.dart';
-import 'package:heutagogy/screens/handyWidgets/customAppBar.dart';
-import 'package:heutagogy/screens/handyWidgets/slideHeading.dart';
+import 'package:heutagogy/screens/widgets/customAppBar.dart';
+import 'package:heutagogy/screens/widgets/slideHeading.dart';
 import 'package:provider/provider.dart';
 import 'package:heutagogy/services/database.dart';
 import 'package:heutagogy/models/studentProgress.dart';
@@ -14,7 +16,8 @@ import 'package:heutagogy/models/studentProgress.dart';
 class MathMatchScreen extends StatefulWidget {
   final MathMatchTest data;
   final String courseID,lessonID,type;
-  MathMatchScreen(this.data,this.type,this.courseID,this.lessonID);
+  final String typeOfData;
+  MathMatchScreen(this.data,this.type,this.courseID,this.lessonID,this.typeOfData);
 
   @override
   _MathMatchScreenState createState() => _MathMatchScreenState(data);
@@ -28,10 +31,29 @@ class _MathMatchScreenState extends State<MathMatchScreen> {
   var rightMarked = Map();
 
   _MathMatchScreenState(this.testdata);
+  bool isConnected;
+  var connectivity;
+  StreamSubscription<ConnectivityResult> subscription;
+
+  _updateConnectivityInformation() async {
+      connectivity = new Connectivity();
+      isConnected = ((await connectivity.checkConnectivity()) != ConnectivityResult.none);
+      setState((){});
+      subscription = connectivity.onConnectivityChanged.listen((ConnectivityResult result){
+        print("Subscription result below");
+        print(result);
+        setState((){
+          isConnected = (result != ConnectivityResult.none);
+        });
+      });
+      subscription.cancel();
+  }
 
   @override
   void initState() {
     super.initState();
+    print("Called init state");
+    _updateConnectivityInformation();
     data = Map<String, dynamic>();
     for (var x in testdata.questions) {
       data[x.second] = false;
@@ -40,7 +62,7 @@ class _MathMatchScreenState extends State<MathMatchScreen> {
       rightMarked[x.second] = false;
     }
   }
-
+  
   void _updateProgress() {
     var user = Provider.of<UserModel>(context,listen: false);
     String studentID = user.getID();
@@ -81,47 +103,72 @@ class _MathMatchScreenState extends State<MathMatchScreen> {
     rows.add(
       SizedBox(height: 20),
     );
-    rows.add(
-        MaterialButton(
-          minWidth: 85,
-          height: 65,
-          elevation: 10,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(10),
-          ),
-          child: Text("Submit",style: TextStyle(color: Colors.white),),
-          color: Colors.redAccent,
-          // Colors.white,
-          // HexColor("#ed2a26"),
-          padding: const EdgeInsets.all(5),
-          onPressed: () {
-            _updateProgress();
+    if(widget.typeOfData == "online"){
+      rows.add(
+      MaterialButton(
+        minWidth: 75,
+        height: 75,
+        elevation: 8,
+        child: Text("Submit"),
+        color: HexColor("#ed2a26"),
+        padding: const EdgeInsets.all(5),
+        onPressed: () {
+          if(isConnected == true){
+              _updateProgress();
+              showDialog(
+                  context: context,
+                  builder: (BuildContext context) {
+                    return AlertDialog(
+                      title: Text("Quiz submitted!"),
+                      content: Text("The Quiz is submitted successfully"),
+                      actions: [
+                        FlatButton(
+                          child: Text("Stay"),
+                          onPressed: () {
+                            Navigator.pop(context);
+                          },
+                        ),
+                        FlatButton(
+                          child: Text("Leave"),
+                          onPressed: () {
+                            Navigator.pop(context);
+                            Navigator.pop(context);
+                          },
+                        )
+                      ],
+                    );
+                  });
+          }
+          else{
             showDialog(
-                context: context,
-                builder: (BuildContext context) {
-                  return AlertDialog(
-                    title: Text("Quiz submitted!"),
-                    content: Text("The Quiz is submitted successfully"),
-                    actions: [
-                      FlatButton(
-                        child: Text("Stay"),
-                        onPressed: () {
-                          Navigator.pop(context);
-                        },
-                      ),
-                      FlatButton(
-                        child: Text("Leave"),
-                        onPressed: () {
-                          Navigator.pop(context);
-                          Navigator.pop(context);
-                        },
-                      )
-                    ],
-                  );
-                });
-          },
-        )
+                  context: context,
+                  builder: (BuildContext context) {
+                    return AlertDialog(
+                      title: Text("Quiz was NOT submitted!"),
+                      content: Text("You are offline. Connect to a network or read offline course content."),
+                      actions: [
+                        FlatButton(
+                          child: Text("Stay"),
+                          onPressed: () {
+                            Navigator.pop(context);
+                          },
+                        ),
+                        FlatButton(
+                          child: Text("Leave"),
+                          onPressed: () {
+                            Navigator.pop(context);
+                            Navigator.pop(context);
+                          },
+                        )
+                      ],
+                    );
+                  });
+          }
+        },
+      ),
     );
+    }
+    
     return Scaffold(
         appBar: CustomAppBar(title: testdata.testName,),
         body: Padding(

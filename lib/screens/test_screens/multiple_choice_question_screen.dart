@@ -1,3 +1,6 @@
+import 'dart:async';
+
+import 'package:connectivity/connectivity.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -8,8 +11,8 @@ import 'package:heutagogy/models/test_type_models/multiple_choice_question_test.
 import 'package:heutagogy/models/test_type_models/option_class.dart';
 import 'package:heutagogy/models/test_type_models/question_class.dart';
 import 'package:heutagogy/models/userModel.dart';
-import 'package:heutagogy/screens/handyWidgets/customAppBar.dart';
-import 'package:heutagogy/screens/handyWidgets/slideHeading.dart';
+import 'package:heutagogy/screens/widgets/customAppBar.dart';
+import 'package:heutagogy/screens/widgets/slideHeading.dart';
 import 'package:heutagogy/screens/score_screens/single_correct_test_result_viewer.dart';
 import 'package:heutagogy/services/database.dart';
 import 'package:provider/provider.dart';
@@ -18,8 +21,9 @@ import 'package:heutagogy/models/time_object_model.dart';
 class MultipleChoiceQuestionScreen extends StatefulWidget {
   final singleCorrectTest;
   final String courseID, lessonID, type;
+  final String typeOfData;
   MultipleChoiceQuestionScreen(
-      {this.singleCorrectTest, this.type, this.courseID, this.lessonID});
+      {this.singleCorrectTest, this.type, this.courseID, this.lessonID, this.typeOfData});
 
   @override
   _MultipleChoiceQuestionScreenState createState() =>
@@ -39,6 +43,9 @@ class _MultipleChoiceQuestionScreenState
   int total = 0;
 
   List<String> responses = List<String>();
+  bool isConnected;
+  var connectivity;
+  StreamSubscription<ConnectivityResult> subscription;
 
   Map<String, dynamic> getResponseMap() {
     Map<String, dynamic> responseMap = Map<String, dynamic>();
@@ -80,14 +87,29 @@ class _MultipleChoiceQuestionScreenState
       courseId: 'Default Course ID',
       testId: 'Default Test ID');
 
+   _updateConnectivityInformation() async {
+      connectivity = new Connectivity();
+      isConnected = ((await connectivity.checkConnectivity()) != ConnectivityResult.none);
+      setState((){});
+      subscription = connectivity.onConnectivityChanged.listen((ConnectivityResult result){
+        print("Subscription result below");
+        print(result);
+        setState((){
+          isConnected = (result != ConnectivityResult.none);
+        });
+      });
+      subscription.cancel();
+  }
+
   @override
   void initState() {
+    super.initState();
     for (var _ in singleCorrectTest.questions) {
       answers[_.text] = false;
       choices[_.text] = null;
     }
     timeObject.setStartTime(DateTime.now());
-    super.initState();
+    _updateConnectivityInformation();
   }
 
   @override
@@ -111,56 +133,79 @@ class _MultipleChoiceQuestionScreenState
           shrinkWrap: true,
           children: <Widget>[
             SlideHeader(testName: singleCorrectTest.testName,testDescription: singleCorrectTest.testDescription,),
-            Column(
-                children: singleCorrectTest.questions
-                    .map<Widget>(
-                        (e) => QuestionWidget(e, this.answers, this.choices))
-                    .toList()),
-            SizedBox(
-              height: 10,
-            ),
-            MaterialButton(
-              minWidth: 75,
-              height: 65,
-              elevation: 10,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(10),
+              Column(
+                  children: singleCorrectTest.questions
+                      .map<Widget>(
+                          (e) => QuestionWidget(e, this.answers, this.choices))
+                      .toList()),
+              SizedBox(
+                height: 10,
               ),
-              child: Text("Submit",style: TextStyle(color: Colors.white),),
-              color: Colors.redAccent,
-              // Colors.white,
-              // HexColor("#ed2a26"),
-              padding: const EdgeInsets.all(5),
-              onPressed: () {
-                _updateProgress();
-                 showDialog(
-                    context: context,
-                    builder: (BuildContext context) {
-                      return AlertDialog(
-                        title: Text("Quiz submitted!"),
-                        content: Text("The Quiz is submitted successfully"),
-                        actions: [
-                          FlatButton(
-                            child: Text("Stay"),
-                            onPressed: () {
-                              Navigator.pop(context);
-                            },
-                          ),
-                          FlatButton(
-                            child: Text("Leave"),
-                            onPressed: () {
-                              Navigator.pop(context);
-                              Navigator.pop(context);
-                            },
-                          )
-                        ],
-                      );
-                    });
-              },
-            )
-          ],
-        ),
-      ),
+              (widget.typeOfData == "online")?
+              Container(
+                margin: EdgeInsets.all(7),
+                width: 50,
+                height: 50,
+                child: RaisedButton(
+                  onPressed: () {
+                    if(isConnected == true){
+              _updateProgress();
+              showDialog(
+                  context: context,
+                  builder: (BuildContext context) {
+                    return AlertDialog(
+                      title: Text("Quiz submitted!"),
+                      content: Text("The Quiz is submitted successfully"),
+                      actions: [
+                        FlatButton(
+                          child: Text("Stay"),
+                          onPressed: () {
+                            Navigator.pop(context);
+                          },
+                        ),
+                        FlatButton(
+                          child: Text("Leave"),
+                          onPressed: () {
+                            Navigator.pop(context);
+                            Navigator.pop(context);
+                          },
+                        )
+                      ],
+                    );
+                  });
+          }
+          else{
+            showDialog(
+                  context: context,
+                  builder: (BuildContext context) {
+                    return AlertDialog(
+                      title: Text("Quiz was NOT submitted!"),
+                      content: Text("You are offline. Connect to a network or read offline course content."),
+                      actions: [
+                        FlatButton(
+                          child: Text("Stay"),
+                          onPressed: () {
+                            Navigator.pop(context);
+                          },
+                        ),
+                        FlatButton(
+                          child: Text("Leave"),
+                          onPressed: () {
+                            Navigator.pop(context);
+                            Navigator.pop(context);
+                          },
+                        )
+                      ],
+                    );
+                  });
+          }
+                  },
+                  elevation: 10,
+                  child: Text("Submit",),
+                ),
+              ):Container(),
+            ],
+          )),
     );
   }
 }

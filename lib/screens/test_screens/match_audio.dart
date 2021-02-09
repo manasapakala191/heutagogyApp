@@ -1,13 +1,15 @@
+import 'dart:async';
 import 'dart:math';
 import 'package:audioplayers/audio_cache.dart';
 import 'package:audioplayers/audioplayers.dart';
+import 'package:connectivity/connectivity.dart';
 import 'package:flutter/material.dart';
 import 'package:heutagogy/models/progress.dart';
 import 'package:heutagogy/models/studentProgress.dart';
 import 'package:heutagogy/models/test_type_models/match_audio.dart';
 import 'package:heutagogy/models/userModel.dart';
-import 'package:heutagogy/screens/handyWidgets/customAppBar.dart';
-import 'package:heutagogy/screens/handyWidgets/slideHeading.dart';
+import 'package:heutagogy/screens/widgets/customAppBar.dart';
+import 'package:heutagogy/screens/widgets/slideHeading.dart';
 import 'package:provider/provider.dart';
 import 'package:heutagogy/services/database.dart';
 import '../../hex_color.dart';
@@ -16,8 +18,9 @@ class DragDropAudioScreen extends StatefulWidget {
 
   final DragDropAudioTest data;
   final String courseID,lessonID,type;
+  final String typeOfData;
   
-  DragDropAudioScreen(this.data,this.type,this.courseID,this.lessonID, {Key key}) : super(key: key);
+  DragDropAudioScreen(this.data,this.type,this.courseID,this.lessonID,this.typeOfData, {Key key}) : super(key: key);
   
   @override
   _DragDropAudioScreenState createState() => _DragDropAudioScreenState(data);
@@ -31,6 +34,30 @@ class _DragDropAudioScreenState extends State<DragDropAudioScreen> {
   var leftMarked;
   var rightMarked;
   StudentProgress progress;
+  bool isConnected;
+  var connectivity;
+  StreamSubscription<ConnectivityResult> subscription;
+  
+  _updateConnectivityInformation() async {
+      connectivity = new Connectivity();
+      isConnected = ((await connectivity.checkConnectivity()) != ConnectivityResult.none);
+      setState((){});
+      subscription = connectivity.onConnectivityChanged.listen((ConnectivityResult result){
+        print("Subscription result below");
+        print(result);
+        setState((){
+          isConnected = (result != ConnectivityResult.none);
+        });
+      });
+      subscription.cancel();
+  }
+
+  @override
+  void initState(){
+    super.initState();
+    print("Called init state");
+    _updateConnectivityInformation();
+  }
 
   _DragDropAudioScreenState(DragDropAudioTest data) {
     seed = Random().nextInt(100);
@@ -193,47 +220,70 @@ class _DragDropAudioScreenState extends State<DragDropAudioScreen> {
           )));
     }
     body.add(SizedBox(height: 20));
-    body.add(
-        MaterialButton(
-          minWidth: 75,
-          height: 65,
-          elevation: 10,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(10),
-          ),
-          child: Text("Submit",style: TextStyle(color: Colors.white),),
-          color: Colors.redAccent,
-          // Colors.white,
-          // HexColor("#ed2a26"),
-          padding: const EdgeInsets.all(5),
-          onPressed: () {
-            _updateProgress();
+    if(widget.typeOfData == "online"){
+        body.add(
+      MaterialButton(
+        height: 55,
+        elevation: 8,
+        child: Text("Submit"),
+        color: HexColor("#ed2a26"),
+        padding: const EdgeInsets.all(5),
+        onPressed: () {
+          if(isConnected == true){
+              _updateProgress();
+              showDialog(
+                  context: context,
+                  builder: (BuildContext context) {
+                    return AlertDialog(
+                      title: Text("Quiz submitted!"),
+                      content: Text("The Quiz is submitted successfully"),
+                      actions: [
+                        FlatButton(
+                          child: Text("Stay"),
+                          onPressed: () {
+                            Navigator.pop(context);
+                          },
+                        ),
+                        FlatButton(
+                          child: Text("Leave"),
+                          onPressed: () {
+                            Navigator.pop(context);
+                            Navigator.pop(context);
+                          },
+                        )
+                      ],
+                    );
+                  });
+          }
+          else{
             showDialog(
-                context: context,
-                builder: (BuildContext context) {
-                  return AlertDialog(
-                    title: Text("Quiz submitted!"),
-                    content: Text("The Quiz is submitted successfully"),
-                    actions: [
-                      FlatButton(
-                        child: Text("Stay"),
-                        onPressed: () {
-                          Navigator.pop(context);
-                        },
-                      ),
-                      FlatButton(
-                        child: Text("Leave"),
-                        onPressed: () {
-                          Navigator.pop(context);
-                          Navigator.pop(context);
-                        },
-                      )
-                    ],
-                  );
-                });
-          },
-        )
+                  context: context,
+                  builder: (BuildContext context) {
+                    return AlertDialog(
+                      title: Text("Quiz was NOT submitted!"),
+                      content: Text("You are offline. Connect to a network or read offline course content."),
+                      actions: [
+                        FlatButton(
+                          child: Text("Stay"),
+                          onPressed: () {
+                            Navigator.pop(context);
+                          },
+                        ),
+                        FlatButton(
+                          child: Text("Leave"),
+                          onPressed: () {
+                            Navigator.pop(context);
+                            Navigator.pop(context);
+                          },
+                        )
+                      ],
+                    );
+                  });
+          }
+         },
+      ),
     );
+    }
     return body;
   }
 }
@@ -265,9 +315,8 @@ class _DraggableAudioButtonState extends State<DraggableAudioButton>
     super.initState();
     audioCache = AudioCache(prefix: 'assets/audios/');
     // try {
-      print("\n\nFind the audio Path here ");
+      // print("\n\nFind the audio Path here ");
       print(audioPath);
-      print("Audio path is above here!!");
     audioCache.load("$audioPath.mp3"); 
     // } catch (e) {
     //   print("There has been an error loading the audio file");
