@@ -141,7 +141,10 @@ class _MultipleChoiceImageQuestionScreenState
               margin: EdgeInsets.all(7),
               width: 50,
               height: 50,
-              child: RaisedButton(
+              child: MaterialButton(
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10),
+                  ),
                 onPressed: () {
                  if(isConnected == true){
               _updateProgress();
@@ -196,8 +199,8 @@ class _MultipleChoiceImageQuestionScreenState
           }
                 },
                 elevation: 10,
-                child: Text("Submit", style: TextStyle(color: Colors.white),),
-                color: HexColor("#ed2a26"),
+                child: Text("Submit", style: TextStyle(color: Colors.white,fontSize: 15),),
+                color: Colors.redAccent
               ),
             ):Container(),
           ],

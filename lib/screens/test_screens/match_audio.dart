@@ -191,7 +191,7 @@ class _DragDropAudioScreenState extends State<DragDropAudioScreen> {
             setState(() {
               if(data == sound.description)
               correct[sound.description] = true;
-              leftMarked[sound.description] = true;
+              leftMarked[data] = true;
               rightMarked[sound.description] = true;
               choices[sound.description] = data;
             });
@@ -223,10 +223,14 @@ class _DragDropAudioScreenState extends State<DragDropAudioScreen> {
     if(widget.typeOfData == "online"){
         body.add(
       MaterialButton(
-        height: 55,
+        height: 75,
         elevation: 8,
-        child: Text("Submit"),
-        color: HexColor("#ed2a26"),
+        minWidth: 85,
+        child: Text("Submit",style: TextStyle(color: Colors.white,fontSize: 15),),
+        color: Colors.redAccent,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(10),
+        ),
         padding: const EdgeInsets.all(5),
         onPressed: () {
           if(isConnected == true){

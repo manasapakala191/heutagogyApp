@@ -129,22 +129,6 @@ class _MatchTextState extends State<MatchText> {
       testName: _matchPicWithText.testName,
       testDescription: _matchPicWithText.testDescription,
     ));
-    
-    if (_matchPicWithText.testDescription != null &&
-        _matchPicWithText.testDescription != "") {
-      items.add(
-        Container(
-          padding: EdgeInsets.all(10.0),
-          child: Text(
-            _matchPicWithText.testDescription,
-            style: TextStyle(
-              fontSize: 20,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-        ),
-      );
-    }
     // print("Size is: ");
     // print(_matchPicWithText.choices.length);
     for (var x in _matchPicWithText.choices) {
@@ -228,11 +212,14 @@ class _MatchTextState extends State<MatchText> {
     if(widget.typeOfData == "online"){
       items.add(
       MaterialButton(
-        minWidth: 25,
+        minWidth: 85,
         height: 75,
-        elevation: 8,
-        child: Text("Submit"),
-        color: HexColor("#ed2a26"),
+        elevation: 10,
+        child: Text("Submit",style: TextStyle(color: Colors.white,fontSize: 15),),
+        color: Colors.redAccent,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(10),
+        ),
         padding: const EdgeInsets.all(5),
         onPressed: (){
           if(isConnected == true){

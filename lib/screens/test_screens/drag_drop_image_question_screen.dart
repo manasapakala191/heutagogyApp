@@ -132,7 +132,8 @@ class _DragDropImageScreenState extends State<DragDropImageScreen> {
     List<Widget> drops = [];
     List<Widget> targets = [];
 
-    for (var image in dragDropImageTest.pictures) {
+    for (int i=0;i<dragDropImageTest.pictures.length;i++) {
+    var image =dragDropImageTest.pictures[i];
       if (leftMarked[image.description]) {
         drops.add(Container(
             width: 128,
@@ -201,9 +202,10 @@ class _DragDropImageScreenState extends State<DragDropImageScreen> {
           onAccept: (data) {
             print("This is correct :)");
             setState(() {
+              print(data);
               if(data == image.description)
               correct[data] = true;
-              leftMarked[image.description] = true;
+              leftMarked[data] = true;
               rightMarked[image.description] = true;
               print(data);
               print(image.description);
@@ -237,12 +239,15 @@ class _DragDropImageScreenState extends State<DragDropImageScreen> {
     if(widget.typeOfData == "online"){
       body.add(
       MaterialButton(
-        minWidth: 75,
+        minWidth: 85,
         height: 75,
         elevation: 8,
-        child: Text("Submit", style: TextStyle(color:Colors.white),),
-        color: HexColor("#ed2a26"),
-        padding: const EdgeInsets.all(5),
+        child: Text("Submit",style: TextStyle(color: Colors.white,fontSize: 15),),
+        color: Colors.redAccent,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(10),
+        ),
+        padding: const EdgeInsets.all(10),
         onPressed: () {
           if(isConnected == true){
               _updateProgress();

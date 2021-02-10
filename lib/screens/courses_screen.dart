@@ -178,6 +178,14 @@ class _CoursesHomeScreenState extends State<CoursesHomeScreen> {
                                                     course[idx]
                                                         .courseID).then((value) {
                                                           print("Downloaded"+course[idx].courseID);
+                                                          showDialog(
+                                                            context: context,
+                                                            builder: (context){
+                                                              return AlertDialog(
+                                                                title: Text("${course[idx].courseName} is now available offline!"),
+                                                              );
+                                                            }
+                                                          );
                                                           // Navigator.push(context, MaterialPageRoute(
                                                           //     builder: (context) =>
                                                           //         DisplayJsonScreen(course[idx].courseID)));
@@ -194,14 +202,7 @@ class _CoursesHomeScreenState extends State<CoursesHomeScreen> {
                         }
                       }
                       return Container(
-                        child: Text(
-                          "You're offline. \n"
-                          "Keep learning from your downloaded courses!",
-                          style: TextStyle(
-                            fontSize: 40,
-                          ),
-                          textAlign: TextAlign.center,
-                        ),
+                        child: CircularProgressIndicator(),
                       );
                     }
                   },

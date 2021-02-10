@@ -51,7 +51,7 @@ class _LessonViewerState extends State<LessonViewer> {
     print("boolYT"+_isYoutube.toString());
     if(_isYoutube){
       youTubePlayerInitializer();
-    } else {
+    } else if(videoUrl.isNotEmpty){
       playerInitializer();
     }
     super.initState();
@@ -68,27 +68,32 @@ class _LessonViewerState extends State<LessonViewer> {
     _controller.setLooping(true);
   }
 
-  youTubePlayerInitializer(){
+  youTubePlayerInitializer() {
     var id = YoutubePlayer.convertUrlToId(
         videoUrl
     );
-    _controller1 = YoutubePlayerController(
-      initialVideoId: id,
-      flags: const YoutubePlayerFlags(
-        mute: false,
-        autoPlay: true,
-        disableDragSeek: false,
-        loop: false,
-        isLive: false,
-        forceHD: false,
-        enableCaption: true,
-      ),
-    )..addListener(listener);
+    if (id != null) {
+      _controller1 = YoutubePlayerController(
+        initialVideoId: id,
+        flags: const YoutubePlayerFlags(
+          mute: false,
+          autoPlay: true,
+          disableDragSeek: false,
+          loop: false,
+          isLive: false,
+          forceHD: false,
+          enableCaption: true,
+        ),
+      )
+        ..addListener(listener);
 
-    _videoMetaData = const YoutubeMetaData();
-    _playerState = PlayerState.unknown;
+      _videoMetaData = const YoutubeMetaData();
+      _playerState = PlayerState.unknown;
+    } else {
+      _isYoutube=false;
+      videoUrl="";
+    }
   }
-
   void listener() {
     if (_isPlayerReady && mounted && !_controller1.value.isFullScreen) {
       setState(() {
@@ -207,7 +212,7 @@ class _LessonViewerState extends State<LessonViewer> {
             ): Container() : Container(),
             Padding(
               padding: EdgeInsets.symmetric(horizontal: 12, vertical: 7),
-              child: Text(lesson.lessonContent),
+              child: Text(lesson.lessonContent,style: TextStyle(fontSize: 17),),
             )
           ],
         ),

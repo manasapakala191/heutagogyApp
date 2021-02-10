@@ -7,8 +7,11 @@ class CustomMainAppBar extends StatelessWidget implements PreferredSizeWidget{
   @override
   Widget build(BuildContext context) {
     return AppBar(
-      backgroundColor: HexColor('#ed2a26'),
-      title: Text("Heutagogy",style: TextStyle(color: Colors.white),),
+      backgroundColor: Colors.white,
+      title: Text("Heutagogy",style: TextStyle(color: HexColor('#ed2a26'),),),
+      iconTheme: IconThemeData(
+        color: HexColor("#ed2a26"),
+      ),
     );
   }
 }
