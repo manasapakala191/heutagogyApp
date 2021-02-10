@@ -67,7 +67,7 @@ class LessonScreen extends StatelessWidget {
         {
           //done
           print("a video url"+ data["videoURL"]);
-          return LessonViewer(lesson: Lesson.fromJson(data),type: sid, courseID: cid,lessonID: lid,videoURL: data["videoURL"]);
+          return LessonViewer(lesson: Lesson.fromJson(data),type: sid, courseID: cid,lessonID: lid,videoURL: data["videoURL"],typeOfData: "online");
           // return LessonViewer(lesson: Lesson.fromJson(data),type: sid, courseID: cid,lessonID: lid, isOffline: false);
         }
         break;

@@ -13,7 +13,8 @@ class LessonViewer extends StatefulWidget {
   final Lesson lesson;
   final String lessonID, courseID,type;
   final String videoURL;
-  LessonViewer({this.lesson,this.lessonID,this.courseID,this.type,this.videoURL});
+  final String typeOfData;
+  LessonViewer({this.lesson,this.lessonID,this.courseID,this.type,this.videoURL,this.typeOfData});
   @override
   _LessonViewerState createState() => _LessonViewerState();
 }
@@ -40,10 +41,12 @@ class _LessonViewerState extends State<LessonViewer> {
   bool _isYoutube=false;
   @override
   void initState() {
+    print("\n\n\n\nVideo is this");
+    print(widget.videoURL);
     lesson = widget.lesson;
     timeObject.setStartTime(DateTime.now());
     videoUrl=widget.videoURL;
-    _isYoutube = videoUrl.contains("youtube");
+    _isYoutube = (videoUrl != null && videoUrl.contains("youtube") == true);
     print("me"+videoUrl);
     print("boolYT"+_isYoutube.toString());
     if(_isYoutube){
@@ -55,8 +58,11 @@ class _LessonViewerState extends State<LessonViewer> {
   }
 
   playerInitializer(){
+    if(videoUrl == null){
+      return;
+    }
     _controller = VideoPlayerController.network(
-      videoUrl,
+      videoUrl
     );
     _initializeVideoPlayerFuture = _controller.initialize();
     _controller.setLooping(true);

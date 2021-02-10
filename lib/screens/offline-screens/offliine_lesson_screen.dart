@@ -68,7 +68,9 @@ class OfflineLessonScreen extends StatelessWidget {
       case 'l0':
         {
           //done
-          return LessonViewer(lesson: Lesson.fromJson(data),type: sid, courseID: cid,lessonID: lid);
+          print("a video url"+ data["videoURL"]);
+          return LessonViewer(lesson: Lesson.fromJson(data),type: sid, courseID: cid,lessonID: lid,videoURL: data["videoURL"],typeOfData: "online");
+          // return LessonViewer(lesson: Lesson.fromJson(data),type: sid, courseID: cid,lessonID: lid, isOffline: false);
         }
         break;
       case 'q0':
@@ -140,8 +142,13 @@ class OfflineLessonScreen extends StatelessWidget {
 
   _buildSlides(List data,String cid) {
     
-    List types = ['l0', 'q0', 'q1', 'q2', 'q3', 'q4', 'q5','q6','q7','q8','q9'];
+    // List types = ['l0', 'q0', 'q1', 'q2', 'q3', 'q4', 'q5','q6','q7','q8','q9'];
+    print("\n");
+    print("\n");
+    print("Find the data here");
     print(data);
+    print("\n\nFind the length of the data here");
+    print(data.length);
     return Consumer<UserModel>(
         builder: (context, userModel, child) {
           return ListView.builder(
@@ -151,6 +158,7 @@ class OfflineLessonScreen extends StatelessWidget {
               Map slideData=data[idx];
               // print(slideData);
               print(idx);
+              print("Is problem here?");
               return Padding(
                   padding: EdgeInsets.all(20),
                   child: Card(
@@ -185,7 +193,7 @@ class OfflineLessonScreen extends StatelessWidget {
                                 Padding(
                                   padding: EdgeInsets.only(top: 16),
                                   child: Hero(
-                                    tag: types[idx],
+                                    tag: slideData["sid"],
                                     child: Material(
                                       color: Colors.transparent,
                                       child: Text(

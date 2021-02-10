@@ -35,7 +35,7 @@ class _CustomDrawerState extends State<CustomDrawer> {
             ),
             ListTile(
               title: Text("Home"),
-              trailing: Icon(Icons.account_circle),
+              trailing: Icon(Icons.home),
               onTap: () {
                 Navigator.of(context).push(
                   MaterialPageRoute(
@@ -61,7 +61,7 @@ class _CustomDrawerState extends State<CustomDrawer> {
             ),
             ListTile(
               title: Text("Downloaded Courses"),
-              trailing: Icon(Icons.account_circle),
+              trailing: Icon(Icons.download_sharp),
               onTap: () {
                 Navigator.of(context).push(
                   MaterialPageRoute(
