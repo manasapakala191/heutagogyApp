@@ -1,4 +1,8 @@
+import 'dart:async';
+import 'dart:io';
+
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:connectivity/connectivity.dart';
 import 'package:flutter/material.dart';
 import 'package:heutagogy/hex_color.dart';
 import 'package:heutagogy/models/progress.dart';
@@ -8,8 +12,8 @@ import 'package:heutagogy/models/test_type_models/option_class.dart';
 import 'package:heutagogy/models/test_type_models/question_class.dart';
 import 'package:heutagogy/models/time_object_model.dart';
 import 'package:heutagogy/models/userModel.dart';
-import 'package:heutagogy/screens/handyWidgets/customAppBar.dart';
-import 'package:heutagogy/screens/handyWidgets/slideHeading.dart';
+import 'package:heutagogy/screens/widgets/customAppBar.dart';
+import 'package:heutagogy/screens/widgets/slideHeading.dart';
 import 'package:heutagogy/screens/score_screens/single_correct_image_response_viewer.dart';
 import 'package:heutagogy/services/database.dart';
 import 'package:provider/provider.dart';
@@ -17,8 +21,9 @@ import 'package:provider/provider.dart';
 class MultipleChoiceImageQuestionScreen extends StatefulWidget {
   final ImageQuestionTest imageQuestionTest;
   final String courseID, lessonID, type;
+  final String typeOfData;
   MultipleChoiceImageQuestionScreen(
-      {this.imageQuestionTest, this.type, this.courseID, this.lessonID});
+      {this.imageQuestionTest, this.type, this.courseID, this.lessonID, this.typeOfData});
   @override
   _MultipleChoiceImageQuestionScreenState createState() =>
       _MultipleChoiceImageQuestionScreenState(this.imageQuestionTest);
@@ -40,6 +45,23 @@ class _MultipleChoiceImageQuestionScreenState
   int total = 0;
 
   List<String> responses = List<String>();
+  bool isConnected;
+  var connectivity;
+  StreamSubscription<ConnectivityResult> subscription;
+
+  _updateConnectivityInformation() async {
+      connectivity = new Connectivity();
+      isConnected = ((await connectivity.checkConnectivity()) != ConnectivityResult.none);
+      setState((){});
+      subscription = connectivity.onConnectivityChanged.listen((ConnectivityResult result){
+        print("Subscription result below");
+        print(result);
+        setState((){
+          isConnected = (result != ConnectivityResult.none);
+        });
+      });
+      subscription.cancel();
+  }
 
   Map<String, dynamic> getResponseMap() {
     Map<String, dynamic> responseMap = Map<String, dynamic>();
@@ -73,6 +95,9 @@ class _MultipleChoiceImageQuestionScreenState
 
   @override
   void initState() {
+    print("Called init state");
+    super.initState();
+    _updateConnectivityInformation();
     for (var _ in imageQuestionTest.questions) {
       choices[_.question] = null;
       answers[_.question] = false;
@@ -80,7 +105,6 @@ class _MultipleChoiceImageQuestionScreenState
     print(choices);
     print(answers);
     timeObject.setStartTime(DateTime.now());
-    super.initState();
   }
 
   @override
@@ -106,51 +130,76 @@ class _MultipleChoiceImageQuestionScreenState
             SlideHeader(testName: imageQuestionTest.testName,testDescription: imageQuestionTest.testDescription,),
             Column(
               children: imageQuestionTest.questions
-                  .map((e) => QuestionWidget(e, this.choices, this.answers))
+                  .map((e) => QuestionWidget(e, this.choices, this.answers, widget.typeOfData))
                   .toList(),
             ),
             SizedBox(
               height: 10,
             ),
-            MaterialButton(
-              minWidth: 75,
-              height: 65,
-              elevation: 10,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(10),
+            (widget.typeOfData == "online")?
+            Container(
+              margin: EdgeInsets.all(7),
+              width: 50,
+              height: 50,
+              child: RaisedButton(
+                onPressed: () {
+                 if(isConnected == true){
+              _updateProgress();
+              showDialog(
+                  context: context,
+                  builder: (BuildContext context) {
+                    return AlertDialog(
+                      title: Text("Quiz submitted!"),
+                      content: Text("The Quiz is submitted successfully"),
+                      actions: [
+                        FlatButton(
+                          child: Text("Stay"),
+                          onPressed: () {
+                            Navigator.pop(context);
+                          },
+                        ),
+                        FlatButton(
+                          child: Text("Leave"),
+                          onPressed: () {
+                            Navigator.pop(context);
+                            Navigator.pop(context);
+                          },
+                        )
+                      ],
+                    );
+                  });
+          }
+          else{
+            showDialog(
+                  context: context,
+                  builder: (BuildContext context) {
+                    return AlertDialog(
+                      title: Text("Quiz was NOT submitted!"),
+                      content: Text("You are offline. Connect to a network or read offline course content."),
+                      actions: [
+                        FlatButton(
+                          child: Text("Stay"),
+                          onPressed: () {
+                            Navigator.pop(context);
+                          },
+                        ),
+                        FlatButton(
+                          child: Text("Leave"),
+                          onPressed: () {
+                            Navigator.pop(context);
+                            Navigator.pop(context);
+                          },
+                        )
+                      ],
+                    );
+                  });
+          }
+                },
+                elevation: 10,
+                child: Text("Submit", style: TextStyle(color: Colors.white),),
+                color: HexColor("#ed2a26"),
               ),
-              child: Text("Submit",style: TextStyle(color: Colors.white),),
-              color: Colors.redAccent,
-              // Colors.white,
-              // HexColor("#ed2a26"),
-              padding: const EdgeInsets.all(5),
-              onPressed: () {
-                _updateProgress();
-                showDialog(
-                    context: context,
-                    builder: (BuildContext context) {
-                      return AlertDialog(
-                        title: Text("Quiz submitted!"),
-                        content: Text("The Quiz is submitted successfully"),
-                        actions: [
-                          FlatButton(
-                            child: Text("Stay"),
-                            onPressed: () {
-                              Navigator.pop(context);
-                            },
-                          ),
-                          FlatButton(
-                            child: Text("Leave"),
-                            onPressed: () {
-                              Navigator.pop(context);
-                              Navigator.pop(context);
-                            },
-                          )
-                        ],
-                      );
-                    });
-              },
-            ),
+            ):Container(),
           ],
         ),
       ),
@@ -161,7 +210,8 @@ class _MultipleChoiceImageQuestionScreenState
 class QuestionWidget extends StatelessWidget {
   final ImageQuestionData question;
   final Map choices, answers;
-  QuestionWidget(this.question, this.choices, this.answers);
+  final String typeOfData;
+  QuestionWidget(this.question, this.choices, this.answers, this.typeOfData);
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -183,7 +233,7 @@ class QuestionWidget extends StatelessWidget {
             color: HexColor("#607196"),
           ),
           ImageOptionBuilder(
-              question.options, this.choices, this.answers, question.question),
+              question.options, this.choices, this.answers, question.question, this.typeOfData),
         ],
       ),
     );
@@ -194,7 +244,8 @@ class ImageOptionBuilder extends StatefulWidget {
   final List<ImageChoice> options;
   final Map choices, answers;
   final String question;
-  ImageOptionBuilder(this.options, this.choices, this.answers, this.question);
+  final String typeOfData;
+  ImageOptionBuilder(this.options, this.choices, this.answers, this.question,this.typeOfData);
   @override
   _ImageOptionBuilderState createState() =>
       _ImageOptionBuilderState(this.choices, this.answers, this.question);
@@ -237,23 +288,23 @@ class _ImageOptionBuilderState extends State<ImageOptionBuilder> {
           value: index,
           activeColor: HexColor('#ed2a26'),
           groupValue: groupValue,
-          title: Image.network(
-            widget.options[index].picture,
-            // scale: 1.5,
-            fit: BoxFit.fill,
-            height: MediaQuery.of(context).size.height / 5,
-            width: MediaQuery.of(context).size.width / 3,
-            // errorBuilder: (BuildContext context, Object exception, StackTrace stackTrace){
-            //   return CircularProgressIndicator();
-            // },
-          ),
-          // title: widget.options[index].picture!=null && widget.options[index].picture.isNotEmpty
-          //             ? FadeInImage.assetNetwork(
-          //                 placeholder: "assets/images/loading.gif",
-          //                 image: widget.options[index].picture != null ? widget.options[index].picture : "No image")
-          //             : Image.asset(
-          //                 "assets/images/loading.gif",
-          //               )
+          // title: Image.network(
+          //   widget.options[index].picture,
+          //   // scale: 1.5,
+          //   fit: BoxFit.fill,
+          //   height: MediaQuery.of(context).size.height / 5,
+          //   width: MediaQuery.of(context).size.width / 3,
+          //   // errorBuilder: (BuildContext context, Object exception, StackTrace stackTrace){
+          //   //   return CircularProgressIndicator();
+          //   // },
+          // ),
+          title: (widget.typeOfData == "online")?(widget.options[index].picture!=null && widget.options[index].picture.isNotEmpty)
+                      ? FadeInImage.assetNetwork(
+                          placeholder: "assets/images/loading.gif",
+                          image: widget.options[index].picture != null ? widget.options[index].picture : "No image")
+                      : Image.asset(
+                          "assets/images/loading.gif",
+                        ): Image(image: FileImage(File(widget.options[index].picture))),
         ),
       ),
     );

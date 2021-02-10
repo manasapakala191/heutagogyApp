@@ -9,12 +9,14 @@ import 'package:heutagogy/models/test_type_models/drag_drop_order_test.dart';
 import 'package:heutagogy/models/test_type_models/fill_the_blank_test.dart';
 import 'package:heutagogy/models/test_type_models/missing_numbers_test.dart';
 import 'package:heutagogy/models/userModel.dart';
+import 'package:heutagogy/screens/courses_screen.dart';
 import 'package:heutagogy/screens/login-resources/login.dart';
 import 'package:heutagogy/screens/test_screens/drag_drop_order_screen.dart';
 import 'package:heutagogy/screens/test_screens/fill_in_the_blanks_type.dart';
 import 'package:heutagogy/screens/test_screens/missing_numbers_type.dart';
 import 'package:provider/provider.dart';
 import 'package:heutagogy/screens/test_screens/drag_drop_multiple.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 void main() {
   runApp(
@@ -35,6 +37,45 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+  bool _isAlreadyLoggedIn;
+
+  _checkIfAlreadyLoggedIn() async{
+    final credentialsStorage = await SharedPreferences.getInstance();
+    String password = credentialsStorage.getString('password');
+    if(password == null){
+      _isAlreadyLoggedIn = false;
+    }
+    else{
+      _isAlreadyLoggedIn = true;
+      String rollNumber = credentialsStorage.getString('rollNumber');
+      String name = credentialsStorage.getString('name');
+      String photoURL = credentialsStorage.getString('photoURL');
+      List<String> courses = credentialsStorage.getStringList('courses');
+      if(courses != null && courses.isNotEmpty){
+        Map<String,dynamic> coursesMap = {};
+        // Map<String, dynamic> temp = {};
+        for(var course in courses){
+          // temp[course] = {};
+          coursesMap[course] = {};
+        }
+        print(coursesMap);
+        final userModel = Provider.of<UserModel>(context,listen: false);
+        print("-=");
+        userModel.fillDataWhileSigningIn(name, password, rollNumber, photoURL, coursesMap);
+        print("+=");
+      }
+    }
+    setState((){});
+    print("Login");
+    print(_isAlreadyLoggedIn);
+  }
+
+  @override
+  void initState(){
+    super.initState();
+    _checkIfAlreadyLoggedIn();
+  }
+
   @override
   Widget build(BuildContext context) {
     // fetchData();
@@ -69,18 +110,20 @@ class _MyHomePageState extends State<MyHomePage> {
                     );
                   }
                   if (snapshot.connectionState == ConnectionState.done) {
+                    print("Status is ");
+                    print(_isAlreadyLoggedIn);
                     Timer(
                         Duration(milliseconds: 500),
                         () => Navigator.of(context).pushReplacement(
                             MaterialPageRoute(
                                 builder: (BuildContext context) =>
-                                    LoginPage())));
+                                    (_isAlreadyLoggedIn == true)?CoursesHomeScreen():LoginPage())));
                     return IconButton(
                       onPressed: () {
                         Navigator.pushReplacement(
                             context,
                             MaterialPageRoute(
-                                builder: (context) => LoginPage()));
+                                builder: (context) => (_isAlreadyLoggedIn == true)?CoursesHomeScreen():LoginPage()));
                       },
                       icon: Icon(
                         Icons.check_circle,

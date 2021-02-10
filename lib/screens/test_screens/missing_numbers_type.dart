@@ -1,3 +1,6 @@
+import 'dart:async';
+
+import 'package:connectivity/connectivity.dart';
 import 'package:flutter/material.dart';
 import 'dart:math';
 
@@ -5,8 +8,8 @@ import 'package:heutagogy/hex_color.dart';
 import 'package:heutagogy/models/progress.dart';
 import 'package:heutagogy/models/test_type_models/missing_numbers_test.dart';
 import 'package:heutagogy/models/userModel.dart';
-import 'package:heutagogy/screens/handyWidgets/customAppBar.dart';
-import 'package:heutagogy/screens/handyWidgets/slideHeading.dart';
+import 'package:heutagogy/screens/widgets/customAppBar.dart';
+import 'package:heutagogy/screens/widgets/slideHeading.dart';
 import 'package:heutagogy/screens/score_screens/missing_numbers_result_screen.dart';
 import 'package:heutagogy/services/database.dart';
 import 'package:provider/provider.dart';
@@ -14,7 +17,8 @@ import 'package:provider/provider.dart';
 class MissingNumbersTestType extends StatefulWidget {
   MissingNumbersTest missingNumbersTest;
   String type,lid,cid;
-  MissingNumbersTestType(this.missingNumbersTest,this.type,this.cid,this.lid);
+  String typeOfData;
+  MissingNumbersTestType(this.missingNumbersTest,this.type,this.cid,this.lid,this.typeOfData);
   @override
   _MissingNumbersTestTypeState createState() => _MissingNumbersTestTypeState(missingNumbersTest);
 }
@@ -70,10 +74,29 @@ class _MissingNumbersTestTypeState extends State<MissingNumbersTestType> {
     print(json);
     // DatabaseService().writeProgress(json,studentID,widget.cid,widget.lid,widget.type);
   }
+
+  bool isConnected;
+  var connectivity;
+  StreamSubscription<ConnectivityResult> subscription;
+
+  _updateConnectivityInformation() async {
+      connectivity = new Connectivity();
+      isConnected = ((await connectivity.checkConnectivity()) != ConnectivityResult.none);
+      setState((){});
+      subscription = connectivity.onConnectivityChanged.listen((ConnectivityResult result){
+        print("Subscription result below");
+        print(result);
+        setState((){
+          isConnected = (result != ConnectivityResult.none);
+        });
+      });
+      subscription.cancel();
+  }
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
+    _updateConnectivityInformation();
     answers = List.generate(testData.missingList.length, (index) => 0);
     // randomList =
     //     List.generate(testData.missing, (index) => testData.start+1 + Random().nextInt(testData.end-testData.start + 1));
@@ -153,6 +176,7 @@ class _MissingNumbersTestTypeState extends State<MissingNumbersTestType> {
                 ],
               ),
               Padding(padding: EdgeInsets.all(15)),
+              (widget.typeOfData == "online")?
               MaterialButton(
                 minWidth: 75,
                 height: 65,
@@ -166,7 +190,8 @@ class _MissingNumbersTestTypeState extends State<MissingNumbersTestType> {
                 // HexColor("#ed2a26"),
                 padding: const EdgeInsets.all(5),
                 onPressed: () {
-                  _updateProgress();
+                  if(isConnected == true){
+                      _updateProgress();
                   // Navigator.push(context, MaterialPageRoute(builder: (context) => MissingNumbersResultScreen(missingNumbersTest: testData,progress: progress1,)));
                   showDialog(
                       context: context,
@@ -191,8 +216,36 @@ class _MissingNumbersTestTypeState extends State<MissingNumbersTestType> {
                           ],
                         );
                       });
+                  }
+                  else{
+                  // Navigator.push(context, MaterialPageRoute(builder: (context) => MissingNumbersResultScreen(missingNumbersTest: testData,progress: progress1,)));
+                  showDialog(
+                      context: context,
+                      builder: (BuildContext context) {
+                        return AlertDialog(
+                          title: Text("Quiz was NOT submitted!"),
+                          content: Text("Internet connection is not stable. Verify and try again later."),
+                          actions: [
+                            FlatButton(
+                              child: Text("Stay"),
+                              onPressed: () {
+                                Navigator.pop(context);
+                              },
+                            ),
+                            FlatButton(
+                              child: Text("Leave"),
+                              onPressed: () {
+                                Navigator.pop(context);
+                                Navigator.pop(context);
+                              },
+                            )
+                          ],
+                        );
+                      });
+                  }
+                  
                 },
-              )
+              ):Container(),
             ],
           )),
     );

@@ -13,7 +13,6 @@ import 'package:heutagogy/models/test_type_models/math_match.dart';
 import 'package:heutagogy/models/test_type_models/missing_numbers_test.dart';
 import 'package:heutagogy/models/test_type_models/multiple_choice_question_test.dart';
 import 'package:heutagogy/models/userModel.dart';
-import 'package:heutagogy/screens/widgets/customAppBar.dart';
 import 'package:heutagogy/screens/test_screens/drag_drop_multiple.dart';
 import 'package:heutagogy/screens/test_screens/drag_drop_order_screen.dart';
 import 'package:heutagogy/screens/test_screens/fill_in_the_blanks_type.dart';
@@ -27,20 +26,23 @@ import 'package:heutagogy/screens/test_screens/math_match_screen.dart';
 import 'package:heutagogy/screens/test_screens/multiple_choice_image_question_screen.dart';
 import 'package:heutagogy/screens/test_screens/multiple_choice_question_screen.dart';
 import 'package:heutagogy/services/database.dart';
+import 'package:heutagogy/services/localFileService.dart';
 import 'package:provider/provider.dart';
 
-class LessonScreen extends StatelessWidget {
+class OfflineLessonScreen extends StatelessWidget {
   final LessonData lessonData;
   final CourseData courseData;
-  LessonScreen({this.courseData, this.lessonData});
+  OfflineLessonScreen({this.courseData, this.lessonData});
 
   @override
   Widget build(BuildContext context) {
     UserModel userModel=Provider.of<UserModel>(context);
     return Scaffold(
-      appBar: CustomAppBar(title: lessonData.lname,),
-      body: FutureBuilder<List<QueryDocumentSnapshot>>(
-        future: DatabaseService.getSlidesForLessons(courseData.courseID, lessonData.lID),
+      appBar: AppBar(
+        title: Text(lessonData.lname,),
+      ),
+      body: FutureBuilder<List>(
+        future: LocalFileService.fetchSlidesOfLesson(courseData.courseID, lessonData.lID),
         builder: (context,snapshot) {
           if (snapshot.hasError) {
             return Container(
@@ -74,58 +76,58 @@ class LessonScreen extends StatelessWidget {
       case 'q0':
         {
           //done
-          return MatchText(matchPicWithText: MatchPicWithText.fromJSON(data),type: sid, courseID: cid,lessonID: lid,typeOfData: "online");
+          return MatchText(matchPicWithText: MatchPicWithText.fromJSON(data),type: sid, courseID: cid,lessonID: lid,typeOfData: "offline");
         }
         break;
       case 'q1':
         {
           //done
           return MultipleChoiceImageQuestionScreen(
-              imageQuestionTest: ImageQuestionTest.fromJson(data),type: sid, courseID: cid,lessonID: lid, typeOfData: "online",);
+              imageQuestionTest: ImageQuestionTest.fromJson(data),type: sid, courseID: cid,lessonID: lid, typeOfData: "offline",);
         }
         break;
       case 'q2':
         {
           return MultipleChoiceQuestionScreen(
-              singleCorrectTest: SingleCorrectTest.fromJson(data),type: sid, courseID: cid,lessonID: lid, typeOfData: "online",);
+              singleCorrectTest: SingleCorrectTest.fromJson(data),type: sid, courseID: cid,lessonID: lid, typeOfData: "offline",);
         }
         break;
       case 'q3':
         {
           //done
-          return DragDropImageScreen(DragDropImageTest.fromJSON(data),sid,cid,lid,"online");
+          return DragDropImageScreen(DragDropImageTest.fromJSON(data),sid,cid,lid,"offline");
         }
         break;
       case 'q4':
         {
           //done
-          return DragDropAudioScreen(DragDropAudioTest.fromJSON(data),sid,cid,lid,"online");
+          return DragDropAudioScreen(DragDropAudioTest.fromJSON(data),sid,cid,lid,"offline");
         }
         break;
       case 'q5':
         {
           //done
-          return MathMatchScreen(MathMatchTest.fromJSON(data),sid,cid,lid,"online");
+          return MathMatchScreen(MathMatchTest.fromJSON(data),sid,cid,lid,"offline");
         }
         break;
       case 'q6':
         {
-          return FillInTheBlankType(FillInBlankTest.fromJSON(data), sid, cid, lid,"online");
+          return FillInTheBlankType(FillInBlankTest.fromJSON(data), sid, cid, lid,"offline");
         }
         break;
       case 'q7':
         {
-          return MissingNumbersTestType(MissingNumbersTest.fromJSON(data),sid,cid,lid,"online");
+          return MissingNumbersTestType(MissingNumbersTest.fromJSON(data),sid,cid,lid,"offline");
         }
         break;
       case 'q8':
         {
-          return DragDropMultipleScreen(DragDropMultipleTest.fromJSON(data), sid, cid, lid,"online");
+          return DragDropMultipleScreen(DragDropMultipleTest.fromJSON(data), sid, cid, lid,"offline");
         }
         break;
-      case 'q9':
+        case 'q9':
         {
-        return DragDropOrderScreen(DragDropOrderTest.fromJSON(data), sid, cid, lid,"online");
+        return DragDropOrderScreen(DragDropOrderTest.fromJSON(data), sid, cid, lid,"offline");
       }
       break;
       default:
@@ -138,18 +140,25 @@ class LessonScreen extends StatelessWidget {
     }
   }
 
-  _buildSlides(List<QueryDocumentSnapshot> data,String cid) {
-    List types = ['l0', 'q0', 'q1', 'q2', 'q3', 'q4', 'q5','q6','q7','q8','q9'];
+  _buildSlides(List data,String cid) {
+    
+    // List types = ['l0', 'q0', 'q1', 'q2', 'q3', 'q4', 'q5','q6','q7','q8','q9'];
+    print("\n");
+    print("\n");
+    print("Find the data here");
     print(data);
+    print("\n\nFind the length of the data here");
+    print(data.length);
     return Consumer<UserModel>(
         builder: (context, userModel, child) {
           return ListView.builder(
             itemCount: data.length,
             physics: ClampingScrollPhysics(),
             itemBuilder: (BuildContext context, int idx) {
-              
-              Map slideData=data[idx].data();
-              print(slideData);
+              Map slideData=data[idx];
+              // print(slideData);
+              print(idx);
+              print("Is problem here?");
               return Padding(
                   padding: EdgeInsets.all(20),
                   child: Card(

@@ -1,85 +1,71 @@
 import 'dart:async';
 import 'package:connectivity/connectivity.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:heutagogy/hex_color.dart';
 import 'package:heutagogy/models/course_model.dart';
 import 'package:heutagogy/models/userModel.dart';
 import 'package:heutagogy/screens/course_screen.dart';
-import 'package:heutagogy/screens/jsonReadScreen.dart';
 import 'package:heutagogy/screens/login-resources/login.dart';
 import 'package:heutagogy/screens/widgets/customAppBar.dart';
 import 'package:heutagogy/screens/widgets/custom_floating_action_button.dart';
 import 'package:heutagogy/screens/widgets/custom_main_app_bar.dart';
 import 'package:heutagogy/screens/widgets/drawer_widget.dart';
 import 'package:heutagogy/screens/misc-screens/profile.dart';
+import 'package:heutagogy/screens/offline-screens/offline_course_screen.dart';
 import 'package:heutagogy/screens/progress/progress_screen.dart';
 import 'package:heutagogy/services/database.dart';
-import 'package:heutagogy/services/downloadFunctions.dart';
+import 'package:heutagogy/services/localFileService.dart';
 import 'package:provider/provider.dart';
-import 'offline-screens/offline_main_screen.dart';
 
-// courses with (+) for adding a new course
+class OfflineMainScreen extends StatefulWidget {
 
-class CoursesHomeScreen extends StatefulWidget {
   @override
-  _CoursesHomeScreenState createState() => _CoursesHomeScreenState();
+  _OfflineMainScreenState createState() => _OfflineMainScreenState();
 }
 
-class _CoursesHomeScreenState extends State<CoursesHomeScreen> {
-  final _formCourseKey = GlobalKey<FormState>();
-  String courseCode = "";
-  bool add;
-  final GlobalKey<ScaffoldState> _scaffoldkey = new GlobalKey<ScaffoldState>();
-  var connectivity;
-  bool isConnected;
-  StreamSubscription<ConnectivityResult> subscription;
+class _OfflineMainScreenState extends State<OfflineMainScreen> {
+    var connectivity;
+    bool isConnected;
+    StreamSubscription<ConnectivityResult> subscription;
+    final GlobalKey<ScaffoldState> _scaffoldkey = new GlobalKey<ScaffoldState>();
 
-  _updateConnectivityInformation() async {
-    connectivity = new Connectivity();
-    isConnected = ((await connectivity.checkConnectivity()) != ConnectivityResult.none);
-    setState(() {});
-    subscription = connectivity.onConnectivityChanged.listen((ConnectivityResult result){
-      print(result);
-      if(result == ConnectivityResult.wifi || result == ConnectivityResult.mobile){
-        isConnected = true;
-      }
-      else{
-        isConnected = false;
-      }
-      setState(() {});
-    });
-    subscription.cancel();
-  }
+    _updateConnectivityInformation() async {
+      connectivity = new Connectivity();
+      isConnected = ((await connectivity.checkConnectivity()) != ConnectivityResult.none);
+      setState((){});
+      subscription = connectivity.onConnectivityChanged.listen((ConnectivityResult result){
+        print("Subscription result below");
+        print(result);
+        setState((){
+          isConnected = (result != ConnectivityResult.none);
+        });
+      });
+      subscription.cancel();
+    }
 
-  @override
-  void initState(){
-    super.initState();
-    _updateConnectivityInformation();
-  }
-
+    @override
+    void initState(){
+      super.initState();
+      _updateConnectivityInformation();
+    }
   @override
   Widget build(BuildContext context) {
-    final userModel = Provider.of<UserModel>(context);
+   final userModel = Provider.of<UserModel>(context);
     final _screenSize = MediaQuery.of(context).size;
-    // subscription = connectivity.onConnectivityChanged.listen((ConnectivityResult result){
-    //   print(result);
-    //   isConnected = (result != ConnectivityResult.none);
-    //   setState((){});
-    // });
     return Scaffold(
       key: _scaffoldkey,
       appBar: CustomMainAppBar(),
       drawer: CustomDrawer(),
       floatingActionButton: CustomFloatingActionButton(scaffoldkey: _scaffoldkey),
-      body: isConnected ? Center(
+      body: Center(
         child: Container(
           // child: Text(courses.length.toString()),
           child: (userModel.courses_enrolled != null &&
                   userModel.courses_enrolled.isNotEmpty)
-              ?StreamBuilder<List<CourseData>>(
-                  stream: DatabaseService.populateCourse(
+              ? 
+              FutureBuilder<List<CourseData>>(
+                  future: LocalFileService.fetchCourses(
                       userModel.courses_enrolled),
                   builder: (context, snapshot) {
                     if (snapshot.hasError) {
@@ -95,7 +81,7 @@ class _CoursesHomeScreenState extends State<CoursesHomeScreen> {
                             itemCount: course.length,
                             physics: ClampingScrollPhysics(),
                             itemBuilder: (BuildContext context, int idx) {
-                              return Padding(
+                              return course[idx] == null? Container():Padding(
                                 padding: EdgeInsets.all(20),
                                 child: Card(
                                   clipBehavior: Clip.antiAlias,
@@ -114,7 +100,8 @@ class _CoursesHomeScreenState extends State<CoursesHomeScreen> {
                                           context,
                                           MaterialPageRoute(
                                               builder: (context) =>
-                                                  CourseScreen(course[idx])));
+                                                  OfflineCourseScreen(course[idx])));
+                                                  // (isConnected == true)?CourseScreen(course[idx]):
                                     },
                                     child: Row(
                                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -163,27 +150,7 @@ class _CoursesHomeScreenState extends State<CoursesHomeScreen> {
                                             ],
                                           ),
                                         ),
-                                        Container(
-                                          decoration: BoxDecoration(
-                                            borderRadius: BorderRadius.circular(100),
-                                            border: Border.all(color: Colors.black87)
-                                          ),
-                                          margin: EdgeInsets.only(right: 5),
-                                          child: IconButton(
-                                              icon: Icon(Icons
-                                                  .download_rounded),
-                                              onPressed: () {
-                                                DownloadService
-                                                    .downloadEntireCourse(
-                                                    course[idx]
-                                                        .courseID).then((value) {
-                                                          print("Downloaded"+course[idx].courseID);
-                                                          // Navigator.push(context, MaterialPageRoute(
-                                                          //     builder: (context) =>
-                                                          //         DisplayJsonScreen(course[idx].courseID)));
-                                                });
-                                              }),
-                                        )
+                                        
                                       ],
                                     ),
                                   ),
@@ -193,23 +160,14 @@ class _CoursesHomeScreenState extends State<CoursesHomeScreen> {
                           );
                         }
                       }
-                      return Container(
-                        child: Text(
-                          "You're offline. \n"
-                          "Keep learning from your downloaded courses!",
-                          style: TextStyle(
-                            fontSize: 40,
-                          ),
-                          textAlign: TextAlign.center,
-                        ),
-                      );
+                      return CircularProgressIndicator();
+                      // return OfflineMainScreen();
                     }
                   },
                 )
               : Container(
                   child: Text(
-                    "No courses yet. \n"
-                    "Tap + to add a course",
+                    "No courses yet. \n",
                     style: TextStyle(
                       fontSize: 40,
                     ),
@@ -217,55 +175,7 @@ class _CoursesHomeScreenState extends State<CoursesHomeScreen> {
                   ),
                 ),
         ),
-      ):Center(
-        child: Container(
-            child: Text(
-              "You're offline. \n"
-              "Keep learning from your downloaded courses!",
-              style: TextStyle(
-                fontSize: 40,
-              ),
-              textAlign: TextAlign.center,
-            ),
-          ),
-      )
+        ),
     );
-  }
-
-  showAdding(String roll, UserModel userModel) {
-    final _screenSize = MediaQuery.of(context).size;
-    return _scaffoldkey.currentState
-        .showSnackBar(SnackBar(
-          content: Container(
-            height: _screenSize.height * 0.03,
-            child: FutureBuilder(
-                future: DatabaseService.courseFilter(courseCode),
-                builder: (context, snapshot) {
-                  if (snapshot.connectionState == ConnectionState.done) {
-                    if (snapshot.hasData) {
-                      if (snapshot.data == true) {
-                        add = true;
-                        DatabaseService.addNewCourse(courseCode, roll);
-                        return Icon(Icons.check_circle);
-                      } else {
-                        add = false;
-                        return Text("No such course code");
-                      }
-                    } else if (snapshot.hasError) {
-                      return Text("Problem!");
-                    }
-                  }
-                  return Container(
-                      height: _screenSize.height * 0.03,
-                      width: _screenSize.width * 0.3,
-                      child: Center(child: CircularProgressIndicator()));
-                }),
-          ),
-        ))
-        .closed
-        .then((value) {
-      print(add);
-      if (add) userModel.addCourse(courseCode);
-    });
   }
 }

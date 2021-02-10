@@ -1,11 +1,14 @@
+import 'dart:async';
+
+import 'package:connectivity/connectivity.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:faker/faker.dart' as faker;
 import 'package:heutagogy/hex_color.dart';
 import 'package:heutagogy/models/progress.dart';
 import 'package:heutagogy/models/userModel.dart';
-import 'package:heutagogy/screens/handyWidgets/customAppBar.dart';
-import 'package:heutagogy/screens/handyWidgets/slideHeading.dart';
+import 'package:heutagogy/screens/widgets/customAppBar.dart';
+import 'package:heutagogy/screens/widgets/slideHeading.dart';
 import 'package:heutagogy/screens/score_screens/fill_in_the_blanks_result_viewer.dart';
 import 'package:heutagogy/models/test_type_models/fill_the_blank_test.dart';
 import 'package:heutagogy/services/database.dart';
@@ -14,7 +17,8 @@ import 'package:provider/provider.dart';
 class FillInTheBlankType extends StatefulWidget {
   FillInBlankTest fillInBlankTest;
   String courseID,lessonID,type;
-  FillInTheBlankType(this.fillInBlankTest,this.type,this.courseID,this.lessonID);
+  String typeOfData;
+  FillInTheBlankType(this.fillInBlankTest,this.type,this.courseID,this.lessonID,this.typeOfData);
 
   @override
   _FillInTheBlankTypeState createState() => _FillInTheBlankTypeState(fillInBlankTest);
@@ -53,12 +57,29 @@ class _FillInTheBlankTypeState extends State<FillInTheBlankType> {
     print(json);
     // DatabaseService().writeProgress(json,studentID,widget.courseID,widget.lessonID,widget.type);
   }
+  var connectivity;
+  StreamSubscription<ConnectivityResult> subscription;
+  bool isConnected;
+  _updateConnectivityInformation() async {
+      connectivity = new Connectivity();
+      isConnected = ((await connectivity.checkConnectivity()) != ConnectivityResult.none);
+      setState((){});
+      subscription = connectivity.onConnectivityChanged.listen((ConnectivityResult result){
+        print("Subscription result below");
+        print(result);
+        setState((){
+          isConnected = (result != ConnectivityResult.none);
+        });
+      });
+      subscription.cancel();
+  }
 
   List answers;
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
+    _updateConnectivityInformation();
     answers = List.generate(testData.choices.length, (index) => '');
     print(testData.testName);
   }
@@ -128,6 +149,7 @@ class _FillInTheBlankTypeState extends State<FillInTheBlankType> {
                           ))),
                 ),
                 Padding(padding: EdgeInsets.all(8)),
+                (widget.typeOfData == "online")?
                 MaterialButton(
                   minWidth: 75,
                   height: 65,
@@ -141,7 +163,8 @@ class _FillInTheBlankTypeState extends State<FillInTheBlankType> {
                   // HexColor("#ed2a26"),
                   padding: const EdgeInsets.all(5),
                   onPressed: () {
-                    _updateProgress();
+                    if(isConnected == true){
+                        _updateProgress();
                     // Navigator.push(context, MaterialPageRoute(builder: (context) => FillInTheBlanksResultViewer(fillInBlankTest: testData,progress: progress1,)));
                     showDialog(
                         context: context,
@@ -166,8 +189,35 @@ class _FillInTheBlankTypeState extends State<FillInTheBlankType> {
                             ],
                           );
                         });
+                    }
+                    else{
+                    showDialog(
+                        context: context,
+                        builder: (BuildContext context) {
+                          return AlertDialog(
+                            title: Text("Quiz was NOT submitted!"),
+                            content: Text("You don't have a stable internet connection. Verify your connection and try again."),
+                            actions: [
+                              FlatButton(
+                                child: Text("Stay"),
+                                onPressed: () {
+                                  Navigator.pop(context);
+                                },
+                              ),
+                              FlatButton(
+                                child: Text("Leave"),
+                                onPressed: () {
+                                  Navigator.pop(context);
+                                  Navigator.pop(context);
+                                },
+                              )
+                            ],
+                          );
+                        });
+                    }
+                    
                   },
-                )
+                ):Container(),
               ],
             ))
     );

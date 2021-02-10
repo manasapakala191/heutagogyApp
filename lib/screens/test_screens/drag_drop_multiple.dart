@@ -1,9 +1,12 @@
+import 'dart:async';
+
+import 'package:connectivity/connectivity.dart';
 import 'package:flutter/material.dart';
 import 'package:heutagogy/hex_color.dart';
 import 'package:heutagogy/models/test_type_models/drag_drop_multiple_test.dart';
 import 'package:heutagogy/models/progress.dart';
-import 'package:heutagogy/screens/handyWidgets/customAppBar.dart';
-import 'package:heutagogy/screens/handyWidgets/slideHeading.dart';
+import 'package:heutagogy/screens/widgets/customAppBar.dart';
+import 'package:heutagogy/screens/widgets/slideHeading.dart';
 import 'dart:math';
 
 import 'package:heutagogy/screens/score_screens/drag_drop_multiple_score.dart';
@@ -11,7 +14,8 @@ import 'package:heutagogy/screens/score_screens/drag_drop_multiple_score.dart';
 class DragDropMultipleScreen extends StatefulWidget {
   final DragDropMultipleTest data;
   final String courseID, lessonID, type;
-  DragDropMultipleScreen(this.data, this.type, this.courseID, this.lessonID);
+  final String typeOfData;
+  DragDropMultipleScreen(this.data, this.type, this.courseID, this.lessonID,this.typeOfData);
   @override
   _DragDropMultipleScreenState createState() =>
       _DragDropMultipleScreenState(data);
@@ -56,17 +60,36 @@ class _DragDropMultipleScreenState extends State<DragDropMultipleScreen> {
     // DatabaseService().writeProgress(json,studentID,widget.courseID,widget.lessonID,widget.type);
   }
 
+  var connectivity;
+  bool isConnected;
+  StreamSubscription<ConnectivityResult> subscription;
+
+  _updateConnectivityInformation() async {
+      connectivity = new Connectivity();
+      isConnected = ((await connectivity.checkConnectivity()) != ConnectivityResult.none);
+      setState((){});
+      subscription = connectivity.onConnectivityChanged.listen((ConnectivityResult result){
+        print("Subscription result below");
+        print(result);
+        setState((){
+          isConnected = (result != ConnectivityResult.none);
+        });
+      });
+      subscription.cancel();
+  }
+
   @override
   void initState() {
     // TODO: implement initState
     // testdata = DragDropMultipleTest.fromJSON(json);
+    super.initState();
+    _updateConnectivityInformation();
     data = Map<String, dynamic>();
     for (var x in testdata.questions) {
       data[x.second] = false;
       choices[x.second] = null;
       leftMarked[x.second] = false;
     }
-    super.initState();
   }
 
   @override
@@ -100,6 +123,7 @@ class _DragDropMultipleScreenState extends State<DragDropMultipleScreen> {
               ),
             ),
             SizedBox(height: 20),
+            (widget.typeOfData == "online")?
         MaterialButton(
           minWidth: 75,
           height: 65,
@@ -113,7 +137,8 @@ class _DragDropMultipleScreenState extends State<DragDropMultipleScreen> {
           // HexColor("#ed2a26"),
           padding: const EdgeInsets.all(5),
           onPressed: () {
-            _updateProgress();
+            if(isConnected == true){
+                 _updateProgress();
             // Navigator.push(context, MaterialPageRoute(builder: (context) => DragDropMultipleScore(dragDropMultipleTest: testdata,progress: progress1,)));
             showDialog(
                 context: context,
@@ -138,8 +163,35 @@ class _DragDropMultipleScreenState extends State<DragDropMultipleScreen> {
                     ],
                   );
                 });
+            }
+            else{
+              //  Navigator.push(context, MaterialPageRoute(builder: (context) => DragDropMultipleScore(dragDropMultipleTest: testdata,progress: progress1,)));
+            showDialog(
+                context: context,
+                builder: (BuildContext context) {
+                  return AlertDialog(
+                    title: Text("Quiz was NOT submitted!"),
+                    content: Text("Internet Connection is unstable, try again later."),
+                    actions: [
+                      FlatButton(
+                        child: Text("Stay"),
+                        onPressed: () {
+                          Navigator.pop(context);
+                        },
+                      ),
+                      FlatButton(
+                        child: Text("Leave"),
+                        onPressed: () {
+                          Navigator.pop(context);
+                          Navigator.pop(context);
+                        },
+                      )
+                    ],
+                  );
+                });
+            }
           },
-        )
+        ):Container()
           ],
         ),
       ),

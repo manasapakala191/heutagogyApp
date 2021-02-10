@@ -9,7 +9,9 @@ class CourseData{
   CourseData({@required this.courseID,@required this.courseName,this.description, this.level});
 
   factory CourseData.fromJSON(Map<String,dynamic> json){
-    print(json);
+    if(json == null){
+      return null;
+    }
     return CourseData(
         courseID: json['course_id'],
         courseName: json['course_name'],

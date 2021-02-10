@@ -1,3 +1,6 @@
+import 'dart:async';
+
+import 'package:connectivity/connectivity.dart';
 import 'package:flutter/material.dart';
 
 import 'dart:math';
@@ -5,8 +8,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:heutagogy/hex_color.dart';
 import 'package:heutagogy/models/progress.dart';
 import 'package:heutagogy/models/userModel.dart';
-import 'package:heutagogy/screens/handyWidgets/customAppBar.dart';
-import 'package:heutagogy/screens/handyWidgets/slideHeading.dart';
+import 'package:heutagogy/screens/widgets/customAppBar.dart';
+import 'package:heutagogy/screens/widgets/slideHeading.dart';
 import 'package:heutagogy/screens/score_screens/drag_drop_order_score.dart';
 import 'package:provider/provider.dart';
 import 'package:heutagogy/services/database.dart';
@@ -15,7 +18,8 @@ import 'package:heutagogy/models/test_type_models/drag_drop_order_test.dart';
 class DragDropOrderScreen extends StatefulWidget {
   final DragDropOrderTest data;
   final String courseID, lessonID, type;
-  DragDropOrderScreen(this.data, this.type, this.courseID, this.lessonID);
+  final String typeOfData;
+  DragDropOrderScreen(this.data, this.type, this.courseID, this.lessonID,this.typeOfData);
 
   @override
   _DragDropOrderScreenState createState() => _DragDropOrderScreenState(data);
@@ -28,10 +32,28 @@ class _DragDropOrderScreenState extends State<DragDropOrderScreen> {
   var leftMarked = [];
   var rightMarked = [];
   _DragDropOrderScreenState(this.testdata);
+  var connectivity;
+  StreamSubscription<ConnectivityResult> subscription;
+  bool isConnected;
+
+  _updateConnectivityInformation() async {
+      connectivity = new Connectivity();
+      isConnected = ((await connectivity.checkConnectivity()) != ConnectivityResult.none);
+      setState((){});
+      subscription = connectivity.onConnectivityChanged.listen((ConnectivityResult result){
+        print("Subscription result below");
+        print(result);
+        setState((){
+          isConnected = (result != ConnectivityResult.none);
+        });
+      });
+      subscription.cancel();
+  }
 
   @override
   void initState() {
     super.initState();
+    _updateConnectivityInformation();
     int i=0;
     data=List(testdata.questions.length);
     choices=List(testdata.questions.length);
@@ -136,6 +158,7 @@ class _DragDropOrderScreenState extends State<DragDropOrderScreen> {
                       );
                     }),
                 SizedBox(height: 20,),
+                (widget.typeOfData == "online")?
                 MaterialButton(
                   minWidth: 75,
                   height: 65,
@@ -149,7 +172,8 @@ class _DragDropOrderScreenState extends State<DragDropOrderScreen> {
                   // HexColor("#ed2a26"),
                   padding: const EdgeInsets.all(5),
                   onPressed: () {
-                    _updateProgress();
+                    if(isConnected == true){
+                      _updateProgress();
                     showDialog(
                         context: context,
                         builder: (BuildContext context) {
@@ -173,8 +197,35 @@ class _DragDropOrderScreenState extends State<DragDropOrderScreen> {
                             ],
                           );
                         });
+                    }
+                    else{
+                      showDialog(
+                        context: context,
+                        builder: (BuildContext context) {
+                          return AlertDialog(
+                            title: Text("Quiz was NOT submitted!"),
+                            content: Text("Internet connection is not stable, try again later."),
+                            actions: [
+                              FlatButton(
+                                child: Text("Stay"),
+                                onPressed: () {
+                                  Navigator.pop(context);
+                                },
+                              ),
+                              FlatButton(
+                                child: Text("Leave"),
+                                onPressed: () {
+                                  Navigator.pop(context);
+                                  Navigator.pop(context);
+                                },
+                              )
+                            ],
+                          );
+                        });
+                    }
+                    
                   },
-                ),
+                ):Container(),
               ],
             ),
           ),

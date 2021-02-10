@@ -3,7 +3,7 @@ import 'package:heutagogy/hex_color.dart';
 import 'package:heutagogy/models/course_model.dart';
 import 'package:heutagogy/models/lessonModel.dart';
 import 'package:heutagogy/models/userModel.dart';
-import 'package:heutagogy/screens/handyWidgets/customAppBar.dart';
+import 'package:heutagogy/screens/widgets/customAppBar.dart';
 import 'package:heutagogy/screens/lesson_screen.dart';
 import 'package:heutagogy/screens/progress/progress_quiz_screen.dart';
 import 'package:heutagogy/services/database.dart';
