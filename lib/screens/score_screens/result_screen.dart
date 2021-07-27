@@ -28,11 +28,15 @@ class ResultScreen extends StatelessWidget {
               testName: matchPicWithText.testName,
               testDescription: matchPicWithText.testDescription,
             ),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: PieChartWidget(
-                right: progress.partsDone,
-                wrong: progress.total - progress.partsDone,
+            SizedBox(
+              height: 300,
+              width: 100,
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: PieChartWidget(
+                  right: progress.partsDone,
+                  wrong: progress.total - progress.partsDone,
+                ),
               ),
             ),
             ListTile(

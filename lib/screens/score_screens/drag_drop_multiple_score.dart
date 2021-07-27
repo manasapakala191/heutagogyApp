@@ -29,7 +29,8 @@ class DragDropMultipleScore extends StatelessWidget {
             shrinkWrap: true,
             children: [
               SlideHeader(testName: dragDropMultipleTest.testName,testDescription: dragDropMultipleTest.testDescription,),
-              Padding(
+              Container(
+                height: 300,
                 padding: const EdgeInsets.all(8.0),
                 child: PieChartWidget(
                   right: progress.partsDone,

@@ -72,7 +72,7 @@ class _MissingNumbersTestTypeState extends State<MissingNumbersTestType> {
     print(answers);
     Map<String, dynamic> json = progress.toMap();
     print(json);
-    // DatabaseService().writeProgress(json,studentID,widget.cid,widget.lid,widget.type);
+    DatabaseService().writeProgress(json,studentID,widget.cid,widget.lid,widget.type);
   }
 
   bool isConnected;
@@ -192,30 +192,30 @@ class _MissingNumbersTestTypeState extends State<MissingNumbersTestType> {
                 onPressed: () {
                   if(isConnected == true){
                       _updateProgress();
-                  // Navigator.push(context, MaterialPageRoute(builder: (context) => MissingNumbersResultScreen(missingNumbersTest: testData,progress: progress1,)));
-                  showDialog(
-                      context: context,
-                      builder: (BuildContext context) {
-                        return AlertDialog(
-                          title: Text("Quiz submitted!"),
-                          content: Text("The Quiz is submitted successfully"),
-                          actions: [
-                            FlatButton(
-                              child: Text("Stay"),
-                              onPressed: () {
-                                Navigator.pop(context);
-                              },
-                            ),
-                            FlatButton(
-                              child: Text("Leave"),
-                              onPressed: () {
-                                Navigator.pop(context);
-                                Navigator.pop(context);
-                              },
-                            )
-                          ],
-                        );
-                      });
+                  Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => MissingNumbersResultScreen(missingNumbersTest: testData,progress: progress1,)));
+                  // showDialog(
+                  //     context: context,
+                  //     builder: (BuildContext context) {
+                  //       return AlertDialog(
+                  //         title: Text("Quiz submitted!"),
+                  //         content: Text("The Quiz is submitted successfully"),
+                  //         actions: [
+                  //           FlatButton(
+                  //             child: Text("Stay"),
+                  //             onPressed: () {
+                  //               Navigator.pop(context);
+                  //             },
+                  //           ),
+                  //           FlatButton(
+                  //             child: Text("Leave"),
+                  //             onPressed: () {
+                  //               Navigator.pop(context);
+                  //               Navigator.pop(context);
+                  //             },
+                  //           )
+                  //         ],
+                  //       );
+                  //     });
                   }
                   else{
                   // Navigator.push(context, MaterialPageRoute(builder: (context) => MissingNumbersResultScreen(missingNumbersTest: testData,progress: progress1,)));

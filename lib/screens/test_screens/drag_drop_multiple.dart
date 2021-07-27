@@ -5,11 +5,14 @@ import 'package:flutter/material.dart';
 import 'package:heutagogy/hex_color.dart';
 import 'package:heutagogy/models/test_type_models/drag_drop_multiple_test.dart';
 import 'package:heutagogy/models/progress.dart';
+import 'package:heutagogy/models/userModel.dart';
 import 'package:heutagogy/screens/widgets/customAppBar.dart';
 import 'package:heutagogy/screens/widgets/slideHeading.dart';
 import 'dart:math';
 
 import 'package:heutagogy/screens/score_screens/drag_drop_multiple_score.dart';
+import 'package:heutagogy/services/database.dart';
+import 'package:provider/provider.dart';
 
 class DragDropMultipleScreen extends StatefulWidget {
   final DragDropMultipleTest data;
@@ -32,8 +35,8 @@ class _DragDropMultipleScreenState extends State<DragDropMultipleScreen> {
   _DragDropMultipleScreenState(this.testdata);
 
   void _updateProgress() {
-    // var user = Provider.of<UserModel>(context,listen: false);
-    // String studentID = user.getID();
+    var user = Provider.of<UserModel>(context,listen: false);
+    String studentID = user.getID();
     List<String> responses = [];
     for (var response in choices.values) {
       responses.add(response);
@@ -57,7 +60,7 @@ class _DragDropMultipleScreenState extends State<DragDropMultipleScreen> {
       progress1 = progress;
     });
     Map<String, dynamic> json = progress.toMap();
-    // DatabaseService().writeProgress(json,studentID,widget.courseID,widget.lessonID,widget.type);
+    DatabaseService().writeProgress(json,studentID,widget.courseID,widget.lessonID,widget.type);
   }
 
   var connectivity;
@@ -139,56 +142,56 @@ class _DragDropMultipleScreenState extends State<DragDropMultipleScreen> {
           onPressed: () {
             if(isConnected == true){
                  _updateProgress();
-            // Navigator.push(context, MaterialPageRoute(builder: (context) => DragDropMultipleScore(dragDropMultipleTest: testdata,progress: progress1,)));
-            showDialog(
-                context: context,
-                builder: (BuildContext context) {
-                  return AlertDialog(
-                    title: Text("Quiz submitted!"),
-                    content: Text("The Quiz is submitted successfully"),
-                    actions: [
-                      FlatButton(
-                        child: Text("Stay"),
-                        onPressed: () {
-                          Navigator.pop(context);
-                        },
-                      ),
-                      FlatButton(
-                        child: Text("Leave"),
-                        onPressed: () {
-                          Navigator.pop(context);
-                          Navigator.pop(context);
-                        },
-                      )
-                    ],
-                  );
-                });
+            Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => DragDropMultipleScore(dragDropMultipleTest: testdata,progress: progress1,)));
+            // showDialog(
+            //     context: context,
+            //     builder: (BuildContext context) {
+            //       return AlertDialog(
+            //         title: Text("Quiz submitted!"),
+            //         content: Text("The Quiz is submitted successfully"),
+            //         actions: [
+            //           FlatButton(
+            //             child: Text("Stay"),
+            //             onPressed: () {
+            //               Navigator.pop(context);
+            //             },
+            //           ),
+            //           FlatButton(
+            //             child: Text("Leave"),
+            //             onPressed: () {
+            //               Navigator.pop(context);
+            //               Navigator.pop(context);
+            //             },
+            //           )
+            //         ],
+            //       );
+            //     });
             }
             else{
-              //  Navigator.push(context, MaterialPageRoute(builder: (context) => DragDropMultipleScore(dragDropMultipleTest: testdata,progress: progress1,)));
-            showDialog(
-                context: context,
-                builder: (BuildContext context) {
-                  return AlertDialog(
-                    title: Text("Quiz was NOT submitted!"),
-                    content: Text("Internet Connection is unstable, try again later."),
-                    actions: [
-                      FlatButton(
-                        child: Text("Stay"),
-                        onPressed: () {
-                          Navigator.pop(context);
-                        },
-                      ),
-                      FlatButton(
-                        child: Text("Leave"),
-                        onPressed: () {
-                          Navigator.pop(context);
-                          Navigator.pop(context);
-                        },
-                      )
-                    ],
-                  );
-                });
+               Navigator.push(context, MaterialPageRoute(builder: (context) => DragDropMultipleScore(dragDropMultipleTest: testdata,progress: progress1,)));
+            // showDialog(
+            //     context: context,
+            //     builder: (BuildContext context) {
+            //       return AlertDialog(
+            //         title: Text("Quiz was NOT submitted!"),
+            //         content: Text("Internet Connection is unstable, try again later."),
+            //         actions: [
+            //           FlatButton(
+            //             child: Text("Stay"),
+            //             onPressed: () {
+            //               Navigator.pop(context);
+            //             },
+            //           ),
+            //           FlatButton(
+            //             child: Text("Leave"),
+            //             onPressed: () {
+            //               Navigator.pop(context);
+            //               Navigator.pop(context);
+            //             },
+            //           )
+            //         ],
+            //       );
+            //     });
             }
           },
         ):Container()

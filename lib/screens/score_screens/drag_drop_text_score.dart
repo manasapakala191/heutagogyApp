@@ -32,7 +32,8 @@ class DragDropTextScore extends StatelessWidget {
                 testName: mathMatchTest.testName,
                 testDescription: mathMatchTest.testDescription,
               ),
-              Padding(
+              Container(
+                height: 300,
                 padding: const EdgeInsets.all(8.0),
                 child: PieChartWidget(
                   right: progress.partsDone,

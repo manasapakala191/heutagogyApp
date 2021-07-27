@@ -43,7 +43,7 @@ class _MultipleChoiceImageQuestionScreenState
   int count = 0;
 
   int total = 0;
-
+  Progress progress1;
   List<String> responses = List<String>();
   bool isConnected;
   var connectivity;
@@ -89,6 +89,9 @@ class _MultipleChoiceImageQuestionScreenState
     var progress = Progress(name:imageQuestionTest.testName,
         description: imageQuestionTest.testDescription,partsDone: count,total: total,responses: responses);
     Map<String, dynamic> json = progress.toMap();
+    setState(() {
+      progress1=progress;
+    });
     DatabaseService().writeProgress(
         json, studentID, widget.courseID, widget.lessonID, widget.type);
   }
@@ -148,29 +151,30 @@ class _MultipleChoiceImageQuestionScreenState
                 onPressed: () {
                  if(isConnected == true){
               _updateProgress();
-              showDialog(
-                  context: context,
-                  builder: (BuildContext context) {
-                    return AlertDialog(
-                      title: Text("Quiz submitted!"),
-                      content: Text("The Quiz is submitted successfully"),
-                      actions: [
-                        FlatButton(
-                          child: Text("Stay"),
-                          onPressed: () {
-                            Navigator.pop(context);
-                          },
-                        ),
-                        FlatButton(
-                          child: Text("Leave"),
-                          onPressed: () {
-                            Navigator.pop(context);
-                            Navigator.pop(context);
-                          },
-                        )
-                      ],
-                    );
-                  });
+              Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => SingleCorrectImageResponseViewer(progress: progress1,imageQuestionTest: imageQuestionTest,)));
+              // showDialog(
+              //     context: context,
+              //     builder: (BuildContext context) {
+              //       return AlertDialog(
+              //         title: Text("Quiz submitted!"),
+              //         content: Text("The Quiz is submitted successfully"),
+              //         actions: [
+              //           FlatButton(
+              //             child: Text("Stay"),
+              //             onPressed: () {
+              //               Navigator.pop(context);
+              //             },
+              //           ),
+              //           FlatButton(
+              //             child: Text("Leave"),
+              //             onPressed: () {
+              //               Navigator.pop(context);
+              //               Navigator.pop(context);
+              //             },
+              //           )
+              //         ],
+              //       );
+              //     });
           }
           else{
             showDialog(

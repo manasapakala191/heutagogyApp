@@ -32,7 +32,8 @@ class DragDropOrderScore extends StatelessWidget {
             child: ListView(
               children: [
                 SlideHeader(testName: dragDropOrderTest.testName,testDescription: dragDropOrderTest.testDescription,),
-                Padding(
+                Container(
+                  height: 300,
                   padding: const EdgeInsets.all(8.0),
                   child: PieChartWidget(
                     right: progress.partsDone,
@@ -66,7 +67,7 @@ class DragDropOrderResponseViewer extends StatelessWidget {
 
   final checkList = <bool>[];
 
-  listToString(List<String> listStr){
+  listToString(List listStr){
     String answer="";
     for(int i=0;i<listStr.length;i++){
       answer+=" "+listStr[i];

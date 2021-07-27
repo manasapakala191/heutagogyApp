@@ -48,7 +48,8 @@ class FillInTheBlanksResultViewer extends StatelessWidget {
                       testName: fillInBlankTest.testName,
                       testDescription: fillInBlankTest.testDescription,
                     ),
-                Padding(
+                Container(
+                  height: 300,
                   padding: const EdgeInsets.all(8.0),
                   child: PieChartWidget(
                       right: progress.partsDone,

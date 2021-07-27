@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'dart:math';
-import 'package:audioplayers/audio_cache.dart';
 import 'package:audioplayers/audioplayers.dart';
 import 'package:connectivity/connectivity.dart';
 import 'package:flutter/material.dart';
@@ -8,20 +7,22 @@ import 'package:heutagogy/models/progress.dart';
 import 'package:heutagogy/models/studentProgress.dart';
 import 'package:heutagogy/models/test_type_models/match_audio.dart';
 import 'package:heutagogy/models/userModel.dart';
+import 'package:heutagogy/screens/score_screens/drag_drop_score.dart';
 import 'package:heutagogy/screens/widgets/customAppBar.dart';
 import 'package:heutagogy/screens/widgets/slideHeading.dart';
 import 'package:provider/provider.dart';
 import 'package:heutagogy/services/database.dart';
 import '../../hex_color.dart';
+import 'package:audioplayers/audio_cache.dart';
 
 class DragDropAudioScreen extends StatefulWidget {
 
   final DragDropAudioTest data;
   final String courseID,lessonID,type;
   final String typeOfData;
-  
+
   DragDropAudioScreen(this.data,this.type,this.courseID,this.lessonID,this.typeOfData, {Key key}) : super(key: key);
-  
+
   @override
   _DragDropAudioScreenState createState() => _DragDropAudioScreenState(data);
 }
@@ -37,7 +38,8 @@ class _DragDropAudioScreenState extends State<DragDropAudioScreen> {
   bool isConnected;
   var connectivity;
   StreamSubscription<ConnectivityResult> subscription;
-  
+  Progress progress1;
+
   _updateConnectivityInformation() async {
       connectivity = new Connectivity();
       isConnected = ((await connectivity.checkConnectivity()) != ConnectivityResult.none);
@@ -90,6 +92,9 @@ class _DragDropAudioScreenState extends State<DragDropAudioScreen> {
     }
     var progress = Progress(name: audiodata.testName,description: audiodata.testDescription,partsDone: count,total: total,responses: responses);
     Map<String,dynamic> json = progress.toMap();
+    setState(() {
+      progress1=progress;
+    });
     DatabaseService().writeProgress(json,studentID,widget.courseID,widget.lessonID,widget.type);
   }
 
@@ -235,6 +240,7 @@ class _DragDropAudioScreenState extends State<DragDropAudioScreen> {
         onPressed: () {
           if(isConnected == true){
               _updateProgress();
+              Navigator.pushReplacement(context,MaterialPageRoute(builder: (context)=> DragDropScoreWidget(progress: progress1,questionTest: audiodata,)) );
               showDialog(
                   context: context,
                   builder: (BuildContext context) {
@@ -321,7 +327,7 @@ class _DraggableAudioButtonState extends State<DraggableAudioButton>
     // try {
       // print("\n\nFind the audio Path here ");
       print(audioPath);
-    audioCache.load("$audioPath.mp3"); 
+    audioCache.load("$audioPath.mp3");
     // } catch (e) {
     //   print("There has been an error loading the audio file");
     // }

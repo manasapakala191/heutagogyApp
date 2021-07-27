@@ -35,6 +35,7 @@ class _DragDropOrderScreenState extends State<DragDropOrderScreen> {
   var connectivity;
   StreamSubscription<ConnectivityResult> subscription;
   bool isConnected;
+  Progress progress1;
 
   _updateConnectivityInformation() async {
       connectivity = new Connectivity();
@@ -107,7 +108,10 @@ class _DragDropOrderScreenState extends State<DragDropOrderScreen> {
     print(responses);
     Map<String, dynamic> json = progress.toMap();
     print(json);
-    // DatabaseService().writeProgress(json,studentID,widget.courseID,widget.lessonID,widget.type);
+    setState(() {
+      progress1=progress;
+    });
+    DatabaseService().writeProgress(json,studentID,widget.courseID,widget.lessonID,widget.type);
   }
 
   @override
@@ -147,8 +151,11 @@ class _DragDropOrderScreenState extends State<DragDropOrderScreen> {
                                 //   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                                 //   children: _buildDraggables(idx,testdata.questions[idx])..shuffle(Random(2))
                                 // ),
-                                Row(
-                                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                Wrap(
+                                    alignment: WrapAlignment.start,
+                                    direction: Axis.horizontal,
+                                    spacing: 5,
+                                    runSpacing: 3,
                                     children: _buildDragTargets(idx,testdata.questions[idx])
                                 ),
                               ],
@@ -174,7 +181,8 @@ class _DragDropOrderScreenState extends State<DragDropOrderScreen> {
                   onPressed: () {
                     if(isConnected == true){
                       _updateProgress();
-                    showDialog(
+                      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => DragDropOrderScore(progress: progress1,dragDropOrderTest: testdata,)));
+                      showDialog(
                         context: context,
                         builder: (BuildContext context) {
                           return AlertDialog(
@@ -313,7 +321,7 @@ class _DragDropOrderScreenState extends State<DragDropOrderScreen> {
             builder:
                 (BuildContext context, List<String> incoming, List rejected) {
               return Container(
-                  alignment: Alignment.center,
+                  // alignment: Alignment.center,
                   constraints: BoxConstraints(minHeight: 40, minWidth: 40),
                   padding: EdgeInsets.all(10),
                   margin: EdgeInsets.only(top: 10),
@@ -369,7 +377,7 @@ class _DragDropOrderScreenState extends State<DragDropOrderScreen> {
             builder:
                 (BuildContext context, List<String> incoming, List rejected) {
               return Container(
-                alignment: Alignment.center,
+                // alignment: Alignment.center,
                 // width: 50,
                 // height: 50,
                 constraints: BoxConstraints(minHeight: 40, minWidth: 40),

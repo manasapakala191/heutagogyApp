@@ -33,7 +33,7 @@ class _CoursesHomeScreenState extends State<CoursesHomeScreen> {
   bool add;
   final GlobalKey<ScaffoldState> _scaffoldkey = new GlobalKey<ScaffoldState>();
   var connectivity;
-  bool isConnected;
+  bool isConnected=true;
   StreamSubscription<ConnectivityResult> subscription;
 
   _updateConnectivityInformation() async {

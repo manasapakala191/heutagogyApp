@@ -29,7 +29,8 @@ class SingleCorrectImageResponseViewer extends StatelessWidget {
               testName: imageQuestionTest.testName,
               testDescription: imageQuestionTest.testDescription,
             ),
-            Padding(
+            Container(
+              height: 300,
               padding: const EdgeInsets.all(8.0),
               child: PieChartWidget(
                 wrong: progress.total-progress.partsDone ,

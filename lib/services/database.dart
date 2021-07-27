@@ -192,7 +192,8 @@ class DatabaseService {
             DocumentReference doc = doc1.collection("slides").doc(type);
             doc.get().then((snapshot) {
               if (snapshot.exists) {
-                if (snapshot.data()["percentage"] < data["percentage"]) {
+                Map<String,dynamic> mapVal = snapshot.data();
+                if (mapVal ["percentage"] < data["percentage"]) {
                   writeProgressHelper(
                       data, studentID, courseID, lessonID, type);
                 } else {
@@ -283,7 +284,7 @@ class DatabaseService {
         credentialsStorage.setString('password',doc_required["Password"]);
         credentialsStorage.setString('name',doc_required["Name"]);
         credentialsStorage.setString('photoURL',doc_required["PhotoURL"]);
-        List<String> courseList = List<String>();
+        List<String> courseList = [];
         for(var course in doc_required["Courses"].keys){
           // print(course);
           courseList.add(course);

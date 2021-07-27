@@ -107,7 +107,7 @@ class _LessonViewerState extends State<LessonViewer> {
   void dispose() {
     timeObject.setEndTime(DateTime.now());
     timeObject.addTimeObjectToStudentPerformance();
-    if(_isYoutube){
+    if(!_isYoutube){
     _controller.dispose();}
     else{
     _controller1.dispose();}

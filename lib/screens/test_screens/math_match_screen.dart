@@ -7,6 +7,7 @@ import 'package:heutagogy/hex_color.dart';
 import 'package:heutagogy/models/progress.dart';
 import 'package:heutagogy/models/test_type_models/math_match.dart';
 import 'package:heutagogy/models/userModel.dart';
+import 'package:heutagogy/screens/score_screens/drag_drop_text_score.dart';
 import 'package:heutagogy/screens/widgets/customAppBar.dart';
 import 'package:heutagogy/screens/widgets/slideHeading.dart';
 import 'package:provider/provider.dart';
@@ -29,6 +30,7 @@ class _MathMatchScreenState extends State<MathMatchScreen> {
   Map<String,dynamic> choices = Map<String,dynamic>();
   var leftMarked = Map();
   var rightMarked = Map();
+  Progress progress1;
 
   _MathMatchScreenState(this.testdata);
   bool isConnected;
@@ -79,6 +81,9 @@ class _MathMatchScreenState extends State<MathMatchScreen> {
     }
     var progress = Progress(name: testdata.testName,description: testdata.testDescription,partsDone: count,total: total,responses: responses);
     Map<String,dynamic> json = progress.toMap();
+    setState(() {
+      progress1=progress;
+    });
     DatabaseService().writeProgress(json,studentID,widget.courseID,widget.lessonID,widget.type);
   }
 
@@ -118,29 +123,30 @@ class _MathMatchScreenState extends State<MathMatchScreen> {
         onPressed: () {
           if(isConnected == true){
               _updateProgress();
-              showDialog(
-                  context: context,
-                  builder: (BuildContext context) {
-                    return AlertDialog(
-                      title: Text("Quiz submitted!"),
-                      content: Text("The Quiz is submitted successfully"),
-                      actions: [
-                        FlatButton(
-                          child: Text("Stay"),
-                          onPressed: () {
-                            Navigator.pop(context);
-                          },
-                        ),
-                        FlatButton(
-                          child: Text("Leave"),
-                          onPressed: () {
-                            Navigator.pop(context);
-                            Navigator.pop(context);
-                          },
-                        )
-                      ],
-                    );
-                  });
+              Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => DragDropTextScore(progress: progress1,mathMatchTest: testdata,)));
+              // showDialog(
+              //     context: context,
+              //     builder: (BuildContext context) {
+              //       return AlertDialog(
+              //         title: Text("Quiz submitted!"),
+              //         content: Text("The Quiz is submitted successfully"),
+              //         actions: [
+              //           FlatButton(
+              //             child: Text("Stay"),
+              //             onPressed: () {
+              //               Navigator.pop(context);
+              //             },
+              //           ),
+              //           FlatButton(
+              //             child: Text("Leave"),
+              //             onPressed: () {
+              //               Navigator.pop(context);
+              //               Navigator.pop(context);
+              //             },
+              //           )
+              //         ],
+              //       );
+              //     });
           }
           else{
             showDialog(

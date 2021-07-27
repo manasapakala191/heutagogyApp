@@ -19,28 +19,28 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  audioplayers: 
-  cached_network_image: ^2.3.3
-  cloud_firestore:
-  firebase_storage:
-  image_picker:
-  cupertino_icons: 
-  faker: ^1.2.1
-  firebase_core: 
-  flutter_svg: 
-  path_provider: ^1.6.21
-  provider: 
-  video_player: ^0.11.1+2
-  google_fonts:
-  fl_chart: ^0.12.0
-  dio:
-  youtube_player_flutter:
-  connectivity:
-  shared_preferences:
+  audioplayers: ^0.18.1
+  cached_network_image: ^3.1.0
+  cloud_firestore: ^2.4.0
+  firebase_storage: ^10.0.1
+  image_picker: ^0.8.2
+  cupertino_icons: ^1.0.3
+  faker: ^2.0.0
+  firebase_core: ^1.4.0
+  flutter_svg: ^0.20.0-nullsafety.3
+  path_provider: ^2.0.2
+  provider: ^5.0.0
+  video_player: ^2.1.12
+  google_fonts: ^2.1.0
+  fl_chart: ^0.36.3
+  dio: ^4.0.0
+  youtube_player_flutter: ^8.0.0
+  connectivity: ^3.0.6
+  shared_preferences: ^2.0.6
 dev_dependencies:
   flutter_test:
     sdk: flutter
-  flutter_launcher_icons: ^0.7.2+1
+  flutter_launcher_icons:
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec

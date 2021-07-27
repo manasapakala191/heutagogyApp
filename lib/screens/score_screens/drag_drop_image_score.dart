@@ -6,6 +6,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:heutagogy/hex_color.dart';
 import 'package:heutagogy/models/progress.dart';
 import 'package:heutagogy/models/test_type_models/drag_drop_test.dart';
+import 'package:heutagogy/screens/widgets/customAppBar.dart';
 import 'package:heutagogy/screens/widgets/slideHeading.dart';
 import 'package:heutagogy/screens/score_screens/pie_chart_widget.dart';
 
@@ -18,21 +19,7 @@ class DragDropImageScore extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          title: Text(
-            "Your progress in Line & Line Segments",
-            style: TextStyle(
-              color: Colors.white
-            )
-          ),
-          leading: IconButton(
-            icon: Icon(Icons.arrow_back, color: Colors.white,),
-            onPressed: (){
-              Navigator.of(context).pop();
-            },
-          ),
-          backgroundColor: HexColor('#ed2a26'),
-        ),
+        appBar: CustomAppBar(title: "Your Progress",),
         backgroundColor: Colors.white,
         body: Padding(
           padding: EdgeInsets.all(10),
@@ -43,7 +30,8 @@ class DragDropImageScore extends StatelessWidget {
                 testName: dragDropImageTest.testName,
                 testDescription: dragDropImageTest.testDescription,
               ),
-              Padding(
+              Container(
+                height: 300,
                 padding: const EdgeInsets.all(8.0),
                 child: PieChartWidget(
                   right: progress.partsDone,

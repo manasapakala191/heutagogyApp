@@ -32,6 +32,7 @@ class SingleCorrectResultViewer extends StatelessWidget {
             ),
             SizedBox(
               width: MediaQuery.of(context).size.width,
+              height: 300,
               child: Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: PieChartWidget(
@@ -95,7 +96,7 @@ class QuestionResponseViewer extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: [
             Text(questionData.text,style: TextStyle(fontSize: 20),),
-            questionData.image.isNotEmpty? Image.network(questionData.image): Container(),
+            questionData.image!=null && questionData.image.isNotEmpty ? Image.network(questionData.image): Container(),
             Column(
               children: questionData.options.map((e) => SizedBox(
                 width: MediaQuery.of(context).size.width,

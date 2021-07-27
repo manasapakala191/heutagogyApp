@@ -37,7 +37,7 @@ class _MultipleChoiceQuestionScreenState
 
   var answers = Map<String, dynamic>();
   var choices = Map<String, dynamic>();
-
+  Progress progress1;
   int count = 0;
 
   int total = 0;
@@ -78,6 +78,9 @@ class _MultipleChoiceQuestionScreenState
         responses: responses);
     Map<String, dynamic> json = progress.toMap();
     print(json.toString() + "mcq text progress");
+    setState(() {
+      progress1=progress;
+    });
     DatabaseService().writeProgress(
         json, studentID, widget.courseID, widget.lessonID, widget.type);
   }
@@ -158,29 +161,30 @@ class _MultipleChoiceQuestionScreenState
                   onPressed: () {
                     if(isConnected == true){
               _updateProgress();
-              showDialog(
-                  context: context,
-                  builder: (BuildContext context) {
-                    return AlertDialog(
-                      title: Text("Quiz submitted!"),
-                      content: Text("The Quiz is submitted successfully"),
-                      actions: [
-                        FlatButton(
-                          child: Text("Stay"),
-                          onPressed: () {
-                            Navigator.pop(context);
-                          },
-                        ),
-                        FlatButton(
-                          child: Text("Leave"),
-                          onPressed: () {
-                            Navigator.pop(context);
-                            Navigator.pop(context);
-                          },
-                        )
-                      ],
-                    );
-                  });
+              Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => SingleCorrectResultViewer(progress: progress1,singleCorrectTest: singleCorrectTest,)));
+              // showDialog(
+              //     context: context,
+              //     builder: (BuildContext context) {
+              //       return AlertDialog(
+              //         title: Text("Quiz submitted!"),
+              //         content: Text("The Quiz is submitted successfully"),
+              //         actions: [
+              //           FlatButton(
+              //             child: Text("Stay"),
+              //             onPressed: () {
+              //               Navigator.pop(context);
+              //             },
+              //           ),
+              //           FlatButton(
+              //             child: Text("Leave"),
+              //             onPressed: () {
+              //               Navigator.pop(context);
+              //               Navigator.pop(context);
+              //             },
+              //           )
+              //         ],
+              //       );
+              //     });
           }
           else{
             showDialog(

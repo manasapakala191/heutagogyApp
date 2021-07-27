@@ -1,9 +1,9 @@
-import 'package:audioplayers/audio_cache.dart';
 import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:heutagogy/hex_color.dart';
+import 'package:audioplayers/audio_cache.dart';
 import 'package:heutagogy/models/progress.dart';
 import 'package:heutagogy/models/test_type_models/match_audio.dart';
 import 'package:heutagogy/models/test_type_models/option_class.dart';
@@ -56,7 +56,8 @@ class _DragDropScoreWidgetState extends State<DragDropScoreWidget> {
               testName: widget.questionTest.testName,
               testDescription: widget.questionTest.testDescription,
             ),
-            Padding(
+            Container(
+              height: 300,
               padding: const EdgeInsets.all(8.0),
               child: PieChartWidget(
                 wrong: widget.progress.total - widget.progress.partsDone,
@@ -103,7 +104,6 @@ class AudioQuestionResponseViewer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    print("hhjbfjsbfja--------");
     print(response);
     print(questionData.description);
     return Card(
@@ -151,7 +151,7 @@ class _AudioButtonState extends State<AudioButton>
       print("\n\nFind the audio Path here ");
       print(audioPath);
       print("Audio path is above here!!");
-    audioCache.load("$audioPath.mp3"); 
+    audioCache.load("$audioPath.mp3");
     // } catch (e) {
     //   print("There has been an error loading the audio file");
     // }

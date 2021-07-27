@@ -30,7 +30,7 @@ class PieChartWidget extends StatelessWidget {
           title: data['correct'].toString(),
           showTitle: true,
           value: data['correct'].toDouble(),
-          radius: 120
+          radius: 100
       ));
     }
 
@@ -40,7 +40,7 @@ class PieChartWidget extends StatelessWidget {
           title: data['wrong'].toString(),
           showTitle: true,
           value: data['wrong'].toDouble(),
-          radius: 120
+          radius: 100
       ));
     }
 
@@ -54,22 +54,27 @@ class PieChartWidget extends StatelessWidget {
     return Container(
       padding: EdgeInsets.all(10),
       width: MediaQuery.of(context).size.width,
+      height: MediaQuery.of(context).size.width,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.end,
         mainAxisSize: MainAxisSize.min,
         children: [
-          Center(
-            child: Padding(
-              padding: EdgeInsets.all(7),
-              child: PieChart(
-                  PieChartData(
-                    centerSpaceRadius: 0,
-                    sectionsSpace: 0,
-                    borderData: FlBorderData(
-                      show: false
-                    ),
-                      sections: sections()
-                  )
+          Expanded(
+            child: Center(
+              child: Container(
+                child: Padding(
+                  padding: EdgeInsets.all(7),
+                  child: PieChart(
+                      PieChartData(
+                        centerSpaceRadius: 0,
+                        sectionsSpace: 0,
+                        borderData: FlBorderData(
+                          show: false
+                        ),
+                          sections: sections()
+                      )
+                  ),
+                ),
               ),
             ),
           ),

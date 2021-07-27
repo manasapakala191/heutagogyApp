@@ -41,7 +41,8 @@ class MissingNumbersResultScreen extends StatelessWidget {
             shrinkWrap: true,
             children: [
               SlideHeader(testName: missingNumbersTest.testName,testDescription: missingNumbersTest.testDescription,),
-            Padding(
+            Container(
+              height: 300,
           padding: const EdgeInsets.all(8.0),
           child: PieChartWidget(
               right: progress.partsDone,

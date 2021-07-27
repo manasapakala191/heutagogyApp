@@ -6,6 +6,7 @@ import 'package:heutagogy/models/lessonModel.dart';
 import 'package:heutagogy/models/lessons_models.dart';
 import 'package:heutagogy/models/progress.dart';
 import 'package:heutagogy/models/test_type_models/drag_drop_multiple_test.dart';
+import 'package:heutagogy/models/test_type_models/drag_drop_order_test.dart';
 import 'package:heutagogy/models/test_type_models/drag_drop_test.dart';
 import 'package:heutagogy/models/test_type_models/fill_the_blank_test.dart';
 import 'package:heutagogy/models/test_type_models/match_text_test.dart';
@@ -13,6 +14,7 @@ import 'package:heutagogy/models/test_type_models/math_match.dart';
 import 'package:heutagogy/models/test_type_models/missing_numbers_test.dart';
 import 'package:heutagogy/models/test_type_models/multiple_choice_question_test.dart';
 import 'package:heutagogy/models/userModel.dart';
+import 'package:heutagogy/screens/score_screens/drag_drop_order_score.dart';
 import 'package:heutagogy/screens/widgets/customAppBar.dart';
 import 'package:heutagogy/screens/score_screens/drag_drop_image_score.dart';
 import 'package:heutagogy/screens/score_screens/drag_drop_multiple_score.dart';
@@ -67,7 +69,6 @@ class ProgressQuizScreen extends StatelessWidget {
         ));
   }
 
-  /// Replace with the widgets for progress screen for each quiz here instead of quiz screens
   _returnSlideScreen(String type, var data,var slideResponse, String sid, String cid, String lid) {
     print("type" + type);
     print("response"+slideResponse.toString());
@@ -159,8 +160,8 @@ class ProgressQuizScreen extends StatelessWidget {
         break;
       case 'q9':
         {
-          return DragDropMultipleScore(
-            dragDropMultipleTest: DragDropMultipleTest.fromJSON(data),
+          return DragDropOrderScore(
+            dragDropOrderTest: DragDropOrderTest.fromJSON(data),
             progress: progress,
           );
         }
@@ -198,67 +199,83 @@ class ProgressQuizScreen extends StatelessWidget {
                       DocumentSnapshot slideDoc=snapshot.data;
                       Map slideContent=slideDoc.data();
                       print(slideContent);
-                      return Padding(
-                          padding: EdgeInsets.all(20),
-                          child: Card(
-                              clipBehavior: Clip.antiAlias,
-                              elevation: 3,
-                              shape: RoundedRectangleBorder(
-                                side: BorderSide(
-                                    color: HexColor("#607196"),
-                                    style: BorderStyle.solid,
-                                    width: 1.0),
-                                borderRadius: BorderRadius.circular(16.0),
-                              ),
-                              child: InkWell(
-                                  splashColor: Color.fromARGB(40, 0, 0, 200),
-                                  onTap: () {
-                                    print(userModel.courses_enrolled[cid]["slide"]);
-                                    String sid = userModel.courses_enrolled[cid]["slide"];
-                                    String lid = userModel.courses_enrolled[cid]["lesson"];
-                                    print(":)   -----");
-                                    print(sid);
-                                    Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                            builder: (context) =>
-                                                _returnSlideScreen(slideContent["type"], slideContent,slideData,sid,cid,lid)));
-                                  },
-                                  child: Column(
-                                      mainAxisSize: MainAxisSize.max,
-                                      children: <Widget>[
-                                        Padding(
-                                          padding: EdgeInsets.only(top: 16),
-                                          child: Hero(
-                                            tag: data[idx].id,
-                                            child: Material(
-                                              color: Colors.transparent,
-                                              child: Text(
-                                                slideContent["name"] == null ? "No name":slideContent["name"],
-                                                // "Test",
-                                                style: TextStyle(
-                                                  fontSize: 20,
-                                                  fontFamily: 'Nunito',
+                      if(slideContent!=null) {
+                        return Padding(
+                            padding: EdgeInsets.all(20),
+                            child: Card(
+                                clipBehavior: Clip.antiAlias,
+                                elevation: 3,
+                                shape: RoundedRectangleBorder(
+                                  side: BorderSide(
+                                      color: HexColor("#607196"),
+                                      style: BorderStyle.solid,
+                                      width: 1.0),
+                                  borderRadius: BorderRadius.circular(16.0),
+                                ),
+                                child: InkWell(
+                                    splashColor: Color.fromARGB(40, 0, 0, 200),
+                                    onTap: () {
+                                      print(userModel
+                                          .courses_enrolled[cid]["slide"]);
+                                      String sid = userModel
+                                          .courses_enrolled[cid]["slide"];
+                                      String lid = userModel
+                                          .courses_enrolled[cid]["lesson"];
+                                      print(":)   -----");
+                                      print(sid);
+                                      Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (context) =>
+                                                  _returnSlideScreen(
+                                                      slideContent["type"],
+                                                      slideContent, slideData,
+                                                      sid, cid, lid)));
+                                    },
+                                    child: Column(
+                                        mainAxisSize: MainAxisSize.max,
+                                        children: <Widget>[
+                                          Padding(
+                                            padding: EdgeInsets.only(top: 16),
+                                            child: Hero(
+                                              tag: data[idx].id,
+                                              child: Material(
+                                                color: Colors.transparent,
+                                                child: Text(
+                                                  slideContent["name"] == null
+                                                      ? "No name"
+                                                      : slideContent["name"],
+                                                  // "Test",
+                                                  style: TextStyle(
+                                                    fontSize: 20,
+                                                    fontFamily: 'Nunito',
+                                                  ),
                                                 ),
                                               ),
                                             ),
                                           ),
-                                        ),
-                                        Divider(
-                                          color: Colors.black87,
-                                        ),
-                                        Padding(
-                                            padding: EdgeInsets.only(
-                                                top: 10, left: 20, right: 20, bottom: 20),
-                                            child: Text(
-                                              // slideData["description"] ? "No name": slideData["description"],
-                                              "Progress here is "+slideData["percentage"].toString()+"%",
-                                              style: TextStyle(
-                                                fontSize: 16,
-                                                fontFamily: 'Nunito',
-                                              ),
-                                            ))
-                                      ]))));
+                                          Divider(
+                                            color: Colors.black87,
+                                          ),
+                                          Padding(
+                                              padding: EdgeInsets.only(
+                                                  top: 10,
+                                                  left: 20,
+                                                  right: 20,
+                                                  bottom: 20),
+                                              child: Text(
+                                                // slideData["description"] ? "No name": slideData["description"],
+                                                "Progress here is " +
+                                                    slideData["percentage"]
+                                                        .toString() + "%",
+                                                style: TextStyle(
+                                                  fontSize: 16,
+                                                  fontFamily: 'Nunito',
+                                                ),
+                                              ))
+                                        ]))));
+                      }
+                      return Container();
                     }
                   }
                   return Center(

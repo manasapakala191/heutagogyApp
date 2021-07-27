@@ -51,7 +51,7 @@ class _LoginPageState extends State<LoginPage>
   Widget build(BuildContext context) {
     UserModel userModel = Provider.of<UserModel>(context);
     return Scaffold(
-      resizeToAvoidBottomPadding: false,
+      // resizeToAvoidBottomPadding: false,
       body: SafeArea(
         child: Stack(
           children: [
